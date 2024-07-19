@@ -1,10 +1,12 @@
+import { CodeCategoryData } from "@/components/dumy";
+
 export default function Home() {
   return (
     <main className="bg-gray-100">
       {/* 메인베너 */}
       <section
         className="w-full h-screen bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('https://img.freepik.com/free-photo/3d-render-of-a-coastal-landscape-on-a-sunset-sky_1048-5670.jpg')" }}
+        style={{ backgroundImage: "url('https://cdn.pixabay.com/photo/2012/08/25/22/22/saturn-54999_1280.jpg')" }}
       >
         <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
       </section>
@@ -12,41 +14,14 @@ export default function Home() {
       <section className='w-full h-screen '>
         {/* 카테고리 */}
         <section className="bg-white py-8">
-          <div className="container mx-auto px-4">
-            <div className="flex space-x-4 overflow-x-auto">
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">디자인</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">IT·프로그래밍</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">영상·사진·음향</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">마케팅</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">번역·통역</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">음악·예능·교양</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">문서·사무</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                <span className="mt-2 text-black">세무·법무·노무</span>
-              </div>
+          <div className="container mx-auto px-4 flex">
+            {CodeCategoryData.map((category)=> (
+              <div key={category.id} className="flex flex-col items-center">
+              <img src={category.image} alt={category.name} className="w-12 h-12 bg-gray-300 rounded-full" />
+              <span className="mt-2 text-black">{category.name}</span>
             </div>
+            ))}
+    
           </div>
         </section>
 
