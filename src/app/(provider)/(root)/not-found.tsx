@@ -5,6 +5,4 @@ export default function NotFoundPage() {
       <p>추후 디자인수정</p>
     </div>
   );
-};
-
-
+}
