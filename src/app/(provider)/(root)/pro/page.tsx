@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import ProDetail from '../proDetail/[id]/page';
-import Image from 'next/image';
+import ProDetail from './proDetail/[id]/page';
 
-export default function CardlistPage() {
+export default function proMainPage() {
   const param = '123';
   return (
     <div>
@@ -61,7 +60,7 @@ export default function CardlistPage() {
 
       {/* 의뢰 서비스 리스트 */}
       <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap my-[70px] justify-start">
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -72,7 +71,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -83,7 +82,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -94,7 +93,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -105,7 +104,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -116,7 +115,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -127,7 +126,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -138,7 +137,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -149,7 +148,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
@@ -160,7 +159,7 @@ export default function CardlistPage() {
             </div>
           </div>
         </Link>
-        <Link href={`proDetail/${param}`}>
+        <Link href={`pro/proDetail/${param}`}>
           <div className="w-[300px] h-[400px] border-2 border-black rounded-lg m-[30px]">
             <div className="w-full h-[200px] bg-yellow-400 rounded-lg">이미지</div>
             <div className="flex-col p-2">
