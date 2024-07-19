@@ -1,9 +1,7 @@
-import React from 'react'
-
-const page = () => {
+export default function CreateCard() {
   return (
-    <div>page</div>
+    <div>
+      전문가 의뢰 게시물 생성 페이지
+    </div>
   )
 }
-
-export default page

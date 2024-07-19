@@ -1,9 +1,7 @@
-import React from 'react'
-
-const page = () => {
+export default function ProDetail() {
   return (
-    <div>page</div>
+    <div>
+      전문가 의뢰 상세 게시물 페이지
+    </div>
   )
 }
-
-export default page
