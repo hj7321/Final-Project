@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { CodeCategoryData, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
+import { CodeCategories, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-4">언어별 카테고리</h2>
             <div className="flex justify-between overflow-x-auto">
-              {CodeCategoryData.map((category) => (
+              {CodeCategories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center mx-2">
                   <img src={category.image} alt={category.name} className="w-24 h-24 bg-gray-300 rounded-full" />
                   <span className="mt-2 text-black text-lg">{category.name}</span>
