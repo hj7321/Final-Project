@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { dummyData, DummyDataType } from '@/components/dumy'; // 검색 더미 데이터 임포트
+import { dummyData, DummyDataType } from '@/components/dumy';
 
 export default function Search() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('query');
+  const query = searchParams.get('query') || '';
   const [results, setResults] = useState<DummyDataType[]>([]);
   const [filteredResults, setFilteredResults] = useState<DummyDataType[]>([]);
 
@@ -28,9 +28,15 @@ export default function Search() {
     setFilteredResults(filtered);
   };
 
+  const highlightIfMatch = (text: string, highlight: string) => {
+    return text.toLowerCase().includes(highlight.toLowerCase()) 
+      ? <span className="bg-yellow-200">{text}</span> 
+      : text;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">검색 결과</h1>
+      <h1 className="text-2xl font-bold mb-4">{query} 검색 결과</h1>
       <div className="flex space-x-4 mb-4">
         <button onClick={() => setFilteredResults(results)} className="px-4 py-2 bg-gray-300 rounded">전체</button>
         <button onClick={() => handleFilter('Q&A')} className="px-4 py-2 bg-gray-300 rounded">Q&A</button>
@@ -40,11 +46,13 @@ export default function Search() {
       <div className="grid grid-cols-1 gap-4">
         {filteredResults.map(result => (
           <div key={result.id} className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-bold">{result.title}</h2>
-            <p>{result.content}</p>
+            <h2 className="text-xl font-bold">{highlightIfMatch(result.title, query)}</h2>
+            <p>{highlightIfMatch(result.content, query)}</p>
             <p className="text-gray-500">{result.nickname}</p>
             <div className="flex space-x-2 mt-2">
-              <span className="bg-gray-200 text-gray-700 rounded px-2 py-1 text-sm">{result.codeCategory.name}</span>
+              <span className={`rounded px-2 py-1 text-sm ${result.codeCategory.name.toLowerCase().includes(query.toLowerCase()) ? 'bg-yellow-200' : 'bg-gray-200 text-gray-700'}`}>
+                {result.codeCategory.name}
+              </span>
             </div>
           </div>
         ))}

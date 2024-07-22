@@ -1,6 +1,4 @@
-// src/components/Header.tsx
-
-'use client'; // 클라이언트 컴포넌트로 지정
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
