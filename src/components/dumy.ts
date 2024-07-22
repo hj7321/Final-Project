@@ -1,3 +1,19 @@
+export type CodeCategoryType = {
+  id: number;
+  name: string;
+  image: string;
+};
+
+export type DummyDataType = {
+  id: number;
+  category: string;
+  title: string;
+  content: string;
+  nickname: string;
+  date: string;
+  codeCategory: CodeCategoryType;
+};
+
 export const CodeCategoryData = [
     {
       id: 1,
@@ -250,5 +266,3 @@ const generateDummyData = (numItems: number) => {
 };
 
 export const dummyData = generateDummyData(200);
-
-dummyData;

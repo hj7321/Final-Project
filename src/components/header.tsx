@@ -1,24 +1,34 @@
-import Link from "next/link"
+// src/components/Header.tsx
+
+'use client'; // 클라이언트 컴포넌트로 지정
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Header() {
+  const [searchInput, setSearchInput] = useState('');
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchInput.trim()) {
+      router.push(`/search?query=${searchInput}`);
+    }
+  };
+
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100">
       {/* 로고 */}
       <div className="flex items-center">
-        <Link href={"/"}>
-        <div className="w-40 h-16 bg-black text-white flex items-center justify-center">
-          <span className="text-lg">커리업!</span>
-        </div></Link>
+        <Link href="/">
+          <div className="w-40 h-16 bg-black text-white flex items-center justify-center">
+            <span className="text-lg">커리업!</span>
+          </div>
+        </Link>
         <nav className="ml-4 space-x-4">
-          <a href="#" className="text-black">
-            Q & A
-          </a>
-          <a href="#" className="text-black">
-            인사이트
-          </a>
-          <Link href="/pro" className="text-black">
-            전문가 의뢰
-          </Link>
+          <a href="#" className="text-black">Q & A</a>
+          <a href="#" className="text-black">인사이트</a>
+          <Link href="/pro" className="text-black">전문가 의뢰</Link>
         </nav>
       </div>
 
@@ -28,8 +38,11 @@ export default function Header() {
           type="text"
           placeholder="도움이 필요한 언어, 주제를 찾아보세요."
           className="bg-gray-200 outline-none w-64"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button>
+        <button onClick={handleSearch}>
           <svg
             className="w-5 h-5 text-gray-500"
             fill="none"
@@ -49,13 +62,8 @@ export default function Header() {
 
       {/* 로그인 및 회원가입 */}
       <div className="flex items-center space-x-4">
-        <Link
-        href="/mypage/1" className="bg-black text-white px-4 py-2 rounded">
-          로그인
-        </Link>
-        <a href="#" className="border border-black text-black px-4 py-2 rounded">
-          회원가입
-        </a>
+        <Link href="/mypage/1" className="bg-black text-white px-4 py-2 rounded">로그인</Link>
+        <a href="#" className="border border-black text-black px-4 py-2 rounded">회원가입</a>
       </div>
     </header>
   );
