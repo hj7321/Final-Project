@@ -4,7 +4,7 @@ import ProDetail from './proDetail/[id]/page';
 export default function proMainPage() {
   const param = '123';
   return (
-    <div>
+    <div className='max-w-[1440px] mx-auto flex-col justify-center items-center'>
       {/* 언어별 카테고리 영역 */}
       <div className="my-[70px] mx-auto ">
         <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
