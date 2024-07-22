@@ -1,5 +1,6 @@
 import React from 'react';
-import { CodeCategoryData } from '@/components/dumy';
+import Link from 'next/link';
+import { CodeCategoryData, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
 
 export default function Home() {
   return (
@@ -29,7 +30,7 @@ export default function Home() {
         </section>
 
         {/* 커뮤니티섹션 */}
-        <section className="container mx-auto px-4 py-8">
+        <section className="container mx-auto px-4 py-8 h-auto">
           <h2 className="text-2xl font-bold mb-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gray-200 p-4 rounded">
@@ -39,22 +40,10 @@ export default function Home() {
                   더보기
                 </a>
               </div>
-              <div>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
+              <div className="flex flex-col justify-between mt-5">
+                {qnaData.map((item) => (
+                  <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{item.date}</span></p>
+                ))}
               </div>
             </div>
 
@@ -65,52 +54,35 @@ export default function Home() {
                   더보기
                 </a>
               </div>
-              <div>
-                <p className="mb-2">
-                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
-                <p className="mb-2">
-                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
-                </p>
+              <div className="flex flex-col justify-between mt-5">
+                {insightData.map((item) => (
+                  <p key={item.id} className="mb-5">
+                    {item.title} <span className="text-gray-500">{item.date}</span>
+                  </p>
+                ))}
               </div>
             </div>
           </div>
         </section>
       </section>
 
-      {/* 전문가  */}
-      <section className="container w-full min-h-screen mx-auto px-4 py-8">
-        <h2 className="text-xl font-bold mb-4">전문가</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 shadow">
-            <img src="https://via.placeholder.com/150" alt="Service 1" className="w-full h-40 object-cover mb-4" />
-            <h3 className="font-bold">전문가1</h3>
-            <p>전문가 설명...</p>
-          </div>
-          <div className="bg-white p-4 shadow">
-            <img src="https://via.placeholder.com/150" alt="Service 2" className="w-full h-40 object-cover mb-4" />
-            <h3 className="font-bold">전문가2</h3>
-            <p>전문가 설명...</p>
-          </div>
-          <div className="bg-white p-4 shadow">
-            <img src="https://via.placeholder.com/150" alt="Service 3" className="w-full h-40 object-cover mb-4" />
-            <h3 className="font-bold">전문가3</h3>
-            <p>전문가 설명...</p>
-          </div>
-          <div className="bg-white p-4 shadow">
-            <img src="https://via.placeholder.com/150" alt="Service 4" className="w-full h-40 object-cover mb-4" />
-            <h3 className="font-bold">전문가4</h3>
-            <p>전문가 설명...</p>
-          </div>
+      {/* 전문가 */}
+      <section className="container mx-auto px-4 py-8 h-screen">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">전문가 의뢰 목록</h2>
+          <Link href="/pro" className="text-blue-500">
+            더보기
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          {expertData.slice(0, 10).map((expert) => (
+            <div key={expert.id} className="bg-white p-2 shadow rounded">
+              <img src={expert.image} alt={expert.title} className="w-full h-100 object-cover mb-4" />
+              <h3 className="font-bold">{expert.title}</h3>
+              <p>{expert.price}</p>
+              <span className="text-gray-500">{expert.language}</span>
+            </div>
+          ))}
         </div>
       </section>
     </main>
