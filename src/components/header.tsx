@@ -7,7 +7,7 @@ export default function Header() {
       <div className="flex items-center">
         <Link href={"/"}>
         <div className="w-40 h-16 bg-black text-white flex items-center justify-center">
-          <span className="text-lg">로고</span>
+          <span className="text-lg">커리업!</span>
         </div></Link>
         <nav className="ml-4 space-x-4">
           <a href="#" className="text-black">
