@@ -9,7 +9,7 @@ const signUp = (status: string): void => {
 
 export default function SignUpComplete() {
   return (
-    <section className="border border-main text-center content-center">
+    <section className="border border-main text-center content-center h-[525px]">
       <h2 className="text-[40px] font-black mb-[10px]">회원가입을 축하드립니다!</h2>
       <h2>전문가로 활동하시겠습니까?</h2>
       <p className="mb-[30px]">전문가는 소액을 받고 의뢰인들의 코드를 피드백하는 활동을 할 수 있습니다.</p>
