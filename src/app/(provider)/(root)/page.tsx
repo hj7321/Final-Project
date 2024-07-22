@@ -1,6 +1,5 @@
-// src/app/(provider)/(root)/page.tsx
 import React from 'react';
-import Link from 'next/link'; // Next.js Link 사용
+import Link from 'next/link';
 import { CodeCategoryData, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
 
 export default function Home() {
@@ -14,7 +13,7 @@ export default function Home() {
         <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
       </section>
 
-      <section className='w-full min-h-screen'>
+      <section className="w-full min-h-screen">
         {/* 카테고리 */}
         <section className="bg-white py-8">
           <div className="container mx-auto px-4">
