@@ -9,6 +9,7 @@ export default function CreateCard() {
           placeholder="제목을 입력해주세요."
         />
       </div>
+      {/* 언어 선택 카테고리 섹션 */}
       <div className="mb-[20px] border-2 border-slate-400 rounded-md">
         <div className="p-4">
           <p className="ml-7 text-lg">언어 선택(중복가능)</p>
@@ -106,6 +107,7 @@ export default function CreateCard() {
           </div>
         </div>
       </div>
+      {/* 이미지 업로드 섹션 */}
       <div className="w-full h-[150px] border-2 border-slate-400 my-[20px] rounded-md p-4 flex flex-col items-center justify-center">
         <div className="w-[60px] h-[60px] bg-blue-300 flex items-center justify-center relative rounded-full">
           이미지
@@ -113,10 +115,11 @@ export default function CreateCard() {
         </div>
         <p className="mt-4">이미지를 첨부해주세요. (1개 이상 필수, 최대 5개까지 첨부 가능)</p>
       </div>
-
+      {/* 상품 설명 입력 섹션 */}
       <div className="border-2 border-slate-400 mb-[20px] rounded-md">
         <textarea name="text" id="text" cols="30" rows="10" className="w-full h-[500px] p-5"></textarea>
       </div>
+      {/* 게시물 등록 버튼 섹션 */}
       <button className="w-full p-5 border-2 border-slate-400 rounded-md">등록하기</button>
     </div>
   );
