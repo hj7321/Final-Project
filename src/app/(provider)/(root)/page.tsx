@@ -1,5 +1,5 @@
 import React from 'react';
-import { CodeCategoryData } from "@/components/dumy";
+import { CodeCategoryData } from '@/components/dumy';
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
         <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
       </section>
 
-      <section className='w-full min-h-screen'>
+      <section className="w-full min-h-screen">
         {/* 카테고리 */}
         <section className="bg-white py-8">
           <div className="container mx-auto px-4">
@@ -40,11 +40,21 @@ export default function Home() {
                 </a>
               </div>
               <div>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
               </div>
             </div>
 
@@ -56,11 +66,21 @@ export default function Home() {
                 </a>
               </div>
               <div>
-                <p className="mb-2">🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
-                <p className="mb-2">타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span></p>
+                <p className="mb-2">
+                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  🔥 타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
+                <p className="mb-2">
+                  타이틀타이틀타이틀타이틀타이틀 <span className="text-gray-500">2024.07.19</span>
+                </p>
               </div>
             </div>
           </div>
