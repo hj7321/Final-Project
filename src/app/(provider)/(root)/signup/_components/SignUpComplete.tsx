@@ -8,17 +8,19 @@ const signUp = (status: string): void => {
 };
 
 export default function SignUpComplete() {
+  const buttonStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] bg-black text-white font-bold';
+
   return (
     <section className="border border-main text-center content-center h-[525px]">
       <h2 className="text-[40px] font-black mb-[10px]">회원가입을 축하드립니다!</h2>
       <h2>전문가로 활동하시겠습니까?</h2>
       <p className="mb-[30px]">전문가는 소액을 받고 의뢰인들의 코드를 피드백하는 활동을 할 수 있습니다.</p>
-      <div className="flex gap-[20px] justify-center">
-        <button className="border rounded-[3px] p-[15px]" onClick={() => signUp('pro_level1')}>
-          네. 전문가로 활동할래요
+      <div className="flex gap-[14px] justify-center">
+        <button className={buttonStyle} onClick={() => signUp('pro_level1')}>
+          예
         </button>
-        <button className="border rounded-[3px] p-[15px]" onClick={() => signUp('normal')}>
-          아니요. 일반 사용자로 활동할래요
+        <button className={buttonStyle} onClick={() => signUp('normal')}>
+          아니오
         </button>
       </div>
 
