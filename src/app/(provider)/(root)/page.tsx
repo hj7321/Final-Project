@@ -1,7 +1,7 @@
 // src/app/(provider)/(root)/page.tsx
 import React from 'react';
 import Link from 'next/link'; // Next.js Link 사용
-import { CodeCategoryData, qnaData, insightData } from "@/components/dumy"; // 더미 데이터 임포트
+import { CodeCategoryData, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
 
 export default function Home() {
   return (
@@ -68,38 +68,22 @@ export default function Home() {
       </section>
 
       {/* 전문가 */}
-      <section className="container mx-auto px-4 py-8">
+      <section className="container mx-auto px-4 py-8 h-screen">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">전문가 의뢰 목록</h2>
           <Link href="/pro" className="text-blue-500">
             더보기
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 shadow rounded">
-            <div className="w-full h-48 bg-gray-300 mb-4"></div>
-            <h3 className="font-bold">의뢰 타이틀</h3>
-            <p>가격</p>
-            <span className="text-gray-500">개발 언어</span>
-          </div>
-          <div className="bg-white p-4 shadow rounded">
-            <div className="w-full h-48 bg-gray-300 mb-4"></div>
-            <h3 className="font-bold">의뢰 타이틀</h3>
-            <p>가격</p>
-            <span className="text-gray-500">개발 언어</span>
-          </div>
-          <div className="bg-white p-4 shadow rounded">
-            <div className="w-full h-48 bg-gray-300 mb-4"></div>
-            <h3 className="font-bold">의뢰 타이틀</h3>
-            <p>가격</p>
-            <span className="text-gray-500">개발 언어</span>
-          </div>
-          <div className="bg-white p-4 shadow rounded">
-            <div className="w-full h-48 bg-gray-300 mb-4"></div>
-            <h3 className="font-bold">의뢰 타이틀</h3>
-            <p>가격</p>
-            <span className="text-gray-500">개발 언어</span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          {expertData.slice(0, 10).map((expert) => (
+            <div key={expert.id} className="bg-white p-2 shadow rounded">
+              <img src={expert.image} alt={expert.title} className="w-full h-100 object-cover mb-4" />
+              <h3 className="font-bold">{expert.title}</h3>
+              <p>{expert.price}</p>
+              <span className="text-gray-500">{expert.language}</span>
+            </div>
+          ))}
         </div>
       </section>
     </main>
