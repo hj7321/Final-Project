@@ -1,12 +1,14 @@
+import Link from "next/link"
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100">
       {/* 로고 */}
       <div className="flex items-center">
-        <div className="w-20 h-20 bg-gray-300 flex items-center justify-center">
-          <span className="text-black text-lg">로고</span>
-        </div>
+        <Link href={"/"}>
+        <div className="w-40 h-16 bg-black text-white flex items-center justify-center">
+          <span className="text-lg">커리업!</span>
+        </div></Link>
         <nav className="ml-4 space-x-4">
           <a href="#" className="text-black">
             Q & A
@@ -14,15 +16,19 @@ export default function Header() {
           <a href="#" className="text-black">
             인사이트
           </a>
-          <a href="#" className="text-black">
+          <Link href="/pro" className="text-black">
             전문가 의뢰
-          </a>
+          </Link>
         </nav>
       </div>
 
       {/* 검색창 */}
       <div className="flex items-center bg-gray-200 rounded-full px-4 py-2">
-        <input type="text" placeholder="Search" className="bg-gray-200 outline-none" />
+        <input
+          type="text"
+          placeholder="도움이 필요한 언어, 주제를 찾아보세요."
+          className="bg-gray-200 outline-none w-64"
+        />
         <button>
           <svg
             className="w-5 h-5 text-gray-500"
@@ -42,15 +48,13 @@ export default function Header() {
       </div>
 
       {/* 로그인 및 회원가입 */}
-      <div className="space-x-4">
-        <a href="#" className="text-black">
+      <div className="flex items-center space-x-4">
+        <Link
+        href="/mypage/1" className="bg-black text-white px-4 py-2 rounded">
           로그인
-        </a>
-        <a href="#" className="text-black">
-          일반 회원가입
-        </a>
-        <a href="#" className="text-black">
-          전문가 회원가입
+        </Link>
+        <a href="#" className="border border-black text-black px-4 py-2 rounded">
+          회원가입
         </a>
       </div>
     </header>
