@@ -16,9 +16,9 @@ export default function Header() {
           <a href="#" className="text-black">
             인사이트
           </a>
-          <a href="#" className="text-black">
+          <Link href="/pro" className="text-black">
             전문가 의뢰
-          </a>
+          </Link>
         </nav>
       </div>
 
