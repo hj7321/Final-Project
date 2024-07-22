@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { CodeCategoryData, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
+import { CodeCategoryData, qnaData, insightData, expertData } from '@/components/dumy'; // 더미 데이터 임포트
 
 export default function Home() {
   return (
@@ -42,7 +42,9 @@ export default function Home() {
               </div>
               <div className="flex flex-col justify-between mt-5">
                 {qnaData.map((item) => (
-                  <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{item.date}</span></p>
+                  <p key={item.id} className="mb-5">
+                    {item.title} <span className="text-gray-500">{item.date}</span>
+                  </p>
                 ))}
               </div>
             </div>
