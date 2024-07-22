@@ -5,7 +5,7 @@ export default function SignUpPage() {
   return (
     <>
       <SignUpForm />
-      <SignUpComplete />
+      {/* <SignUpComplete /> */}
     </>
   );
 }
