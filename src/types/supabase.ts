@@ -9,11 +9,104 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      Accounts: {
+        Row: {
+          consumer_id: string
+          created_at: string
+          id: string
+          is_complete: boolean
+          pro_id: string
+        }
+        Insert: {
+          consumer_id?: string
+          created_at?: string
+          id?: string
+          is_complete?: boolean
+          pro_id?: string
+        }
+        Update: {
+          consumer_id?: string
+          created_at?: string
+          id?: string
+          is_complete?: boolean
+          pro_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Accounts_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Accounts_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "Community Comments": {
+        Row: {
+          community_post_id: string
+          contents: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          community_post_id?: string
+          contents: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          community_post_id?: string
+          contents?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      "Community Likes": {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Community Likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       "Community Posts": {
         Row: {
           content: string
           created_at: string
           id: string
+          post_category: string
           title: string
           user_id: string
         }
@@ -21,6 +114,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          post_category: string
           title: string
           user_id?: string
         }
@@ -28,6 +122,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          post_category?: string
           title?: string
           user_id?: string
         }
@@ -41,6 +136,114 @@ export type Database = {
           },
         ]
       }
+      Portfolio: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          portfolio_img: string[]
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          portfolio_img: string[]
+          title: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          portfolio_img?: string[]
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Portfolio_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "Request Posts": {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          lang_category: string[]
+          post_img: string[]
+          price: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          lang_category: string[]
+          post_img: string[]
+          price: string
+          title: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          lang_category?: string[]
+          post_img?: string[]
+          price?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Request Posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "Request Reviews": {
+        Row: {
+          contents: string
+          created_at: string
+          id: string
+          stars: number
+          user_id: string
+        }
+        Insert: {
+          contents: string
+          created_at?: string
+          id?: string
+          stars: number
+          user_id?: string
+        }
+        Update: {
+          contents?: string
+          created_at?: string
+          id?: string
+          stars?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Request Reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Users: {
         Row: {
           created_at: string
@@ -48,7 +251,7 @@ export type Database = {
           id: string
           nickname: string
           profile_img: string | null
-          status: string
+          status: boolean
         }
         Insert: {
           created_at?: string
@@ -56,7 +259,7 @@ export type Database = {
           id?: string
           nickname: string
           profile_img?: string | null
-          status: string
+          status: boolean
         }
         Update: {
           created_at?: string
@@ -64,7 +267,7 @@ export type Database = {
           id?: string
           nickname?: string
           profile_img?: string | null
-          status?: string
+          status?: boolean
         }
         Relationships: [
           {
