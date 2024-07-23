@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { CodeCategories, qnaData, insightData, expertData } from "@/components/dumy"; // 더미 데이터 임포트
+import { CodeCategories, qnaData, insightData, expertData } from '@/components/dumy'; // 더미 데이터 임포트
 
 export default function Home() {
   return (
