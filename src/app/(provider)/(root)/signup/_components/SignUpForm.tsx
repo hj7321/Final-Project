@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FormEvent, useRef, useState } from 'react';
 import { validateBirth, validateEmail, validateName, validateNickName, validatePassword } from './Validate';
 import signUp from '../action';
+import { redirect } from 'next/navigation';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -94,6 +95,7 @@ export default function SignUpForm() {
       await signUp(email, password, nickname, name, birth);
       alert('회원가입 성공!');
       // 완료 페이지로 리다이렉션
+      redirect('../signupComplete');
     }
   };
 
