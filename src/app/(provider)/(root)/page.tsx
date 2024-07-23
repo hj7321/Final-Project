@@ -13,12 +13,12 @@ export default function Home() {
         <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
       </section>
 
-      <section className="w-full min-h-screen">
+      <section className="w-full min-h-screen flex flex-col">
         {/* 카테고리 */}
-        <section className="bg-white py-8">
-          <div className="container mx-auto px-4">
+        <div className="bg-white py-8 flex-shrink-0 h-1/3">
+          <div className="container mx-auto px-4 h-full">
             <h2 className="text-2xl font-bold mb-4">언어별 카테고리</h2>
-            <div className="flex justify-between overflow-x-auto">
+            <div className="flex justify-between overflow-x-auto h-full items-center">
               {CodeCategories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center mx-2">
                   <img src={category.image} alt={category.name} className="w-24 h-24 bg-gray-300 rounded-full" />
@@ -27,47 +27,50 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
-
+        </div>
         {/* 커뮤니티섹션 */}
-        <section className="container mx-auto px-4 py-8 h-auto">
+        <div className="container mx-auto px-4 py-8 flex-grow h-2/3">
           <h2 className="text-2xl font-bold mb-4">커뮤니티</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-gray-200 p-4 rounded">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">QnA</h2>
-                <a href="#" className="text-blue-500">
-                  더보기
-                </a>
-              </div>
-              <div className="flex flex-col justify-between mt-5">
-                {qnaData.map((item) => (
-                  <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{item.date}</span></p>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+            <div className="bg-gray-200 p-4 rounded flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold">QnA</h2>
+                  <a href="#" className="text-blue-500">
+                    더보기
+                  </a>
+                </div>
+                <div className="overflow-auto">
+                  {qnaData.map((item) => (
+                    <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{item.date}</span></p>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="bg-gray-200 p-4 rounded">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">인사이트</h2>
-                <a href="#" className="text-blue-500">
-                  더보기
-                </a>
-              </div>
-              <div className="flex flex-col justify-between mt-5">
-                {insightData.map((item) => (
-                  <p key={item.id} className="mb-5">
-                    {item.title} <span className="text-gray-500">{item.date}</span>
-                  </p>
-                ))}
+            <div className="bg-gray-200 p-4 rounded flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold">인사이트</h2>
+                  <a href="#" className="text-blue-500">
+                    더보기
+                  </a>
+                </div>
+                <div className="overflow-auto">
+                  {insightData.map((item) => (
+                    <p key={item.id} className="mb-5">
+                      {item.title} <span className="text-gray-500">{item.date}</span>
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </section>
 
       {/* 전문가 */}
-      <section className="container mx-auto px-4 py-8 h-screen">
+      <section className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">전문가 의뢰 목록</h2>
           <Link href="/pro" className="text-blue-500">

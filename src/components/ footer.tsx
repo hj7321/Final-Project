@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-      <footer className="bg-gray-100 p-8">
+      <footer className="bg-gray-100 p-8 pt-20">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* 고객센터 및 전문가센터 */}
           <div className="col-span-2">
