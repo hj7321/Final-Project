@@ -18,7 +18,6 @@
     "react": "^18",
     "react-dom": "^18",
     "supabase": "1.187.3",
-    "uuid": "^10.0.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

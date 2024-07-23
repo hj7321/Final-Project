@@ -1,34 +1,13 @@
 'use client';
 
-import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
-
-const signUp = async (formData) => {
-  const { email, password, nickname, name, birth } = formData;
-  const { data, error } = await supabase.auth.Signup({
-    email,
-    password
-  });
-  if (error) {
-    console.error(error);
-    // 에러 처리
-    return;
-  }
-
-  // TODO: supabase.from 치면 테이블 나오도록 구현해야 함 -> 스탠다드 17차
-  const { data: signUpData, error: signUpError } = await supabase.from('users').insert({ email, nickname });
-  if (signUpError) {
-    console.error(error);
-    // 에러 처리
-    return;
-  }
-
-  return signUpData;
-};
+import Link from 'next/link';
+import { FormEvent, useRef, useState } from 'react';
+import { validateBirth, validateEmail, validateName, validateNickName, validatePassword } from './Validate';
+import signUp from '../action';
 
 const inputs = [
-  { label: '이메일', type: 'email', id: 'email' },
+  { label: '이메일', type: 'text', id: 'email' },
   { label: '비밀번호', type: 'password', id: 'pw' },
   { label: '비밀번호 확인', type: 'password', id: 'pw-check' },
   { label: '닉네임', type: 'text', id: 'nickname' },
@@ -37,8 +16,8 @@ const inputs = [
 ];
 
 const checkBoxes = [
-  { label: '서비스 이용약관 동의 (필수)', id: 'service' },
-  { label: '개인정보 수집 및 이용 동의 (필수)', id: 'personal' },
+  { label: `서비스 이용약관 동의 (필수)`, id: 'service', linkText: '서비스 이용약관' },
+  { label: '개인정보 수집 및 이용 동의 (필수)', id: 'personal', linkText: '개인정보 수집 및 이용' },
   { label: '만 14세 이상입니다. (필수)', id: 'age' },
   { label: '마케팅 수신 동의 (선택)', id: 'marketing' }
 ];
@@ -49,9 +28,6 @@ export default function SignUpForm() {
   const [inputValues, setInputValue] = useState<(string | null)[]>(Array(inputs.length).fill(''));
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false));
-
-  const divClassName = 'flex flex-col items-center';
-  const inputClassName = 'h-[56px] w-[400px] border border-main p-[16px] rounded-[8px';
 
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newValues = [...inputValues];
@@ -75,24 +51,83 @@ export default function SignUpForm() {
     else setIsChecked(false);
   };
 
+  const handleCheckValidation = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const email: string = formData.get('email') as string;
+    const password: string = formData.get('pw') as string;
+    const passwordCheck: string = formData.get('pw-check') as string;
+    const nickname: string = formData.get('nickname') as string;
+    const name: string = formData.get('name') as string;
+    const birth: string = formData.get('birth') as string;
+
+    // 유효성 검사 & 체크여부 통과하면 -> signUp() 함수 호출
+    if (!validateEmail(email)) {
+      inputRefs.current[0]!.focus();
+      return;
+    } else if (!validatePassword(password)) {
+      inputRefs.current[1]!.focus();
+      return;
+    } else if (!passwordCheck) {
+      alert('비밀번호를 다시 한 번 입력해주세요.');
+      inputRefs.current[2]!.focus();
+      return;
+    } else if (password !== passwordCheck) {
+      alert('비밀번호가 일치하지 않습니다.');
+      inputRefs.current[2]!.focus();
+      return;
+    } else if (!validateNickName(nickname)) {
+      inputRefs.current[3]!.focus();
+      return;
+    } else if (!validateName(name)) {
+      inputRefs.current[4]!.focus();
+      return;
+    } else if (!validateBirth(birth)) {
+      inputRefs.current[5]!.focus();
+      return;
+    } else if (!areChecked[0] || !areChecked[1] || !areChecked[2]) {
+      alert('모든 필수 사항에 체크해주세요.');
+    } else {
+      await signUp(email, password, nickname, name, birth);
+      alert('회원가입 성공!');
+      // 완료 페이지로 리다이렉션
+    }
+  };
+
   return (
-    <section className="border border-main flex flex-col gap-[10px] text-center items-center py-[20px]">
+    <form onSubmit={handleCheckValidation} className="flex flex-col gap-[10px] text-center items-center py-[20px]">
       <h2 className="font-bold text-[24px] mb-[48px]">회원가입</h2>
       {inputs.map((input, idx) => (
         <div
           key={idx}
-          className={clsx(divClassName, idx % 3 === 2 && 'mb-[48px]', 'border border-black rounded-[8px]')}
+          className={clsx(
+            'flex flex-col items-center',
+            idx % 3 === 2 && 'mb-[48px]',
+            (idx === selectedIdx || inputValues[idx]!.length > 0) &&
+              'h-[70px] w-[400px] border border-black rounded-[8px] px-[16px] pt-[6px]'
+          )}
         >
           <label
-            className={clsx(idx === selectedIdx || inputValues[idx]!.length > 0 ? 'flex' : 'hidden', 'self-start')}
+            className={clsx(
+              idx === selectedIdx || inputValues[idx]!.length > 0 ? 'flex' : 'hidden',
+              'self-start text-[12px]'
+            )}
             htmlFor={input.id}
           >
             {input.label}
           </label>
           <input
-            className={clsx(inputClassName, idx === selectedIdx && 'border-none')}
+            className={clsx(
+              idx === selectedIdx || inputValues[idx]!.length > 0
+                ? 'w-[362px] outline-none border-none p-0 mt-[5px]'
+                : 'h-[56px] w-[400px] border border-main p-[16px] rounded-[8px]'
+            )}
             type={input.type}
             id={input.id}
+            name={input.id}
             placeholder={idx === selectedIdx ? '' : input.add ? `${input.label} ${input.add}` : input.label}
             ref={(el) => {
               inputRefs.current[idx] = el;
@@ -131,13 +166,29 @@ export default function SignUpForm() {
                 checked={areChecked[idx]}
                 onChange={(e) => handleFourCheckBoxesChange(idx, e)}
               />{' '}
-              <label htmlFor={checkBox.id}>{checkBox.label}</label>
+              <label htmlFor={checkBox.id}>
+                {checkBox.linkText ? (
+                  <>
+                    <Link href="#" className="underline">
+                      {checkBox.linkText}
+                    </Link>{' '}
+                    동의 (필수)
+                  </>
+                ) : (
+                  checkBox.label
+                )}
+              </label>
             </div>
           ))}
         </div>
       </div>
 
-      <button className="h-[56px] w-[400px] rounded-[8px] bg-black text-white">회원가입</button>
-    </section>
+      <button type="submit" className="h-[56px] w-[400px] rounded-[8px] bg-black text-white">
+        회원가입
+      </button>
+      {/* 유효성 검사 모두 통과, 체크박스에 모두 체크하고 나서 회원가입 버튼을 클릭하면 SignUpComplete 컴포넌트로 전환됨 */}
+      {/* 이때 이 컴포넌트에서 작성한 회원 정보를 어떻게 들고가야 하지? */}
+      {/* 버튼을 눌렀을 때 페이지는 그대로인데 컴포넌트가 바뀌는 상황이다. -> 페이지 분리하는 게 좋겠다 */}
+    </form>
   );
 }
