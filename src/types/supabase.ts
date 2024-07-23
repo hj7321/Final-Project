@@ -16,6 +16,7 @@ export type Database = {
           id: string
           is_complete: boolean
           pro_id: string
+          request_post_id: string
         }
         Insert: {
           consumer_id?: string
@@ -23,6 +24,7 @@ export type Database = {
           id?: string
           is_complete?: boolean
           pro_id?: string
+          request_post_id?: string
         }
         Update: {
           consumer_id?: string
@@ -30,6 +32,7 @@ export type Database = {
           id?: string
           is_complete?: boolean
           pro_id?: string
+          request_post_id?: string
         }
         Relationships: [
           {
@@ -44,6 +47,13 @@ export type Database = {
             columns: ["pro_id"]
             isOneToOne: false
             referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Accounts_request_post_id_fkey"
+            columns: ["request_post_id"]
+            isOneToOne: false
+            referencedRelation: "Request Posts"
             referencedColumns: ["id"]
           },
         ]
@@ -70,7 +80,22 @@ export type Database = {
           id?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Community Comments_community_post_id_fkey"
+            columns: ["community_post_id"]
+            isOneToOne: true
+            referencedRelation: "Community Posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Community Comments_community_post_id_fkey1"
+            columns: ["community_post_id"]
+            isOneToOne: true
+            referencedRelation: "Community Posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       "Community Likes": {
         Row: {
@@ -106,7 +131,9 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          lang_category: string[] | null
           post_category: string
+          post_img: string[] | null
           title: string
           user_id: string
         }
@@ -114,7 +141,9 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          lang_category?: string[] | null
           post_category: string
+          post_img?: string[] | null
           title: string
           user_id?: string
         }
@@ -122,7 +151,9 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          lang_category?: string[] | null
           post_category?: string
+          post_img?: string[] | null
           title?: string
           user_id?: string
         }
@@ -217,6 +248,7 @@ export type Database = {
           contents: string
           created_at: string
           id: string
+          request_post_id: string
           stars: number
           user_id: string
         }
@@ -224,6 +256,7 @@ export type Database = {
           contents: string
           created_at?: string
           id?: string
+          request_post_id?: string
           stars: number
           user_id?: string
         }
@@ -231,10 +264,18 @@ export type Database = {
           contents?: string
           created_at?: string
           id?: string
+          request_post_id?: string
           stars?: number
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "Request Reviews_request_post_id_fkey"
+            columns: ["request_post_id"]
+            isOneToOne: true
+            referencedRelation: "Request Posts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "Request Reviews_user_id_fkey"
             columns: ["user_id"]
@@ -249,25 +290,25 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_pro: boolean
           nickname: string
           profile_img: string | null
-          status: boolean
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          is_pro?: boolean
           nickname: string
           profile_img?: string | null
-          status: boolean
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          is_pro?: boolean
           nickname?: string
           profile_img?: string | null
-          status?: boolean
         }
         Relationships: [
           {
