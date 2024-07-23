@@ -11,7 +11,7 @@ export default function AccountList() {
           {postDumy.slice(0, 4).map((post) => (
             <div key={post.id} className="bg-white p-4  rounded-2xl">
               <div className="flex mr-20">
-                <img src={post.image} className="w-[180px] h-[180px] object-cover rounded-lg" alt={post.title} />
+                <img src={post.image} className="w-[180px] h-[180px]  rounded-lg" />
                 <div className="ml-8 flex-1">
                   <p className="font-bold text-[20px] mb-2">{post.title}</p>
                   <p

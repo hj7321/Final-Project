@@ -7,8 +7,34 @@ import MyCommentList from './MyCommentList';
 import MyPostList from './MyPostList';
 import Portfolio from './Portfolio';
 import EditProfile from './EditProfile';
+import { Users } from '@/types/type';
+import { useParams } from 'next/navigation';
+import { QueryClient, useQuery } from '@tanstack/react-query';
+import { createClient } from '@/utils/supabase/client';
 
 export default function AllMypage() {
+  const { id } = useParams();
+
+  const getUserData = async () => {
+    const supabase = createClient();
+    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+    return data;
+  };
+  const {
+    data: Users,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData
+  });
+
+  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+
+  if (error) {
+    return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
+  }
+
   const liStyle = 'text-gray-700  cursor-pointer';
   const activeStyle = 'text-gray-700 cursor-pointer font-bold';
 
@@ -36,17 +62,25 @@ export default function AllMypage() {
     <div className="flex flex-col max-w-[80%] m-auto bg-white">
       <div className="flex flex-1">
         <aside className="w-64  p-4">
-          <div className="flex flex-col items-center mb-6   p-4 rounded">
-            <div className="w-[180px] h-[180px] bg-black rounded-full mb-4"></div>
-            <div className="text-black font-bold mb-4">닉네임</div>
+          <div>
+            <div className="flex flex-col items-center mb-6   p-4 rounded">
+              <div className="w-[180px] h-[180px] bg-black rounded-full mb-4"></div>
+              <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
-            <button className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black " onClick={clickModal}>
-              프로필 수정하기 ✏️
-            </button>
-            {showModal && <EditProfile clickModal={clickModal} />}
+              <button
+                className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black "
+                onClick={clickModal}
+              >
+                프로필 수정하기 ✏️
+              </button>
+              {showModal && <EditProfile clickModal={clickModal} />}
 
-            <button className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black">전문가로 전환</button>
+              <button className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black">
+                전문가로 전환
+              </button>
+            </div>
           </div>
+
           <ul className="space-y-4 mt-[64px]">
             <li className="text-[20px] font-bold">나의 활동</li>
 
