@@ -10,6 +10,7 @@ export default function Search() {
   const query = searchParams.get('query') || '';
   const [results, setResults] = useState<any[]>([]);
   const [filteredResults, setFilteredResults] = useState<any[]>([]);
+  const [selectedTab, setSelectedTab] = useState('전체');
   const supabase = createClient();
 
   useEffect(() => {
@@ -51,6 +52,7 @@ export default function Search() {
   }, [query]);
 
   const handleFilter = (category: string) => {
+    setSelectedTab(category);
     if (category === '전체') {
       setFilteredResults(results);
     } else if (category === '전문가 의뢰') {
@@ -74,10 +76,15 @@ export default function Search() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">{query} 검색 결과</h1>
       <div className="flex space-x-4 mb-4">
-        <button onClick={() => handleFilter('전체')} className="px-4 py-2 bg-gray-300 rounded">전체</button>
-        <button onClick={() => handleFilter('Q&A')} className="px-4 py-2 bg-gray-300 rounded">Q&A</button>
-        <button onClick={() => handleFilter('인사이트')} className="px-4 py-2 bg-gray-300 rounded">인사이트</button>
-        <button onClick={() => handleFilter('전문가 의뢰')} className="px-4 py-2 bg-gray-300 rounded">전문가 의뢰</button>
+        {['전체', 'Q&A', '인사이트', '전문가 의뢰'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleFilter(tab)}
+            className={`px-4 py-2 ${selectedTab === tab ? 'border-b-2 border-black text-black' : 'text-black'}`}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
       {filteredResults.length === 0 ? (
         <div className='w-auto h-screen flex '><h1>검색결과가 없습니다.</h1></div> 
