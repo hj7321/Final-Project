@@ -15,33 +15,9 @@ import { createClient } from '@/utils/supabase/client';
 export default function AllMypage() {
   const { id } = useParams();
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
-    return data;
-  };
-  const {
-    data: Users,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData
-  });
-
-  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
-
-  if (error) {
-    return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
-  }
-
-  const liStyle = 'text-gray-700  cursor-pointer';
-  const activeStyle = 'text-gray-700 cursor-pointer font-bold';
-
-  const [activeComponent, setActiveComponent] = useState('BookMark');
-
   const [showModal, setShowModal] = useState(false);
   const clickModal = () => setShowModal(!showModal);
+  const [activeComponent, setActiveComponent] = useState('BookMark');
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -57,6 +33,32 @@ export default function AllMypage() {
         return <Portfolio />;
     }
   };
+
+  const getUserData = async () => {
+    const supabase = createClient();
+    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+    console.log('data', data);
+    return data;
+  };
+  const {
+    data: Users,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData
+  });
+
+  console.log('users', Users);
+
+  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+
+  if (error) {
+    return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
+  }
+
+  const liStyle = 'text-gray-700  cursor-pointer';
+  const activeStyle = 'text-gray-700 cursor-pointer font-bold';
 
   return (
     <div className="flex flex-col max-w-[80%] m-auto bg-white">
