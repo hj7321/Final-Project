@@ -26,9 +26,8 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  // createServerClient와 supabase.auth.getUser() 사이에 로직을 작성하면 안 된다.
+  // 간단한 실수로 인해 사용자가 무작위로 로그아웃되는 문제를 디버깅하기가 매우 어려워질 수 있다.
 
   const {
     data: { user }
@@ -48,18 +47,15 @@ export async function updateSession(request: NextRequest) {
   //   return NextResponse.redirect(url)
   // }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
+  // 반드시 supabaseResponse 객체를 그대로 반환해야 한다.
+  // NextResponse.next()를 사용하여 새 응답 객체를 생성하는 경우, 다음을 따라야 한다.
+  // 1. 다음과 같이 요청을 전달한다.
+  //    const myNewResponse = NextResponse.next({request})
+  // 2. 다음과 같이 쿠키를 복사한다.
   //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // 3. 필요에 맞게 myNewResponse 객체를 변경하되, 쿠키를 변경하면 안 된다.
+  // 4. 마지막으로, myNewResponse를 반환한다.
+  // 이렇게 하지 않으면, 브라우저와 서버가 동기화되지 않고 사용자의 세션이 조기에 종료될 수 있다.
 
   return supabaseResponse;
 }
