@@ -10,13 +10,13 @@ export default function Footer() {
             </div>
             <p className="mb-4">10:30~18:00 (점심시간 13:00~14:00)<br/>주말, 공휴일 휴무</p>
             <div className="p-4 bg-blue-100 rounded">
-              <p>커리업!은 서비스 중개 플랫폼이에요.<br/>작업 의뢰는 전문가에게 직접 문의해 주세요.</p>
+              <p>CodeU는 서비스 중개 플랫폼이에요.<br/>작업 의뢰는 전문가에게 직접 문의해 주세요.</p>
             </div>
           </div>
   
           {/* 링크 섹션 */}
           <div>
-            <h3 className="font-bold mb-4">커리업!</h3>
+            <h3 className="font-bold mb-4">CodeU</h3>
             <ul>
               <li className="mb-2">커리업! 메인</li>
               <li className="mb-2">Prime</li>
@@ -25,7 +25,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-bold mb-4">커리업! 정보</h3>
+            <h3 className="font-bold mb-4">CodeU 정보</h3>
             <ul>
               <li className="mb-2">서비스 소개</li>
               <li className="mb-2">인재영입</li>
@@ -34,9 +34,9 @@ export default function Footer() {
           <div>
             <h3 className="font-bold mb-4">관련 사이트</h3>
             <ul>
-              <li className="mb-2">커리업! 블로그</li>
-              <li className="mb-2">커리업! 인스타그램</li>
-              <li className="mb-2">커리업! 유튜브</li>
+              <li className="mb-2">CodeU 블로그</li>
+              <li className="mb-2">CodeU 인스타그램</li>
+              <li className="mb-2">CodeU 유튜브</li>
             </ul>
           </div>
           <div>
