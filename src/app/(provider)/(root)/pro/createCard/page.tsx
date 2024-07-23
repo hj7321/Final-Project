@@ -132,8 +132,10 @@ export default function CreateCard() {
             ))}
           </div>
           {images.length < 1 && (
-            <label className="w-[60px] h-[60px] bg-blue-300 flex items-center justify-center relative rounded-full mt-4 cursor-pointer">
-              이미지
+            <label 
+              className="w-[60px] h-[60px] flex items-center justify-center relative rounded-full mt-4 cursor-pointer"
+              style={{backgroundImage : "url('../images/image_select.jpeg')", backgroundSize : 'cover', backgroundPosition : 'center'}}
+            >
               <input
                 type="file"
                 multiple
