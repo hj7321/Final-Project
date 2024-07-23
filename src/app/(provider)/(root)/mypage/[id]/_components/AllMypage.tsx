@@ -32,7 +32,7 @@ export default function AllMypage() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-[80%] m-auto bg-white ">
+    <div className="flex flex-col max-w-[80%] m-auto bg-white">
       <div className="flex flex-1">
         <aside className="w-64  p-4">
           <div className="flex flex-col items-center mb-6   p-4 rounded">
