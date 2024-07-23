@@ -61,7 +61,7 @@ export default function Header() {
       {/* 로그인 및 회원가입 */}
       <div className="flex items-center space-x-4">
         <Link href="/mypage/1" className="bg-black text-white px-4 py-2 rounded">로그인</Link>
-        <a href="#" className="border border-black text-black px-4 py-2 rounded">회원가입</a>
+        <Link href="/signup" className="border border-black text-black px-4 py-2 rounded">회원가입</Link>
       </div>
     </header>
   );
