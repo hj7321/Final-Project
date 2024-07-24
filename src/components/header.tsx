@@ -8,13 +8,20 @@ import useAuthStore from '@/zustand/authStore';
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const router = useRouter();
-  const { isLogin } = useAuthStore();
+  const { isLogin, logout } = useAuthStore();
 
   const handleSearch = () => {
     if (searchInput.trim()) {
       router.push(`/search?query=${searchInput}`);
     }
   };
+
+  const handleLogout = () => {
+    logout();
+    router.replace('/');
+  };
+
+  console.log(isLogin);
 
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100">
@@ -72,9 +79,9 @@ export default function Header() {
           <Link href="/mypage" className="bg-black text-white px-4 py-2 rounded">
             마이페이지
           </Link>
-          <Link href="/" className="border border-black text-black px-4 py-2 rounded">
+          <button onClick={handleLogout} className="border border-black text-black px-4 py-2 rounded">
             로그아웃
-          </Link>
+          </button>
         </div>
       ) : (
         <div className="flex items-center space-x-4">
