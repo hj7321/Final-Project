@@ -1,11 +1,10 @@
 "use client"
 
-import useCreateCard from '@/hooks/useCreateCard';
+import { CodeCategories } from '@/components/dumy';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
 export default function proMainPage() {
-  const { codeLang } = useCreateCard()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,11 +19,10 @@ export default function proMainPage() {
       {/* 언어별 카테고리 영역 */}
       <div className="my-[70px] mx-auto ">
         <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
-          {codeLang.map((lang, index) => (
-            <li className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer" key={index}>
-              <div className="w-[80px] h-[80px] bg-slate-400 rounded-full mb-[10px] mx-auto">
-              </div>
-              <p className="text-center">{lang}</p>
+          {CodeCategories.map((lang) => (
+            <li className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer" key={lang.id}>
+              <img className="w-[80px] h-[80px] bg-slate-400 rounded-full mb-[10px] mx-auto" src={lang.image}/>
+              <p className="text-center">{lang.name}</p>
             </li>
           ))}
         </ul>
