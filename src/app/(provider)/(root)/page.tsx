@@ -73,7 +73,7 @@ export default function Home() {
           </div>
         </div>
         {/* 커뮤니티섹션 */}
-        <div className="container mx-auto px-4 py-8 flex-grow h-2/3">
+        <div className="container mx-auto px-4 py-8 flex-grow min-h-screen">
           <h2 className="text-2xl font-bold mb-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
             <div className="bg-gray-200 p-4 rounded flex flex-col justify-between">
@@ -85,7 +85,7 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {qnaPosts.map((item) => (
+                  {qnaPosts.slice(0,20).map((item) => (
                     <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span></p>
                   ))}
                 </div>
@@ -101,7 +101,7 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {insightPosts.map((item) => (
+                  {insightPosts.slice().map((item) => (
                     <p key={item.id} className="mb-5">
                       {item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
                     </p>
@@ -114,7 +114,7 @@ export default function Home() {
       </section>
 
       {/* 전문가 */}
-      <section className="container mx-auto px-4 py-8">
+      <section className="container mx-auto px-4 py-8 min-h-screen">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">전문가 의뢰 목록</h2>
           <Link href="/pro" className="text-blue-500">
@@ -126,7 +126,7 @@ export default function Home() {
             <div key={expert.id} className="bg-white p-2 shadow rounded">
               <img src={expert.post_img[0]} alt={expert.title} className="w-full h-100 object-cover mb-4" />
               <h3 className="font-bold">{expert.title}</h3>
-              <p>{expert.price}</p>
+              {/* <p>{expert.price}</p> */}
               <span className="text-gray-500">{expert.lang_category.join(', ')}</span>
             </div>
           ))}
