@@ -24,7 +24,7 @@ export default function SignUpComplete() {
         </button>
         {/* 여기서 두 버튼 중 아무 버튼이나 누르면 action.tsx에서 정의한 signUp 함수를 호출해서 supabase에 처리해야 함 */}
         {/* SignUpForm 컴포넌트에서 작성한 회원정보를 가져온 후, 어떤 버튼을 눌렀느냐에 따라 is_pro의 boolean 여부가 결정되면 이것까지 합쳐서 signUp 함수 실행해야 됨 */}
-        {/* signUp() 함수 두 번 호출하는 게 좋을까? */}
+        {/* 근데 여기서 예, 아니오를 클릭하지 않고 페이지를 뒤로가기 해 버리면? -> 어차피 일반 사용자로 저장은 되지만 이러면 페이지가 하나 더 있는 이유가 없는 것 같다 */}
       </form>
 
       <h2 className="mt-[30px]">전문가로 활동하고 싶으시다면, 마이페이지에서 포트폴리오를 등록해주세요.</h2>
