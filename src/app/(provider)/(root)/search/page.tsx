@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { Database } from '@/types/supabase';
 
+const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
 export default function Search() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
   const [results, setResults] = useState<any[]>([]);
   const [filteredResults, setFilteredResults] = useState<any[]>([]);
-  const [selectedTab, setSelectedTab] = useState('전체');
+  const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -18,10 +18,10 @@ export default function Search() {
       const [communityPostsResponse, requestPostsResponse] = await Promise.all([
         supabase
           .from('Community Posts')
-          .select('*'),
+          .select('id, created_at, title, content, post_category, user_id, post_img, lang_category'),
         supabase
           .from('Request Posts')
-          .select('*')
+          .select('id, created_at, title, content, user_id, post_img, lang_category, price')
       ]);
 
       const communityPosts = communityPostsResponse.data;
@@ -80,7 +80,7 @@ export default function Search() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">{query} 검색 결과</h1>
       <div className="flex space-x-4 mb-4">
-        {['전체', 'Q&A', '인사이트', '전문가 의뢰'].map((tab) => (
+        {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => handleFilter(tab)}
