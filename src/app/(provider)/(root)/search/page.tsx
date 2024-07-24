@@ -15,16 +15,20 @@ export default function Search() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const { data: communityPosts, error: communityError } = await supabase
-        .from('Community Posts')
-        .select('id, created_at, title, content, post_category, user_id, post_img, lang_category');
-      
-      const { data: requestPosts, error: requestError } = await supabase
-        .from('Request Posts')
-        .select('id, created_at, title, content, user_id, post_img, lang_category, price');
+      const [communityPostsResponse, requestPostsResponse] = await Promise.all([
+        supabase
+          .from('Community Posts')
+          .select('*'),
+        supabase
+          .from('Request Posts')
+          .select('*')
+      ]);
 
-      if (communityError) console.error('Community Posts error:', communityError);
-      if (requestError) console.error('Request Posts error:', requestError);
+      const communityPosts = communityPostsResponse.data;
+      const requestPosts = requestPostsResponse.data;
+
+      if (communityPostsResponse.error) console.error('Community Posts error:', communityPostsResponse.error);
+      if (requestPostsResponse.error) console.error('Request Posts error:', requestPostsResponse.error);
 
       if (communityPosts && requestPosts) {
         const combinedPosts = [
