@@ -1,12 +1,11 @@
 'use client'
-import { createClient } from '@/utils/supabase/client';
+
 import useCreateCard from '@/hooks/useCreateCard';
 import TitleInput from './_components/TitleInput';
 import LanguageSelect from './_components/LanguageSelect';
 import ImageUpload from './_components/ImageUpload';
 import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
-const supabase = createClient();
 
 export default function CreateCard() {
   const {
