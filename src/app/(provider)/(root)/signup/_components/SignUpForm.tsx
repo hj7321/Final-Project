@@ -2,9 +2,10 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, FormEventHandler, useRef, useState } from 'react';
 import { validateBirth, validateEmail, validateName, validateNickName, validatePassword } from './Validate';
-import signUp from '../action';
+import { useRouter } from 'next/navigation';
+import { FormState } from '@/types/auth.type';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -29,6 +30,18 @@ export default function SignUpForm() {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false));
 
+  // const initialState = {
+  //   email: '',
+  //   password: '',
+  //   passwordCheck: '',
+  //   nickname: '',
+  //   name: '',
+  //   birth: ''
+  // };
+  // const [formState, setFormState] = useState<FormState>(initialState);
+
+  const router = useRouter();
+
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
@@ -51,11 +64,13 @@ export default function SignUpForm() {
     else setIsChecked(false);
   };
 
-  const handleCheckValidation = async (e: FormEvent<HTMLFormElement>) => {
+  const handleCheckValidation: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
+    // (1) 기존 방법
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+    // console.log(formData.get('email'));
 
     const email: string = formData.get('email') as string;
     const password: string = formData.get('pw') as string;
@@ -64,7 +79,6 @@ export default function SignUpForm() {
     const name: string = formData.get('name') as string;
     const birth: string = formData.get('birth') as string;
 
-    // 유효성 검사 & 체크여부 통과하면 -> signUp() 함수 호출
     if (!validateEmail(email)) {
       inputRefs.current[0]!.focus();
       return;
@@ -91,9 +105,25 @@ export default function SignUpForm() {
     } else if (!areChecked[0] || !areChecked[1] || !areChecked[2]) {
       alert('모든 필수 사항에 체크해주세요.');
     } else {
-      await signUp(email, password, nickname, name, birth);
+      alert('모든 조건 충족!');
+      // await signUp(email, password, nickname, name, birth);
+      const dataForSubmit = { email, password, nickname, name, birth };
+      const data = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataForSubmit)
+      }).then((res) => res.json());
+
+      if (data.errorMsg) {
+        alert(data.errorMsg);
+        return;
+      }
       alert('회원가입 성공!');
-      // 완료 페이지로 리다이렉션
+      form.reset();
+
+      router.replace('signup/signUpComplete');
     }
   };
 
