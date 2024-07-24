@@ -1,5 +1,7 @@
-
-import { TitleInputProps } from "@/types/createCard"
+interface TitleInputProps {
+  title : string;
+  setTitle : (title : string) => void
+}
 
 export default function TitleInput({ title, setTitle}: TitleInputProps) {
   return (

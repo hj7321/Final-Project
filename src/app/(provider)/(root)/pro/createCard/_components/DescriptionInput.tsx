@@ -1,5 +1,7 @@
-
-import { DescriptionInputProps } from "@/types/createCard"
+interface DescriptionInputProps {
+  description : string
+  setDescription : (description : string) => void
+}
 
 export default function DescriptionInput({description, setDescription} : DescriptionInputProps) {
   return (

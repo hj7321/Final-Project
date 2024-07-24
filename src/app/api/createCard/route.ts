@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
+
 const uploadImageAndGetUrl = async (supabase:any, image: File) => {
   const fileExt = image.name.split('.').pop();
   const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;

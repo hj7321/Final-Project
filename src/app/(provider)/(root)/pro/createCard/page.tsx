@@ -1,5 +1,5 @@
 'use client'
-import { createClient } from '@/utils/supabase/client';
+
 import useCreateCard from '@/hooks/useCreateCard';
 import TitleInput from './_components/TitleInput';
 import LanguageSelect from './_components/LanguageSelect';

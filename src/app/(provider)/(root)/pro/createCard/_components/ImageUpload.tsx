@@ -1,5 +1,8 @@
-
-import { ImageUploadProps } from "@/types/createCard"
+interface ImageUploadProps {
+  images : File[]
+  handleImageChange : (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleImageDelete : (index: number) => void
+}
 
 export default function ImageUpload({images, handleImageDelete, handleImageChange} : ImageUploadProps) {
   return (
