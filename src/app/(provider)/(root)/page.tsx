@@ -14,7 +14,7 @@ export default function Home() {
     const fetchPosts = async () => {
       const { data: communityPosts, error } = await supabase
         .from('Community Posts')
-        .select('id, created_at, title, content, post_category')
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
