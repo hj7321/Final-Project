@@ -72,7 +72,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* 커뮤니티섹션 */}
+        {/* 커뮤니티*/}
         <div className="container mx-auto px-4 py-8 flex-grow min-h-screen">
           <h2 className="text-2xl font-bold mb-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
@@ -101,7 +101,7 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {insightPosts.slice().map((item) => (
+                  {insightPosts.slice(0,20).map((item) => (
                     <p key={item.id} className="mb-5">
                       {item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
                     </p>
