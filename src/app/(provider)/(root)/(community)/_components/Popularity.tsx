@@ -1,3 +1,3 @@
 export default function Popularity() {
-  return <></>;
+  return <>인기순</>;
 }
