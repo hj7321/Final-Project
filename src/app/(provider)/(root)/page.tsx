@@ -1,8 +1,36 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CodeCategories, qnaData, insightData, expertData } from '@/components/dumy'; // 더미 데이터 임포트
+import { createClient } from '@/utils/supabase/client';
+import { CodeCategories } from '@/components/dumy';
 
 export default function Home() {
+  const [qnaPosts, setQnaPosts] = useState<any[]>([]);
+  const [insightPosts, setInsightPosts] = useState<any[]>([]);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const { data: communityPosts, error } = await supabase
+        .from('Community Posts')
+        .select('id, created_at, title, content, post_category')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching community posts:', error);
+      } else {
+        const qnaPosts = communityPosts.filter(post => post.post_category === 'QnA');
+        const insightPosts = communityPosts.filter(post => post.post_category === 'Insight');
+
+        setQnaPosts(qnaPosts);
+        setInsightPosts(insightPosts);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
     <main className="bg-gray-100">
       {/* 메인베너 */}
@@ -41,8 +69,8 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {qnaData.map((item) => (
-                    <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{item.date}</span></p>
+                  {qnaPosts.map((item) => (
+                    <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span></p>
                   ))}
                 </div>
               </div>
@@ -57,9 +85,9 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {insightData.map((item) => (
+                  {insightPosts.map((item) => (
                     <p key={item.id} className="mb-5">
-                      {item.title} <span className="text-gray-500">{item.date}</span>
+                      {item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
                     </p>
                   ))}
                 </div>
@@ -78,14 +106,6 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {expertData.slice(0, 10).map((expert) => (
-            <div key={expert.id} className="bg-white p-2 shadow rounded">
-              <img src={expert.image} alt={expert.title} className="w-full h-100 object-cover mb-4" />
-              <h3 className="font-bold">{expert.title}</h3>
-              <p>{expert.price}</p>
-              <span className="text-gray-500">{expert.language}</span>
-            </div>
-          ))}
         </div>
       </section>
     </main>

@@ -1,5 +1,8 @@
-
-import { LanguageSelectProps } from "@/types/createCrad";
+interface LanguageSelectProps {
+  language : string[]
+  handleLanguageSelect : (lang : string) => void
+  codeLang : string[]
+}
 
 export default function LanguageSelect({codeLang, language, handleLanguageSelect}: LanguageSelectProps) {
   return (
