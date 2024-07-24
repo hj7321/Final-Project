@@ -8,23 +8,39 @@ import { CodeCategories } from '@/components/dumy';
 export default function Home() {
   const [qnaPosts, setQnaPosts] = useState<any[]>([]);
   const [insightPosts, setInsightPosts] = useState<any[]>([]);
+  const [expertPosts, setExpertPosts] = useState<any[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const { data: communityPosts, error } = await supabase
-        .from('Community Posts')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const [communityResponse, requestResponse] = await Promise.all([
+        supabase
+          .from('Community Posts')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('Request Posts')
+          .select('*')
+          .order('created_at', { ascending: false })
+      ]);
 
-      if (error) {
-        console.error('Error fetching community posts:', error);
+      const { data: communityPosts, error: communityError } = communityResponse;
+      const { data: requestPosts, error: requestError } = requestResponse;
+
+      if (communityError) {
+        console.error('Error fetching community posts:', communityError);
       } else {
         const qnaPosts = communityPosts.filter(post => post.post_category === 'QnA');
         const insightPosts = communityPosts.filter(post => post.post_category === 'Insight');
 
         setQnaPosts(qnaPosts);
         setInsightPosts(insightPosts);
+      }
+
+      if (requestError) {
+        console.error('Error fetching request posts:', requestError);
+      } else {
+        setExpertPosts(requestPosts);
       }
     };
 
@@ -106,6 +122,14 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          {expertPosts.slice(0, 10).map((expert) => (
+            <div key={expert.id} className="bg-white p-2 shadow rounded">
+              <img src={expert.post_img[0]} alt={expert.title} className="w-full h-100 object-cover mb-4" />
+              <h3 className="font-bold">{expert.title}</h3>
+              <p>{expert.price}</p>
+              <span className="text-gray-500">{expert.lang_category.join(', ')}</span>
+            </div>
+          ))}
         </div>
       </section>
     </main>
