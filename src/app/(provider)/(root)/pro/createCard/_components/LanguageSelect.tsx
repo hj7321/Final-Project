@@ -1,5 +1,5 @@
 
-import { LanguageSelectProps } from "@/types/createCrad";
+import { LanguageSelectProps } from "@/types/createCard";
 
 export default function LanguageSelect({codeLang, language, handleLanguageSelect}: LanguageSelectProps) {
   return (

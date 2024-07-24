@@ -1,5 +1,5 @@
 
-import { DescriptionInputProps } from "@/types/createCrad"
+import { DescriptionInputProps } from "@/types/createCard"
 
 export default function DescriptionInput({description, setDescription} : DescriptionInputProps) {
   return (

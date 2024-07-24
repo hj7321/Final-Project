@@ -1,5 +1,5 @@
 
-import { SubmitButtonProps } from "@/types/createCrad"
+import { SubmitButtonProps } from "@/types/createCard"
 
 export default function SubmitButton({ handleSubmit} : SubmitButtonProps) {
   return (

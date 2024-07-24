@@ -1,5 +1,5 @@
 
-import { ImageUploadProps } from "@/types/createCrad"
+import { ImageUploadProps } from "@/types/createCard"
 
 export default function ImageUpload({images, handleImageDelete, handleImageChange} : ImageUploadProps) {
   return (
