@@ -18,7 +18,7 @@ export default function MyPostList() {
   const isClicked = (postList: string) => (activePostList === postList ? 'text-black' : 'text-gray-400');
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-center">
         <span>
           <button className={`mx-2  ${isClicked('QnaPostList')}`} onClick={() => setActivePostList('QnaPostList')}>

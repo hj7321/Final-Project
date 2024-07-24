@@ -31,10 +31,10 @@ export default function QnaPostList() {
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
       <div className=" mb-10">
-        <h2 className="text-2xl font-bold">내가 쓴 글 Qna</h2>
+        <h2 className="text-2xl font-bold">내가 쓴 글</h2>
       </div>
-      <div className="space-y-4  ">
-        {data?.slice(0, 4).map((post) => (
+      <div className="space-y-4 ">
+        {data?.slice(0, 10).map((post) => (
           <div key={post.id} className="bg-white p-4 border border-gray-400 rounded-2xl">
             <h3 className="font-bold text-[20px] ml-8 mb-8 mt-6">{post.title}</h3>
             <p
