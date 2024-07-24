@@ -7,17 +7,18 @@ import MyCommentList from './MyCommentList';
 import MyPostList from './MyPostList';
 import Portfolio from './Portfolio';
 import EditProfile from './EditProfile';
-import { Users } from '@/types/type';
 import { useParams } from 'next/navigation';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
 
 export default function AllMypage() {
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const [showModal, setShowModal] = useState(false);
   const clickModal = () => setShowModal(!showModal);
   const [activeComponent, setActiveComponent] = useState('BookMark');
+  const [userData, setUserData] = useState({});
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -37,7 +38,6 @@ export default function AllMypage() {
   const getUserData = async () => {
     const supabase = createClient();
     const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
-    console.log('data', data);
     return data;
   };
   const {
@@ -49,13 +49,21 @@ export default function AllMypage() {
     queryFn: getUserData
   });
 
-  console.log('users', Users);
-
   if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
   if (error) {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
   }
+
+  const changeUserType = async () => {
+    const supabase = createClient();
+    const updatedIsPro = !Users?.data?.is_pro;
+    const data = await supabase.from('Users').update({ is_pro: updatedIsPro }).eq('id', id);
+
+    alert(`사용자 유형이 ${updatedIsPro ? '전문가' : '일반 회원'}로 변경되었습니다.`);
+
+    return data;
+  };
 
   const liStyle = 'text-gray-700  cursor-pointer';
   const activeStyle = 'text-gray-700 cursor-pointer font-bold';
@@ -77,8 +85,11 @@ export default function AllMypage() {
               </button>
               {showModal && <EditProfile clickModal={clickModal} />}
 
-              <button className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black">
-                전문가로 전환
+              <button
+                className="mb-2 px-4  w-[244px] h-[36px] text-white rounded-[30px]  bg-black"
+                onClick={changeUserType}
+              >
+                {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}
               </button>
             </div>
           </div>
