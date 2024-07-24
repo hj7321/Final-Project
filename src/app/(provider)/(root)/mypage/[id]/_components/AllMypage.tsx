@@ -15,8 +15,9 @@ export default function AllMypage() {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
-  const [showModal, setShowModal] = useState(false);
-  const clickModal = () => setShowModal(!showModal);
+  // const [showModal, setShowModal] = useState(false);
+  // const clickModal = () => setShowModal(!showModal);
+
   const [activeComponent, setActiveComponent] = useState('BookMark');
 
   const renderComponent = () => {
@@ -31,6 +32,8 @@ export default function AllMypage() {
         return <MyPostList />;
       case 'Portfolio':
         return <Portfolio />;
+      case 'EditProfile':
+        return <EditProfile />;
     }
   };
 
@@ -98,10 +101,14 @@ export default function AllMypage() {
               <div className="w-[180px] h-[180px] bg-black rounded-full mb-4"></div>
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
-              <button className="mb-2 px-4 w-[244px] h-[36px] text-white rounded-[30px] bg-black" onClick={clickModal}>
+              <button
+                className="mb-2 px-4 w-[244px] h-[36px] text-white rounded-[30px] bg-black"
+                // onClick={clickModal}
+                onClick={() => setActiveComponent('EditProfile')}
+              >
                 프로필 수정하기 ✏️
               </button>
-              {showModal && <EditProfile clickModal={clickModal} />}
+              {/* {showModal && <EditProfile clickModal={clickModal} />} */}
 
               <button
                 className="mb-2 px-4 w-[244px] h-[36px] text-white rounded-[30px] bg-black"
