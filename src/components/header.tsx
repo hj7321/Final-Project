@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import useAuthStore from '@/zustand/authStore';
 
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const router = useRouter();
+  const { isLogin } = useAuthStore();
 
   const handleSearch = () => {
     if (searchInput.trim()) {
@@ -24,9 +26,15 @@ export default function Header() {
           </div>
         </Link>
         <nav className="ml-4 space-x-4">
-          <a href="#" className="text-black">Q & A</a>
-          <a href="#" className="text-black">인사이트</a>
-          <Link href="/pro" className="text-black">전문가 의뢰</Link>
+          <a href="#" className="text-black">
+            Q & A
+          </a>
+          <a href="#" className="text-black">
+            인사이트
+          </a>
+          <Link href="/pro" className="text-black">
+            전문가 의뢰
+          </Link>
         </nav>
       </div>
 
@@ -59,10 +67,25 @@ export default function Header() {
       </div>
 
       {/* 로그인 및 회원가입 */}
-      <div className="flex items-center space-x-4">
-        <Link href="/mypage/1" className="bg-black text-white px-4 py-2 rounded">로그인</Link>
-        <Link href="/signup" className="border border-black text-black px-4 py-2 rounded">회원가입</Link>
-      </div>
+      {isLogin ? (
+        <div className="flex items-center space-x-4">
+          <Link href="/mypage" className="bg-black text-white px-4 py-2 rounded">
+            마이페이지
+          </Link>
+          <Link href="/" className="border border-black text-black px-4 py-2 rounded">
+            로그아웃
+          </Link>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-4">
+          <Link href="/login" className="bg-black text-white px-4 py-2 rounded">
+            로그인
+          </Link>
+          <Link href="/signup" className="border border-black text-black px-4 py-2 rounded">
+            회원가입
+          </Link>
+        </div>
+      )}
     </header>
   );
 }
