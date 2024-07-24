@@ -42,47 +42,44 @@ export default function useCreateCard() {
     );
   };
   const handleSubmit = async () => {
-    const uploadedImageUrls = [];
-    for (let image of images) {
-      const fileExt = image.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-      const filePath = `request_post_image/${fileName}`;
+    if(!title.trim()) {
+      alert('제목을 입력해주세요')
+      return
+    }
+    if(language.length < 1) {
+      alert('언어는 1개 이상 선택해야 합니다')
+      return
+    }
+    if(!description.trim()) {
+      alert('내용을 입력해주세요')
+      return
+    }
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('description', description)
+      formData.append('language', JSON.stringify(language))
+      images.forEach((image) => {
+        formData.append('images', image)
+      })
 
-      const { error: storageError } = await supabase.storage.from('request_post_image').upload(filePath, image);
-      if (storageError) {
-        alert('스토리지 업로드 실패');
+      const response = await fetch('/api/createCard', {
+        method : 'POST',
+        body : formData
+      })
+      if (response.ok) {
+        alert('게시글이 작성되었습니다 !')
+        setTitle('')
+        setLanguage([])
+        setImages([])
+        setDescription('')
       } else {
-        const { data } = await supabase.storage.from('request_post_image').getPublicUrl(filePath);
-        if (data.publicUrl) {
-          uploadedImageUrls.push(data.publicUrl);
-        } else {
-          alert('URL 가져오기 실패');
-          return;
-        }
+        alert('오류 발생')
       }
+    } catch (error) {
+      alert(error)
     }
-    const { data, error } = await supabase
-      .from('Request Posts')
-      .insert([
-        {
-          user_id: crypto.randomUUID(),
-          title,
-          content: description,
-          lang_category: language,
-          price: '0',
-          post_img: uploadedImageUrls
-        }
-      ]);
-    if( error ) {
-      alert('게시글을 작성하는데 실패했습니다')
-    } else {
-      alert('게시글이 작성되었습니다 !')
-      setTitle('')
-      setLanguage([])
-      setImages([])
-      setDescription('')
-    }
-  };
+  }
   return {
     title,
     setTitle,

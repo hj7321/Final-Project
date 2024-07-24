@@ -1,5 +1,6 @@
-
-import { SubmitButtonProps } from "@/types/createCrad"
+interface SubmitButtonProps {
+  handleSubmit : () => void
+}
 
 export default function SubmitButton({ handleSubmit} : SubmitButtonProps) {
   return (
