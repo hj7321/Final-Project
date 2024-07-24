@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { FormEvent, FormEventHandler, useRef, useState } from 'react';
+import { FormEventHandler, useRef, useState } from 'react';
 import { validateBirth, validateEmail, validateName, validateNickName, validatePassword } from './Validate';
 import { useRouter } from 'next/navigation';
-import { FormState } from '@/types/auth.type';
+import useAuthStore from '@/zustand/authStore';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -30,17 +30,9 @@ export default function SignUpForm() {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false));
 
-  // const initialState = {
-  //   email: '',
-  //   password: '',
-  //   passwordCheck: '',
-  //   nickname: '',
-  //   name: '',
-  //   birth: ''
-  // };
-  // const [formState, setFormState] = useState<FormState>(initialState);
-
   const router = useRouter();
+
+  const { login, setUserId, setUserData } = useAuthStore();
 
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newValues = [...inputValues];
@@ -67,10 +59,8 @@ export default function SignUpForm() {
   const handleCheckValidation: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    // (1) 기존 방법
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    // console.log(formData.get('email'));
 
     const email: string = formData.get('email') as string;
     const password: string = formData.get('pw') as string;
@@ -106,7 +96,6 @@ export default function SignUpForm() {
       alert('모든 필수 사항에 체크해주세요.');
     } else {
       alert('모든 조건 충족!');
-      // await signUp(email, password, nickname, name, birth);
       const dataForSubmit = { email, password, nickname, name, birth };
       const data = await fetch('/api/signup', {
         method: 'POST',
@@ -122,6 +111,10 @@ export default function SignUpForm() {
       }
       alert('회원가입 성공!');
       form.reset();
+      login();
+      console.log(data.userData);
+      setUserId(data.userData.user.id);
+      setUserData(data.userData.user.user_metadata);
 
       router.replace('signup/signUpComplete');
     }
