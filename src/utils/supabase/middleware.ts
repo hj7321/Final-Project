@@ -33,19 +33,15 @@ export async function updateSession(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  // if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
-  //   // no user, potentially respond by redirecting the user to the login page
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = '/login';
-  //   return NextResponse.redirect(url);
-
-  // if ( !user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')
-  // ) {
-  //   // no user, potentially respond by redirecting the user to the login page
-  //   const url = request.nextUrl.clone()
-  //   url.pathname = '/login'
-  //   return NextResponse.redirect(url)
-  // }
+  // 사용자가 없는데(세션 만료) 의뢰 또는 커뮤티니 글쓰기 페이지인 경우 로그인 페이지로 리디렉션
+  if (
+    !user &&
+    (request.nextUrl.pathname.startsWith('/pro/createCard') || request.nextUrl.pathname.startsWith('/createPost'))
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
 
   // 반드시 supabaseResponse 객체를 그대로 반환해야 한다.
   // NextResponse.next()를 사용하여 새 응답 객체를 생성하는 경우, 다음을 따라야 한다.

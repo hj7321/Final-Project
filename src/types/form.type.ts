@@ -5,3 +5,5 @@ export type FormState = {
   name: string;
   birth: string;
 };
+
+export type FormStatePart = Pick<FormState, 'email' | 'password'>;
