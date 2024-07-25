@@ -58,6 +58,48 @@ export type Database = {
           },
         ]
       }
+      Chat: {
+        Row: {
+          chat_room_id: string
+          consumer_id: string
+          content: string
+          created_at: string | null
+          id: string
+          pro_id: string
+        }
+        Insert: {
+          chat_room_id?: string
+          consumer_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          pro_id: string
+        }
+        Update: {
+          chat_room_id?: string
+          consumer_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          pro_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Chat_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Chat_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       "Community Comments": {
         Row: {
           community_post_id: string
