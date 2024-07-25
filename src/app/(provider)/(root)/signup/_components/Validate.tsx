@@ -53,17 +53,16 @@ export const validatePassword = (password: string): boolean | void => {
 export const validateNickName = (nickname: string): boolean | void => {
   if (!nickname) return alert('닉네임을 입력해주세요.');
 
-  // 길이: 3자 이상 15자 이하
-  // 문자: 알파벳 대소문자, 한글, 숫자, 특수문자 모두 허용
+  // 길이: 1자 이상 10자 이하
+  // 문자: 알파벳 대소문자, 한글, 숫자 허용
   // 공백: 문자의 맨 처음과 끝에만 허용하지 않고, 중간 부분에는 허용
 
   // 1) 길이 조건을 만족하지 않는 경우
-  if (nickname.length < 3 || nickname.length > 15) return alert('닉네임은 3자 이상 15자 이하여야 합니다.');
+  if (nickname.length < 1 || nickname.length > 10) return alert('닉네임은 1자 이상 10자 이하여야 합니다.');
 
   // 2) 문자 조건을 만족하지 않는 경우
-  const validCharactersRegex = /^[\p{L}\p{N}\p{P}\p{S}]+$/u;
-  if (!validCharactersRegex.test(nickname))
-    return alert('닉네임은 알파벳 대소문자, 한글, 숫자, 특수문자만 포함할 수 있습니다.');
+  const validCharactersRegex = /^[\p{L}\p{N}]+$/u;
+  if (!validCharactersRegex.test(nickname)) return alert('닉네임은 알파벳 대소문자, 한글, 숫자만 포함할 수 있습니다.');
 
   // 3) 공백 조건을 만족하지 않는 경우
   const startsOrEndsWithSpaceRegex = /^\s|\s$/;
