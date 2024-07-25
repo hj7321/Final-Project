@@ -8,7 +8,7 @@ import useAuthStore from '@/zustand/authStore';
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const router = useRouter();
-  const { isLogin, logout, userId } = useAuthStore();
+  const { isLogin, logout, userId, userData } = useAuthStore();
 
   const handleSearch = () => {
     if (searchInput.trim()) {
@@ -16,7 +16,10 @@ export default function Header() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetch('/api/logout', {
+      method: 'POST'
+    });
     logout();
     router.replace('/');
   };
@@ -74,6 +77,9 @@ export default function Header() {
       {/* 로그인 및 회원가입 */}
       {isLogin ? (
         <div className="flex items-center space-x-4">
+          <p>
+            <b>{userData!.displayName}</b>님
+          </p>
           <Link href={`/mypage/${userId}`} className="bg-black text-white px-4 py-2 rounded">
             마이페이지
           </Link>
