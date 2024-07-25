@@ -2,7 +2,7 @@
 
 import { CodeCategories } from '@/components/dumy';
 import Link from 'next/link';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Posts {
   id: string;
@@ -14,10 +14,12 @@ interface Posts {
   price: number;
 }
 
+
 export default function proMainPage() {
   const [posts, setPosts] = useState<Posts[]>([])
   const [filteredPosts, setFilteredPosts] = useState<Posts[]>([])
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([])
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,6 +56,7 @@ export default function proMainPage() {
         : [...prevState, lang]
     );
   };
+
 
   return (
     <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
