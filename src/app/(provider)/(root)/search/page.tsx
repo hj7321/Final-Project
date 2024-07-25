@@ -1,64 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
-import { CommunityPosts, RequestPosts } from '@/types/type';
+import useSearchPosts from '@/hooks/useSearchPosts';
 
 const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
-
-type CombinedPost = (CommunityPosts & { category: 'Community' }) | (RequestPosts & { category: 'Request' });
 
 export default function Search() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [results, setResults] = useState<CombinedPost[]>([]);
-  const [filteredResults, setFilteredResults] = useState<CombinedPost[]>([]);
+  const { results, filteredResults, setFilteredResults, counts } = useSearchPosts(query);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const [communityPostsResponse, requestPostsResponse] = await Promise.all([
-        supabase.from('Community Posts').select('*'),
-        supabase.from('Request Posts').select('*')
-      ]);
-
-      const communityPosts = communityPostsResponse.data as CommunityPosts[];
-      const requestPosts = requestPostsResponse.data as RequestPosts[];
-
-      if (communityPostsResponse.error) {
-        console.error('Community Posts error:', communityPostsResponse.error.message);
-      }
-      if (requestPostsResponse.error) {
-        console.error('Request Posts error:', requestPostsResponse.error.message);
-      }
-
-      if (communityPosts && requestPosts) {
-        const combinedPosts: CombinedPost[] = [
-          ...communityPosts.map((post) => ({ ...post, category: 'Community' } as CombinedPost)),
-          ...requestPosts.map((post) => ({ ...post, category: 'Request' } as CombinedPost))
-        ];
-
-        if (query) {
-          const lowerQuery = query.toLowerCase();
-          const filteredResults = combinedPosts.filter(
-            (item) =>
-              item.title.toLowerCase().includes(lowerQuery) ||
-              item.content.toLowerCase().includes(lowerQuery) ||
-              (item.lang_category && item.lang_category.some((lang) => lang.toLowerCase().includes(lowerQuery)))
-          );
-          setResults(filteredResults);
-          setFilteredResults(filteredResults);
-        } else {
-          setResults(combinedPosts);
-          setFilteredResults(combinedPosts);
-        }
-      }
-    };
-
-    fetchPosts();
-  }, [query]);
 
   const handleFilter = (category: string) => {
     setSelectedTab(category);
@@ -97,7 +49,7 @@ export default function Search() {
             onClick={() => handleFilter(tab)}
             className={`px-4 py-2 ${selectedTab === tab ? 'border-b-2 border-black text-black' : 'text-black'}`}
           >
-            {tab}
+            {tab} {tab === '전체' ? counts.total : tab === 'Q&A' ? counts.qna : tab === '인사이트' ? counts.insight : counts.request}
           </button>
         ))}
       </div>
