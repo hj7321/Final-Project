@@ -21,8 +21,6 @@ export default function Header() {
     router.replace('/');
   };
 
-  console.log(isLogin);
-
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100">
       {/* 로고 */}
