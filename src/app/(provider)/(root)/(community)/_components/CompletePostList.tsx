@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Languages from './Languages';
 import Latest from './Latest';
 import Popularity from './Popularity';
 
 export default function CompletePostList() {
   const [view, setView] = useState<boolean>(true);
+  const [posts, setPosts] = useState([]);
 
   const handleListChange = () => {
     setView(!view);
