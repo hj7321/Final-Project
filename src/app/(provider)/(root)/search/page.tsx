@@ -3,13 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { CommunityPosts, RequestPosts } from '@/types/type';
 
 const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
+
+type CombinedPost = (CommunityPosts & { category: 'Community' }) | (RequestPosts & { category: 'Request' });
+
 export default function Search() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [results, setResults] = useState<any[]>([]);
-  const [filteredResults, setFilteredResults] = useState<any[]>([]);
+  const [results, setResults] = useState<CombinedPost[]>([]);
+  const [filteredResults, setFilteredResults] = useState<CombinedPost[]>([]);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const supabase = createClient();
 
@@ -20,16 +24,20 @@ export default function Search() {
         supabase.from('Request Posts').select('*')
       ]);
 
-      const communityPosts = communityPostsResponse.data;
-      const requestPosts = requestPostsResponse.data;
+      const communityPosts = communityPostsResponse.data as CommunityPosts[];
+      const requestPosts = requestPostsResponse.data as RequestPosts[];
 
-      if (communityPostsResponse.error) console.error('Community Posts error:', communityPostsResponse.error);
-      if (requestPostsResponse.error) console.error('Request Posts error:', requestPostsResponse.error);
+      if (communityPostsResponse.error) {
+        console.error('Community Posts error:', communityPostsResponse.error.message);
+      }
+      if (requestPostsResponse.error) {
+        console.error('Request Posts error:', requestPostsResponse.error.message);
+      }
 
       if (communityPosts && requestPosts) {
-        const combinedPosts = [
-          ...communityPosts.map((post) => ({ ...post, category: 'Community' })),
-          ...requestPosts.map((post) => ({ ...post, category: 'Request' }))
+        const combinedPosts: CombinedPost[] = [
+          ...communityPosts.map((post) => ({ ...post, category: 'Community' } as CombinedPost)),
+          ...requestPosts.map((post) => ({ ...post, category: 'Request' } as CombinedPost))
         ];
 
         if (query) {
@@ -59,9 +67,9 @@ export default function Search() {
     } else if (category === '전문가 의뢰') {
       setFilteredResults(results.filter((item) => item.category === 'Request'));
     } else if (category === 'Q&A') {
-      setFilteredResults(results.filter((item) => item.post_category === 'QnA'));
+      setFilteredResults(results.filter((item) => item.category === 'Community' && item.post_category === 'QnA'));
     } else if (category === '인사이트') {
-      setFilteredResults(results.filter((item) => item.post_category === 'Insight'));
+      setFilteredResults(results.filter((item) => item.category === 'Community' && item.post_category === 'Insight'));
     }
   };
 
@@ -106,7 +114,7 @@ export default function Search() {
               <p className="text-gray-500">{result.user_id}</p>
               <div className="flex space-x-2 mt-2">
                 {result.lang_category &&
-                  result.lang_category.map((lang: string, index: number) => (
+                  result.lang_category.map((lang, index) => (
                     <span
                       key={index}
                       className={`rounded px-2 py-1 text-sm ${
