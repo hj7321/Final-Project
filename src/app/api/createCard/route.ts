@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 const uploadImageAndGetUrl = async (supabase:any, image: File) => {
   const fileExt = image.name.split('.').pop();
   const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-  const filePath = `request_post_image/${fileName}`;
+  const filePath = `${fileName}`;
 
   const { error: storageError } = await supabase.storage.from('request_post_image').upload(filePath, image);
   if (storageError) {
@@ -16,7 +16,6 @@ const uploadImageAndGetUrl = async (supabase:any, image: File) => {
   if (!data.publicUrl) {
     throw new Error('URL 가져오기 실패');
   }
-
   return data.publicUrl;
 }
 
@@ -31,7 +30,6 @@ export async function POST(request: NextRequest) {
     const images = formData.getAll('images') as File[];
 
     const uploadedImageUrls = await Promise.all(images.map(image => uploadImageAndGetUrl(supabase, image)));
-
     const { error } = await supabase.from('Request Posts').insert([
       {
         user_id: crypto.randomUUID(),
@@ -51,4 +49,5 @@ export async function POST(request: NextRequest) {
     console.error('오류발생');
     return NextResponse.json({ error: '오류가 발생했습니다' });
   }
+  
 }
