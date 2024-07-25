@@ -6,6 +6,8 @@ import LanguageSelect from './_components/LanguageSelect';
 import ImageUpload from './_components/ImageUpload';
 import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
+import PriceInput from './_components/PriceInput';
+
 
 export default function CreateCard() {
   const {
@@ -22,12 +24,15 @@ export default function CreateCard() {
     handleLanguageSelect,
     handleSubmit,
     codeLang,
+    price,
+    setPrice
   } = useCreateCard()
 
   return (
     <div className="max-w-[1240px] mx-auto my-6">
       <h1 className="mb-[20px] text-2xl">전문가 의뢰 등록하기</h1>
       <TitleInput title={title} setTitle={setTitle}/>
+      <PriceInput price={price} setPrice={setPrice}/>
       <LanguageSelect codeLang={codeLang} language={language} handleLanguageSelect={handleLanguageSelect}/>
       <ImageUpload images={images} handleImageChange={handleImageChange} handleImageDelete={handleImageDelete}/>
       <DescriptionInput description={description} setDescription={setDescription}/>

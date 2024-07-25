@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import useAuthStore from "@/zustand/authStore";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -28,6 +29,7 @@ export async function POST(request: NextRequest) {
     const description = formData.get('description') as string;
     const language = JSON.parse(formData.get('language') as string);
     const images = formData.getAll('images') as File[];
+    const price = parseFloat(formData.get('price') as string)
 
     const uploadedImageUrls = await Promise.all(images.map(image => uploadImageAndGetUrl(supabase, image)));
     const { error } = await supabase.from('Request Posts').insert([
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest) {
         title,
         content: description,
         lang_category: language,
-        price: '0',
+        price: price,
         post_img: uploadedImageUrls
       }
     ]);

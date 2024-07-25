@@ -21,6 +21,7 @@ export default function useCreateCard() {
   const [language, setLanguage] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [description, setDescription] = useState<string>('');
+  const [price, setPrice] = useState<number | "">("")
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -59,6 +60,7 @@ export default function useCreateCard() {
       formData.append('title', title)
       formData.append('description', description)
       formData.append('language', JSON.stringify(language))
+      formData.append('price',price.toString())
       images.forEach((image) => {
         formData.append('images', image)
       })
@@ -94,5 +96,7 @@ export default function useCreateCard() {
     handleLanguageSelect,
     handleSubmit,
     codeLang,
+    price,
+    setPrice
   }
 }
