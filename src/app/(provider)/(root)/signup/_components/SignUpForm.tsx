@@ -121,7 +121,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleCheckValidation} className="flex flex-col gap-[10px] text-center items-center py-[20px]">
+    <form onSubmit={handleCheckValidation} className="flex flex-col gap-[10px] text-center items-center py-[64px]">
       <h2 className="font-bold text-[24px] mb-[48px]">회원가입</h2>
       {inputs.map((input, idx) => (
         <div
@@ -162,9 +162,9 @@ export default function SignUpForm() {
         </div>
       ))}
 
-      <div className="h-[240px] w-[400px] border text-left mb-[48px]">
+      {/* <div className="h-[240px] w-[400px] border text-left mb-[48px]">
         <p>관심 언어</p>
-      </div>
+      </div> */}
 
       <div className="h-[240px] w-[400px] mb-[48px] border bg-[#ececec] rounded-[8px] px-[16px] py-[24px] flex flex-col gap-[24px] text-left">
         {/* "전체 동의" 체크박스에 체크가 되었을 경우에만 "회원가입" 버튼이 활성화되어야 함 */}
@@ -206,7 +206,7 @@ export default function SignUpForm() {
         </div>
       </div>
 
-      <button type="submit" className="h-[56px] w-[400px] rounded-[8px] bg-black text-white">
+      <button type="submit" className="h-[56px] w-[400px] rounded-[8px] bg-black text-white font-bold">
         회원가입
       </button>
       {/* 유효성 검사 모두 통과, 체크박스에 모두 체크하고 나서 회원가입 버튼을 클릭하면 SignUpComplete 컴포넌트로 전환됨 */}
