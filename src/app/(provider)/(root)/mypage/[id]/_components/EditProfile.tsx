@@ -9,9 +9,7 @@ import { useState } from 'react';
 export default function EditProfile() {
   const [nickname, setNickname] = useState<string>('');
   const [name, setName] = useState<string>('');
-  const [birthdate, setBirthdate] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string>('');
-  const params = useParams();
   const { id } = useParams();
 
   const queryClient = useQueryClient();
@@ -71,6 +69,9 @@ export default function EditProfile() {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
   }
 
+  const birth = userData?.data?.birth;
+  const formattedBirth = `${birth?.substring(0, 4)}년 ${birth?.substring(4, 6)}월 ${birth?.substring(6, 8)}일`;
+
   return (
     <>
       <div className="w-full p-6">
@@ -125,17 +126,11 @@ export default function EditProfile() {
           </div>
         </div>
         <div className="mb-20">
-          <div className="relative border border-gray-500 rounded-md">
+          <div className="relative border py-6 border-gray-500 rounded-md">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black pointer-events-none">
               생일
             </span>
-            <input
-              disabled
-              type="text"
-              id="birthdate"
-              value={userData?.data?.birth}
-              className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
-            />
+            <span className="w-full h-20 pl-24 pr-4  rounded-md font-normal"> {formattedBirth}</span>
           </div>
         </div>
         <div className="flex mx-0 justify-between">
