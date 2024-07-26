@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
+import { CommunityPosts, RequestPosts } from '@/types/type';
 
 export default function Home() {
-  const [qnaPosts, setQnaPosts] = useState<any[]>([]);
-  const [insightPosts, setInsightPosts] = useState<any[]>([]);
-  const [expertPosts, setExpertPosts] = useState<any[]>([]);
+  const [qnaPosts, setQnaPosts] = useState<CommunityPosts[]>([]);
+  const [insightPosts, setInsightPosts] = useState<CommunityPosts[]>([]);
+  const [expertPosts, setExpertPosts] = useState<RequestPosts[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -57,9 +58,9 @@ export default function Home() {
         <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
       </section>
 
-      <section className="w-full min-h-screen flex flex-col">
+      <section className="w-full h-screen flex flex-col">
         {/* 카테고리 */}
-        <div className="bg-white py-8 flex-shrink-0 h-1/3">
+        <div className="bg-white py-8 flex-shrink-0">
           <div className="container mx-auto px-4 h-full">
             <h2 className="text-2xl font-bold mb-4">언어별 카테고리</h2>
             <div className="flex justify-between overflow-x-auto h-full items-center">
@@ -73,7 +74,7 @@ export default function Home() {
           </div>
         </div>
         {/* 커뮤니티*/}
-        <div className="container mx-auto px-4 py-8 flex-grow min-h-screen">
+        <div className="container mx-auto px-4 py-8 flex-grow">
           <h2 className="text-2xl font-bold mb-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
             <div className="bg-gray-200 p-4 rounded flex flex-col justify-between">
@@ -85,7 +86,7 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {qnaPosts.slice(0,20).map((item) => (
+                  {qnaPosts.slice(0,10).map((item) => (
                     <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span></p>
                   ))}
                 </div>
@@ -101,7 +102,7 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {insightPosts.slice(0,20).map((item) => (
+                  {insightPosts.slice(0,10).map((item) => (
                     <p key={item.id} className="mb-5">
                       {item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
                     </p>
@@ -122,6 +123,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          {/* 추후ui수정 */}
           {expertPosts.slice(0, 10).map((expert) => (
             <div key={expert.id} className="bg-white p-2 shadow rounded">
               <img src={expert.post_img[0]} alt={expert.title} className="w-full h-100 object-cover mb-4" />

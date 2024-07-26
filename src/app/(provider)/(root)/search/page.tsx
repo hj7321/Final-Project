@@ -1,56 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
+import useSearchPosts from '@/hooks/useSearchPosts';
 
 const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
+
 export default function Search() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [results, setResults] = useState<any[]>([]);
-  const [filteredResults, setFilteredResults] = useState<any[]>([]);
+  const { results, filteredResults, setFilteredResults, counts } = useSearchPosts(query);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const [communityPostsResponse, requestPostsResponse] = await Promise.all([
-        supabase.from('Community Posts').select('*'),
-        supabase.from('Request Posts').select('*')
-      ]);
-
-      const communityPosts = communityPostsResponse.data;
-      const requestPosts = requestPostsResponse.data;
-
-      if (communityPostsResponse.error) console.error('Community Posts error:', communityPostsResponse.error);
-      if (requestPostsResponse.error) console.error('Request Posts error:', requestPostsResponse.error);
-
-      if (communityPosts && requestPosts) {
-        const combinedPosts = [
-          ...communityPosts.map((post) => ({ ...post, category: 'Community' })),
-          ...requestPosts.map((post) => ({ ...post, category: 'Request' }))
-        ];
-
-        if (query) {
-          const lowerQuery = query.toLowerCase();
-          const filteredResults = combinedPosts.filter(
-            (item) =>
-              item.title.toLowerCase().includes(lowerQuery) ||
-              item.content.toLowerCase().includes(lowerQuery) ||
-              (item.lang_category && item.lang_category.some((lang) => lang.toLowerCase().includes(lowerQuery)))
-          );
-          setResults(filteredResults);
-          setFilteredResults(filteredResults);
-        } else {
-          setResults(combinedPosts);
-          setFilteredResults(combinedPosts);
-        }
-      }
-    };
-
-    fetchPosts();
-  }, [query]);
 
   const handleFilter = (category: string) => {
     setSelectedTab(category);
@@ -59,9 +19,9 @@ export default function Search() {
     } else if (category === '전문가 의뢰') {
       setFilteredResults(results.filter((item) => item.category === 'Request'));
     } else if (category === 'Q&A') {
-      setFilteredResults(results.filter((item) => item.post_category === 'QnA'));
+      setFilteredResults(results.filter((item) => item.category === 'Community' && item.post_category === 'QnA'));
     } else if (category === '인사이트') {
-      setFilteredResults(results.filter((item) => item.post_category === 'Insight'));
+      setFilteredResults(results.filter((item) => item.category === 'Community' && item.post_category === 'Insight'));
     }
   };
 
@@ -89,7 +49,7 @@ export default function Search() {
             onClick={() => handleFilter(tab)}
             className={`px-4 py-2 ${selectedTab === tab ? 'border-b-2 border-black text-black' : 'text-black'}`}
           >
-            {tab}
+            {tab} {tab === '전체' ? counts.total : tab === 'Q&A' ? counts.qna : tab === '인사이트' ? counts.insight : counts.request}
           </button>
         ))}
       </div>
@@ -106,7 +66,7 @@ export default function Search() {
               <p className="text-gray-500">{result.user_id}</p>
               <div className="flex space-x-2 mt-2">
                 {result.lang_category &&
-                  result.lang_category.map((lang: string, index: number) => (
+                  result.lang_category.map((lang, index) => (
                     <span
                       key={index}
                       className={`rounded px-2 py-1 text-sm ${
