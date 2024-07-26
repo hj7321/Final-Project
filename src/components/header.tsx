@@ -1,14 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
+import HeaderButton from './HeaderButton';
 
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const router = useRouter();
-  const { isLogin, logout, userId, userData } = useAuthStore();
+  const { isLogin, logout, userId, userData, initializeAuthState, isLoading } = useAuthStore();
+
+  console.log(userData);
+
+  useEffect(() => {
+    const initialize = async () => {
+      await initializeAuthState();
+    };
+    initialize();
+  }, [initializeAuthState]);
 
   const handleSearch = () => {
     if (searchInput.trim()) {
@@ -23,8 +33,6 @@ export default function Header() {
     logout();
     router.replace('/');
   };
-
-  console.log(isLogin);
 
   return (
     <header className="flex items-center justify-between p-4 bg-gray-100">
@@ -77,10 +85,11 @@ export default function Header() {
       </div>
 
       {/* 로그인 및 회원가입 */}
+      {/* <HeaderButton /> */}
       {isLogin ? (
         <div className="flex items-center space-x-4">
           <p>
-            <b>{userData!.displayName}</b>님
+            <b>{userData?.name || userData?.user_name}</b>님
           </p>
           <Link href={`/mypage/${userId}`} className="bg-black text-white px-4 py-2 rounded">
             마이페이지
