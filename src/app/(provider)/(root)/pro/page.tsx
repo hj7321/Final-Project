@@ -86,8 +86,8 @@ export default function proMainPage() {
       : [...selectedLanguages, lang];
 
     setSelectedLanguages(newSelectedLanguages);
-    setPage(0); // 페이지를 0으로 초기화
-    fetchData(0, newSelectedLanguages); // 필터링된 데이터를 가져옴
+    setPage(0);
+    fetchData(0, newSelectedLanguages); 
   };
 
   return (
