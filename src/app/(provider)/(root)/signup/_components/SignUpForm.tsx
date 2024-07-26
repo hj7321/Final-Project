@@ -209,9 +209,6 @@ export default function SignUpForm() {
       <button type="submit" className="h-[56px] w-[400px] rounded-[8px] bg-black text-white font-bold">
         회원가입
       </button>
-      {/* 유효성 검사 모두 통과, 체크박스에 모두 체크하고 나서 회원가입 버튼을 클릭하면 SignUpComplete 컴포넌트로 전환됨 */}
-      {/* 이때 이 컴포넌트에서 작성한 회원 정보를 어떻게 들고가야 하지? */}
-      {/* 버튼을 눌렀을 때 페이지는 그대로인데 컴포넌트가 바뀌는 상황이다. -> 페이지 분리하는 게 좋겠다 */}
     </form>
   );
 }
