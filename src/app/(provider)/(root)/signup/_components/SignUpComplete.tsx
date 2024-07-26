@@ -19,7 +19,7 @@ export default function SignUpComplete() {
         body: JSON.stringify({ userId })
       }).then((res) => res.json());
     }
-    router.back();
+    router.replace('/');
   };
 
   const buttonStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] bg-black text-white font-bold';
@@ -36,7 +36,6 @@ export default function SignUpComplete() {
         <button className={buttonStyle} onClick={() => handleChangePro(false)}>
           아니오
         </button>
-        {/* 근데 여기서 예, 아니오를 클릭하지 않고 페이지를 뒤로가기 해 버리면? -> 어차피 일반 사용자로 저장은 되지만 이러면 페이지가 하나 더 있는 이유가 없는 것 같다 */}
       </div>
 
       <h2 className="mt-[30px]">전문가로 활동하고 싶으시다면, 마이페이지에서 포트폴리오를 등록해주세요.</h2>
