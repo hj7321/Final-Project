@@ -11,6 +11,8 @@ export default function EditProfile() {
   const [name, setName] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string>('');
   const [uploadImg, setUploadImg] = useState<File | null>(null);
+  const [publicUrl, setPublicUrl] = useState<string>('');
+
   const { id } = useParams();
 
   const queryClient = useQueryClient();
@@ -31,38 +33,43 @@ export default function EditProfile() {
     queryFn: getUserData
   });
 
-  const changeUserType = async (nickname: string) => {
+  const changeUserType = async (nickname: string, profile_img: string) => {
     const supabase = createClient();
-    const { data, error } = await supabase.from('Users').update({ nickname }).eq('id', id);
+    const { data, error } = await supabase.from('Users').update({ nickname, profile_img }).eq('id', id);
     if (error) throw error;
     return data;
   };
 
   const uploadImage = async (file: File) => {
     const supabase = createClient();
-    const fileName = `profile/${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     const { data, error } = await supabase.storage.from('portfolio_bucket_image').upload(fileName, file);
     if (error) throw error;
-    const publicUrl = supabase.storage.from('profile_avatar').getPublicUrl('public/' + file.name);
-
-    return data;
+    const {
+      data: { publicUrl }
+    } = supabase.storage.from('portfolio_bucket_image').getPublicUrl(fileName);
+    setPublicUrl(publicUrl);
+    console.log('publicUrl', publicUrl);
+    return publicUrl;
   };
 
   const mutation = useMutation({
-    mutationFn: changeUserType,
-    onMutate: async (newNickname) => {
+    mutationFn: ({ nickname, profile_img }: { nickname: string; profile_img: string }) =>
+      changeUserType(nickname, profile_img),
+    onMutate: async (newData: { nickname: string; profile_img: string }) => {
       await queryClient.cancelQueries({ queryKey: ['Users', id] });
 
       const previousUserData = queryClient.getQueryData<Users>(['Users', id]);
 
-      queryClient.setQueryData(['Users'], (old: { data: any }) => ({
+      queryClient.setQueryData(['Users', id], (old: any) => ({
         ...old,
-        nickname: newNickname
+        nickname: newData.nickname,
+        profile_img: newData.profile_img
       }));
 
       return { previousUserData };
     },
-    onError: (err, newNickname, context) => {
+    onError: (err, newData, context) => {
       queryClient.setQueryData(['Users'], context?.previousUserData);
     },
     onSettled: () => {
@@ -80,15 +87,16 @@ export default function EditProfile() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let imageUrl = publicUrl;
     if (uploadImg) {
       try {
-        const uploadResult = await uploadImage(uploadImg);
-        console.log('Image uploaded successfully:', uploadResult);
+        imageUrl = await uploadImage(uploadImg);
+        console.log('Image uploaded successfully:', imageUrl);
       } catch (error) {
         console.error('Error uploading image:', error);
       }
     }
-    mutation.mutate(nickname);
+    mutation.mutate({ nickname, profile_img: imageUrl });
   };
 
   if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
