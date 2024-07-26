@@ -1,5 +1,6 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/client';
 // 회원가입 페이지 코드와 겹치는 부분이 많은데 나중에 리팩토링 해야함
 // 겹치는 부분 커스텀 훅으로 분리
 
@@ -29,7 +30,7 @@ export default function LoginPage() {
     setInputValue(newValues);
   };
 
-  const handleCheckValidation: FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
@@ -58,12 +59,55 @@ export default function LoginPage() {
     setUserId(data.userData.user.id);
     setUserData(data.userData.user.user_metadata);
 
-    router.back();
+    router.back(); // 이거 나중에 고쳐야 함!!
   };
+
+  const handleKakaoLogin = async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: 'http://localhost:3000/signup/signUpComplete'
+      }
+    });
+    if (error) console.log('카카오 로그인 에러');
+    if (data) console.log(data);
+  };
+
+  const handleGoogleLogin = async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:3000/signup/signUpComplete',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    if (error) console.log('구글 로그인 에러');
+    if (data) console.log(data);
+  };
+
+  const handleGitHubLogin = async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: 'http://localhost:3000/signup/signUpComplete'
+      }
+    });
+    if (error) console.log('깃허브 로그인 에러');
+    if (data) console.log(data);
+  };
+
+  const buttonStyle =
+    'h-[56px] w-[400px] rounded-[12px] text-black font-bold flex justify-center items-center gap-[32px]';
 
   return (
     <section className="flex flex-col text-center items-center py-[64px]">
-      <form onSubmit={handleCheckValidation} className="flex flex-col gap-[10px]">
+      <form onSubmit={handleLogin} className="flex flex-col gap-[10px]">
         <h2 className="font-bold text-[24px] mb-[48px]">로고</h2>
         {inputs.map((input, idx) => (
           <div
@@ -122,13 +166,17 @@ export default function LoginPage() {
       <div className="flex flex-col mb-[48px]">
         <p className="text-[#afafaf] text-[12px] mb-[24px]">─────────────────── 또는 ───────────────────</p>
         <div className="flex flex-col gap-[16px]">
-          <button className="h-[56px] w-[400px] rounded-[12px] bg-[#fee500] text-black font-bold flex justify-center items-center gap-[32px]">
+          <button onClick={handleKakaoLogin} className={clsx(buttonStyle, 'bg-[#fee500]')}>
             <p>(로고)</p>
             카카오로 로그인하기
           </button>
-          <button className="h-[56px] w-[400px] rounded-[12px] bg-[#03c75a] text-white font-bold flex justify-center items-center gap-[32px]">
+          <button onClick={handleGoogleLogin} className={clsx(buttonStyle, 'bg-[#ffffff] border border-gray')}>
             <p>(로고)</p>
-            네이버로 로그인하기
+            구글로 로그인하기
+          </button>
+          <button onClick={handleGitHubLogin} className={clsx(buttonStyle, 'bg-[#ffffff] border border-gray')}>
+            <p>(로고)</p>
+            깃허브로 로그인하기
           </button>
         </div>
       </div>
