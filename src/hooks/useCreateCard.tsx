@@ -8,12 +8,12 @@ const codeLang = [
   'JavaScript',
   'Java',
   'Python',
-  'C / C++ / C#',
+  'C/C++/C#',
   'TypeScript',
   'React',
-  'Android / IOS',
+  'Android/IOS',
   'Next.JS',
-  'Git / Github'
+  'Git/Github'
 ];
 
 export default function useCreateCard() {

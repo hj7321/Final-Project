@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = createClient();
     const formData = await request.formData();
-
+    const userId = useAuthStore.getState().userId
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const language = JSON.parse(formData.get('language') as string);
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
     const uploadedImageUrls = await Promise.all(images.map(image => uploadImageAndGetUrl(supabase, image)));
     const { error } = await supabase.from('Request Posts').insert([
       {
+      // 추후에 userId로 변경해야함
         user_id: crypto.randomUUID(),
         title,
         content: description,
