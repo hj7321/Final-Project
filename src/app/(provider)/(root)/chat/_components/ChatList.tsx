@@ -7,14 +7,8 @@ import ChatModal from './ChatModal';
 
 const supabase = createClient();
 
-type ChatRoom = {
-  chat_room_id: string;
-  consumer_id: string;
-  pro_id: string;
-};
-
 const ChatList = () => {
-  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const [chatRooms, setChatRooms] = useState<ChatMessage[]>([]);
   const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
@@ -43,7 +37,7 @@ const ChatList = () => {
       if (error) {
         console.error('Error fetching chat rooms:', error.message);
       } else {
-        const uniqueChatRooms: ChatRoom[] = (data as ChatRoom[]).reduce((acc: ChatRoom[], room: ChatRoom) => {
+        const uniqueChatRooms = (data as ChatMessage[]).reduce((acc: ChatMessage[], room: ChatMessage) => {
           if (!acc.some((item) => item.chat_room_id === room.chat_room_id)) {
             acc.push(room);
           }
