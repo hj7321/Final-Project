@@ -30,3 +30,12 @@ export async function POST(request: Request) {
     return Response.json({ userData: signUpData });
   }
 }
+
+export async function GET() {
+  const supabase = createClient();
+  const { data } = await supabase.from('Users').select('email, nickname');
+  const emailData = data?.map((obj) => obj.email);
+  const nicknameData = data?.map((obj) => obj.nickname);
+
+  return Response.json({ emailData, nicknameData });
+}
