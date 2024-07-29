@@ -2,6 +2,7 @@
 
 import { CodeCategories } from '@/components/dumy';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface Posts {
@@ -20,16 +21,14 @@ export default function proMainPage() {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const route = useRouter()
 
   const fetchData = async (page: number, languages: string[] = []) => {
     try {
       const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
       const url = `/api/proMain?page=${page}${langQuery}`;
-      console.log(`Fetching data for page: ${page}, languages: ${languages}`);
-      console.log(`URL: ${url}`);
       const response = await fetch(url);
       const data = await response.json();
-      console.log('Fetched data:', data);
 
       if (data && Array.isArray(data)) {
         if (page === 0) {
@@ -40,10 +39,10 @@ export default function proMainPage() {
           setFilteredPosts(prevPosts => [...prevPosts, ...data]);
         }
       } else {
-        console.error('No data fetched or data is not an array');
+        console.error('data fetch error');
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error(error);
     }
   };
 
@@ -64,7 +63,6 @@ export default function proMainPage() {
     } else {
       setFilteredPosts(posts);
     }
-    console.log('Filtered posts updated:', filteredPosts);
   }, [selectedLanguages, posts]);
 
   useEffect(() => {
@@ -89,9 +87,14 @@ export default function proMainPage() {
     setPage(0);
     fetchData(0, newSelectedLanguages); 
   };
-
+  const handleNavigation = () => {
+    route.push('/pro/createCard')
+  }
   return (
     <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
+      <div className='flex flex-row justify-end'>
+        <button className='bg-blue-500 px-5 py-3 mt-5' onClick={handleNavigation}>등록하기</button>
+      </div>
       {/* 언어별 카테고리 영역 */}
       <div className="my-[70px] mx-auto ">
         <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
@@ -110,15 +113,6 @@ export default function proMainPage() {
             </li>
           ))}
         </ul>
-      </div>
-      {/* 경력 버튼 필터링 영역 */}
-      <div className="max-w-4xl mx-auto flex justify-between px-[20px] ">
-        <button className="border-2 p-3 rounded-full">1년 ~ 2년</button>
-        <button className="border-2 p-3 rounded-full">2년 ~ 4년</button>
-        <button className="border-2 p-3 rounded-full">4년 ~ 5년</button>
-        <button className="border-2 p-3 rounded-full">5년 ~ 6년</button>
-        <button className="border-2 p-3 rounded-full">6년 ~ 8년</button>
-        <button className="border-2 p-3 rounded-full">8년 이상</button>
       </div>
       {/* 의뢰 서비스 리스트 */}
       <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap my-[70px] justify-start">
