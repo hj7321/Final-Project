@@ -326,31 +326,31 @@ export type Database = {
         Row: {
           birth: string | null
           created_at: string
-          email: string | null
+          email: string
           id: string
           is_pro: boolean | null
           name: string | null
-          nickname: string | null
+          nickname: string
           profile_img: string | null
         }
         Insert: {
           birth?: string | null
           created_at?: string
-          email?: string | null
+          email: string
           id?: string
           is_pro?: boolean | null
           name?: string | null
-          nickname?: string | null
+          nickname: string
           profile_img?: string | null
         }
         Update: {
           birth?: string | null
           created_at?: string
-          email?: string | null
+          email?: string
           id?: string
           is_pro?: boolean | null
           name?: string | null
-          nickname?: string | null
+          nickname?: string
           profile_img?: string | null
         }
         Relationships: [
