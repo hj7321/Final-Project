@@ -10,13 +10,12 @@ import EditProfile from './EditProfile';
 import { useParams } from 'next/navigation';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
+import ReceiveReview from './ReceiveReview';
+import SendReview from './SendReview';
 
 export default function AllMypage() {
   const { id } = useParams();
   const queryClient = useQueryClient();
-
-  // const [showModal, setShowModal] = useState(false);
-  // const clickModal = () => setShowModal(!showModal);
 
   const [activeComponent, setActiveComponent] = useState('BookMark');
 
@@ -34,6 +33,10 @@ export default function AllMypage() {
         return <Portfolio />;
       case 'EditProfile':
         return <EditProfile />;
+      case 'ReceiveReview':
+        return <ReceiveReview />;
+      case 'SendReview':
+        return <SendReview />;
     }
   };
 
@@ -146,12 +149,32 @@ export default function AllMypage() {
             >
               거래내역
             </li>
-            <li
-              className={activeComponent === 'Portfolio' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('Portfolio')}
-            >
-              포트폴리오 수정
-            </li>
+            {Users?.data?.is_pro ? (
+              <li
+                className={activeComponent === 'ReceiveReview' ? activeStyle : liStyle}
+                onClick={() => setActiveComponent('ReceiveReview')}
+              >
+                내가 받은 리뷰
+              </li>
+            ) : (
+              <li
+                className={activeComponent === 'SendReview' ? activeStyle : liStyle}
+                onClick={() => setActiveComponent('SendReview')}
+              >
+                내가 작성한 리뷰
+              </li>
+            )}
+
+            {Users?.data?.is_pro ? (
+              <li
+                className={activeComponent === 'Portfolio' ? activeStyle : liStyle}
+                onClick={() => setActiveComponent('Portfolio')}
+              >
+                나의 포트폴리오
+              </li>
+            ) : (
+              ''
+            )}
           </ul>
         </aside>
         <main className="flex-1 p-8">
