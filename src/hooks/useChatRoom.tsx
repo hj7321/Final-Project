@@ -38,7 +38,7 @@ export const useChatRoom = (currentUserId: string | null, authorId: string | nul
               pro_id: authorId,
               chat_room_id: uuidv4(),
               post_id: postId,
-              content: '문의를 시작합니다.', // Ensure the content is set to an empty string to satisfy the not-null constraint
+              content: '문의를 시작합니다.',
             },
           ])
           .select('chat_room_id')
