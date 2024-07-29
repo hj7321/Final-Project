@@ -1,7 +1,15 @@
-import Chat from "./_components/Chat";
+import React from 'react';
+import ChatList from "./_components/ChatList";
 
 const ChatPage = () => {
-  return <Chat/>;
+  return (
+    <div className="flex">
+      <ChatList />
+      <div className="flex-grow">
+        {/* <Chat /> */}
+      </div>
+    </div>
+  );
 };
 
 export default ChatPage;

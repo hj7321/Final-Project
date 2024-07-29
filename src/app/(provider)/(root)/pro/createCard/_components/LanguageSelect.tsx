@@ -16,7 +16,7 @@ export default function LanguageSelect({codeLang, language, handleLanguageSelect
                 type="checkbox"
                 name={lang}
                 id={lang}
-                className="w-5 h-5 appearance-none border-2 border-black-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                className="w-5 h-5 appearance-none border-2 border-black-300 rounded-full checked:bg-blue-600 checked:border-transparent focus:outline-none "
                 checked={language.includes(lang)}
                 onChange={() => handleLanguageSelect(lang)}
               />
