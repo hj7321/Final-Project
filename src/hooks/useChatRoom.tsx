@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 const supabase = createClient();
 
@@ -19,12 +19,10 @@ export const useChatRoom = (currentUserId: string | null, authorId: string | nul
       const { data, error } = await supabase
         .from('Chat')
         .select('chat_room_id')
-        .or(`consumer_id.eq.${currentUserId},pro_id.eq.${currentUserId}`)
-        .or(`consumer_id.eq.${authorId},pro_id.eq.${authorId}`)
-        .eq('post_id', postId)
+        .or(`and(consumer_id.eq.${currentUserId},pro_id.eq.${authorId},post_id.eq.${postId}),and(consumer_id.eq.${authorId},pro_id.eq.${currentUserId},post_id.eq.${postId})`)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error && error.code !== 'PGRST116') { // 'PGRST116' is the code for "No Rows Found"
         console.error('Error checking chat room:', error.message);
         return;
       }
@@ -38,8 +36,9 @@ export const useChatRoom = (currentUserId: string | null, authorId: string | nul
             {
               consumer_id: currentUserId,
               pro_id: authorId,
-              chat_room_id: uuid(),  // Remove content field here
+              chat_room_id: uuidv4(),
               post_id: postId,
+              content: '문의를 시작합니다.', // Ensure the content is set to an empty string to satisfy the not-null constraint
             },
           ])
           .select('chat_room_id')
