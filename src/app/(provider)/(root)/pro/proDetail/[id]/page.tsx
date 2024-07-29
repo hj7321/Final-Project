@@ -13,6 +13,7 @@ interface UserData {
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
+  const [activeTab, setActiveTab] = useState('portfolio');
   const { id } = useParams();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function ProDetail() {
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
           <div className="h-[150px] w-[150px] border-2 rounded-full mx-auto mt-5">
-            <img src={user.profile_img} alt="user_profile" className="h-full w-full" />
+            <img src={user.profile_img} alt="user_profile" className="object-cover" />
           </div>
           <div className="mx-auto text-2xl mt-4">
             <p>{user.nickname}</p>
@@ -95,7 +96,7 @@ export default function ProDetail() {
                   />
                 </svg>
               </span>
-              <span className='text-white'>문의하기</span>
+              <span className="text-white">문의하기</span>
             </button>
             <button className="w-full h-full border-[#253CE5] border py-2 rounded-xl mt-2 flex flex-row justify-center items-center">
               <span>
@@ -110,13 +111,56 @@ export default function ProDetail() {
                   />
                 </svg>
               </span>
-              <span className='text-[#253CE5]'>구매하기</span>
+              <span className="text-[#253CE5]">구매하기</span>
             </button>
           </div>
         </div>
         <div className="h-[514px] w-[810px] border-2 rounded-xl">
           <img src={post.post_img[0]} alt="post_image" className="w-full h-full object-cover rounded-xl" />
         </div>
+      </div>
+      <div className="mt-8">
+        <div className="flex justify-start space-x-4 border-gray-300 pb-2">
+          <button
+            className={`text-lg ${
+              activeTab === 'portfolio' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('portfolio')}
+          >
+            포트폴리오
+          </button>
+          <button
+            className={`text-lg ${
+              activeTab === 'service' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('service')}
+          >
+            서비스 정보
+          </button>
+          <button
+            className={`text-lg ${
+              activeTab === 'reviews' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('reviews')}
+          >
+            리뷰
+          </button>
+        </div>
+        {activeTab === 'portfolio' && (
+          <div className="mt-4">
+            <p>포트폴리오 내용이 들어갑니다.</p>
+          </div>
+        )}
+        {activeTab === 'service' && (
+          <div className="mt-4">
+            <p>서비스 정보 내용이 들어갑니다.</p>
+          </div>
+        )}
+        {activeTab === 'reviews' && (
+          <div className="mt-4">
+            <p>리뷰 내용이 들어갑니다.</p>
+          </div>
+        )}
       </div>
     </div>
   );
