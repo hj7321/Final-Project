@@ -1,5 +1,6 @@
 
 import { createClient } from "@/utils/supabase/client";
+import useAuthStore from "@/zustand/authStore";
 import { useState } from "react";
 
 const supabase = createClient()
@@ -43,8 +44,16 @@ export default function useCreateCard() {
     );
   };
   const handleSubmit = async () => {
+    const { userId } = useAuthStore.getState()
+    if(!userId) {
+      throw new Error('로그인되어 있지 않습니다')
+    }
     if(!title.trim()) {
       alert('제목을 입력해주세요')
+      return
+    }
+    if(!price) {
+      alert('가격을 입력해주세요')
       return
     }
     if(language.length < 1) {
@@ -61,6 +70,7 @@ export default function useCreateCard() {
       formData.append('description', description)
       formData.append('language', JSON.stringify(language))
       formData.append('price',price.toString())
+      formData.append('userId', userId)
       images.forEach((image) => {
         formData.append('images', image)
       })
@@ -74,6 +84,7 @@ export default function useCreateCard() {
         setTitle('')
         setLanguage([])
         setImages([])
+        setPrice("")
         setDescription('')
       } else {
         alert('오류 발생')
