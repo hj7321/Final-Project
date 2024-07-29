@@ -11,8 +11,6 @@ export default function Header() {
   const router = useRouter();
   const { isLogin, logout, userId, userData, initializeAuthState, isLoading } = useAuthStore();
 
-  console.log(userData);
-
   useEffect(() => {
     const initialize = async () => {
       await initializeAuthState();

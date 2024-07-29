@@ -8,8 +8,6 @@ export default function SignUpComplete() {
   const router = useRouter();
 
   const handleChangePro = async (isPro: boolean): Promise<void> => {
-    console.log(userId);
-    console.log(userData);
     if (isLogin && isPro) {
       await fetch('/api/users', {
         method: 'PATCH',
