@@ -24,7 +24,11 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     return response.json();
   };
 
-  const { data: portfolioData, isLoading: portfolioLoading } = useQuery<Portfolio>({
+  const {
+    data: portfolioData,
+    isLoading: portfolioLoading,
+    error: portfolioError
+  } = useQuery<Portfolio>({
     queryKey: ['portfolio', portfolioId],
     queryFn: getPortfolio,
     enabled: !!portfolioId
@@ -64,8 +68,12 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     return <div className="h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  if (userError) {
-    return <div className="h-screen flex items-center justify-center">Error: {userError.message}</div>;
+  if (userError || portfolioError) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Error: {userError?.message || portfolioError?.message}
+      </div>
+    );
   }
 
   return (
@@ -113,6 +121,33 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               />
               <div className="mt-4 flex flex-wrap space-y-4"></div>
             </div>
+            썸네일
+            {portfolioData && (
+              <img
+                src={
+                  portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0
+                    ? portfolioData.portfolio_img[0]
+                    : 'https://via.placeholder.com/150?text=No+Image'
+                }
+                alt="Portfolio Image"
+              />
+            )}
+            {portfolioData && portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0 ? (
+              portfolioData.portfolio_img.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`Portfolio image ${index}`}
+                  className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+                />
+              ))
+            ) : (
+              <img
+                src="https://via.placeholder.com/150?text=No+Image"
+                alt="No Image"
+                className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+              />
+            )}
           </div>
         </div>
       </div>

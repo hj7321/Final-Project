@@ -100,11 +100,11 @@ export default function AllMypage() {
       <div className="flex flex-1">
         <aside className="w-64 p-4">
           <div>
-            <div className="flex flex-col items-center mb-6 p-4 rounded">
+            <div className="flex flex-col items-center mb-6 p-4 rounded-full">
               <div className="w-[180px] h-[180px]  rounded-full mb-4">
                 <img
                   src={Users?.data?.profile_img || 'https://via.placeholder.com/150?text=Expert+1'}
-                  className="w-72 h-40 rounded-lg"
+                  className="w-72 h-40 rounded-full"
                 />
               </div>
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>

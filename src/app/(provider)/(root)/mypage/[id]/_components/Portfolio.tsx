@@ -6,6 +6,7 @@ import EddPortfolio from './EddPortFolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useAuthStore from '@/zustand/authStore';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -69,7 +70,7 @@ export default function Portfolio() {
     const response = await fetch('/api/portFolio', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(id)
+      body: JSON.stringify({ id })
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -82,11 +83,14 @@ export default function Portfolio() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['porifolio', paramsId] })
   });
 
-  const handleDelete = async (id: string) => {
-    try {
-      deleteMutation(id);
-    } catch (error) {
-      console.error('삭제에 실패했습니다.', error);
+  const handleDelete = (id: string) => {
+    const confirmed = confirm('정말로 삭제하시겠습니까?');
+    if (confirmed) {
+      try {
+        deleteMutation(id);
+      } catch (error) {
+        console.error('삭제에 실패했습니다.', error);
+      }
     }
   };
 
@@ -114,7 +118,14 @@ export default function Portfolio() {
             {data?.map((post) => (
               <div key={post.id} className="bg-white p-4 rounded-2xl">
                 <div className="flex mr-20">
-                  <img src="https://via.placeholder.com/150?text=Expert+1" className="w-72 h-40 rounded-lg" />
+                  <img
+                    src={
+                      post.portfolio_img && post.portfolio_img.length > 0
+                        ? post.portfolio_img[0]
+                        : 'https://via.placeholder.com/150?text=No+Image'
+                    }
+                    className="w-72 h-40 rounded-lg"
+                  />
                   <div className="ml-8 flex-1">
                     <p className="font-bold text-[20px] mb-2">{post.title}</p>
                     <p

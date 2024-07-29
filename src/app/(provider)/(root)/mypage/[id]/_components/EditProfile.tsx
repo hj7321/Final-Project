@@ -43,11 +43,11 @@ export default function EditProfile() {
   const uploadImage = async (file: File) => {
     const supabase = createClient();
     const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const { data, error } = await supabase.storage.from('portfolio_bucket_image').upload(fileName, file);
+    const { data, error } = await supabase.storage.from('portfolio_bucket_image/profile').upload(fileName, file);
     if (error) throw error;
     const {
       data: { publicUrl }
-    } = supabase.storage.from('portfolio_bucket_image').getPublicUrl(fileName);
+    } = supabase.storage.from('portfolio_bucket_image/profile').getPublicUrl(fileName);
     setPublicUrl(publicUrl);
     console.log('publicUrl', publicUrl);
     return publicUrl;
@@ -71,6 +71,10 @@ export default function EditProfile() {
     },
     onError: (err, newData, context) => {
       queryClient.setQueryData(['Users'], context?.previousUserData);
+    },
+    onSuccess: () => {
+      alert('프로필이 성공적으로 수정되었습니다.');
+      window.location.reload();
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['Users'] });

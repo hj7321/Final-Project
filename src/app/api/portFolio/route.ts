@@ -62,7 +62,6 @@ export async function DELETE(request: NextRequest) {
 
     const supabase = createClient();
     const { data, error } = await supabase.from('Portfolio').delete().eq('id', info.id);
-    console.log('data', data);
 
     if (error) {
       return NextResponse.json({ error: error }, { status: 400 });
