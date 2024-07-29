@@ -45,7 +45,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup'))) {
+  if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname === '/signup')) {
     return NextResponse.redirect(request.nextUrl.origin);
   }
 
