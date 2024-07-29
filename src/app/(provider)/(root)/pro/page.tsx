@@ -19,8 +19,8 @@ export default function proMainPage() {
   const [posts, setPosts] = useState<Posts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Posts[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter()
 
   const fetchData = async (page: number, languages: string[] = []) => {
@@ -104,7 +104,7 @@ export default function proMainPage() {
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
-              <img className="w-[80px] h-[80px] bg-slate-400 rounded-full mb-[10px] mx-auto" src={lang.image} />
+              <img className="w-[80px] h-[80px] bg-slate-400 rounded-full mb-[10px] mx-auto bg-inherit" src={lang.image} />
               <p
                 className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
               >
