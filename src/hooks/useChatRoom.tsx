@@ -38,8 +38,7 @@ export const useChatRoom = (currentUserId: string | null, authorId: string | nul
             {
               consumer_id: currentUserId,
               pro_id: authorId,
-              content: '새로운 문의를 시작합니다.',
-              chat_room_id: uuid(),
+              chat_room_id: uuid(),  // Remove content field here
               post_id: postId,
             },
           ])

@@ -20,9 +20,9 @@ export default function ProDetail() {
   const [user, setUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState('portfolio');
   const { id: paramId } = useParams();
-  const id = paramId as string; // id를 문자열로 변환
+  const id = paramId as string; //추가 : id를 문자열로 변환
 
-  const { currentUserId } = useSession(); // 현재 사용자 ID를 가져옴
+  const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
   useEffect(() => {
@@ -42,7 +42,8 @@ export default function ProDetail() {
     fetchData();
   }, [id]);
 
- //추가 코드
+ //추가//
+
   const handleInquiry = () => { // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) { // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
@@ -50,7 +51,8 @@ export default function ProDetail() {
     }
     toggleChat(); // 채팅 창 열림/닫힘 상태를 토글
   };
-//여기까지
+
+//여기까지 //
 
   if (!post || !user) {
     return <p>로딩중</p>;
@@ -308,7 +310,8 @@ export default function ProDetail() {
           </div>
         )}
       </div>
-      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />} {/* chatRoomId가 존재하고 isChatOpen이 true일 때만 ChatModal 컴포넌트를 렌더링 */}
+      {/* 채팅모달 */}
+      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}
     </div>
   );
 }
