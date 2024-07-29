@@ -235,8 +235,57 @@ export default function ProDetail() {
           </div>
         )}
         {activeTab === 'reviews' && (
-          <div className="mt-4">
-            <p>리뷰 내용이 들어갑니다.</p>
+          <div className="mt-4 flex flex-col justify-center items-center">
+            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
+              <div>
+                <p>⭐️⭐️⭐️⭐️⭐️</p>
+              </div>
+              <div className='line-clamp-1 my-2'>
+                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
+              </div>
+              <div className='flex flex-row text-sm font-thin'>
+                <div>
+                  <p>작성자 : 코듀</p>
+                </div>
+                <div className='mx-2'>
+                  <p>작성일 : 2024.08.01</p>
+                </div>
+              </div>
+            </div>
+
+            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
+              <div>
+                <p>⭐️⭐️⭐️⭐️⭐️</p>
+              </div>
+              <div className='line-clamp-1 my-2'>
+                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
+              </div>
+              <div className='flex flex-row text-sm font-thin'>
+                <div>
+                  <p>작성자 : 코듀</p>
+                </div>
+                <div className='mx-2'>
+                  <p>작성일 : 2024.08.01</p>
+                </div>
+              </div>
+            </div>
+
+            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
+              <div>
+                <p>⭐️⭐️⭐️⭐️⭐️</p>
+              </div>
+              <div className='line-clamp-1 my-2'>
+                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
+              </div>
+              <div className='flex flex-row text-sm font-thin'>
+                <div>
+                  <p>작성자 : 코듀</p>
+                </div>
+                <div className='mx-2'>
+                  <p>작성일 : 2024.08.01</p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

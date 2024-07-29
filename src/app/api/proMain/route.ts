@@ -8,7 +8,6 @@ export async function GET(request: any) {
   const offset = page * limit;
 
   const languages = JSON.parse(decodeURIComponent(url.searchParams.get('languages') || '[]'));
-  console.log(`Fetching data for page: ${page}, languages: ${languages}`);
 
   try {
     const supabase = createClient();
@@ -28,8 +27,6 @@ export async function GET(request: any) {
       console.error('Error fetching data:', error);
       return NextResponse.json({ error: '데이터를 가져오는데 실패했습니다' });
     }
-
-    console.log('Fetched data:', data);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching data:', error);

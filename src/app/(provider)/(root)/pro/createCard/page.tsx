@@ -8,9 +8,11 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
+import { CodeCategories } from '@/components/dumy';
 
 
 export default function CreateCard() {
+  CodeCategories
   const route = useRouter()
   const {
     title,

@@ -104,7 +104,7 @@ export default function proMainPage() {
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
-              <img className="w-[80px] h-[80px] bg-slate-400 rounded-full mb-[10px] mx-auto bg-inherit" src={lang.image} />
+              <img className="w-[80px] h-[80px] rounded-full mb-[10px] mx-auto" src={lang.image} />
               <p
                 className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
               >
