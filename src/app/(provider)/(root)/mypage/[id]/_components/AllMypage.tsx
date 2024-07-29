@@ -101,17 +101,20 @@ export default function AllMypage() {
         <aside className="w-64 p-4">
           <div>
             <div className="flex flex-col items-center mb-6 p-4 rounded">
-              <div className="w-[180px] h-[180px] bg-black rounded-full mb-4"></div>
+              <div className="w-[180px] h-[180px]  rounded-full mb-4">
+                <img
+                  src={Users?.data?.profile_img || 'https://via.placeholder.com/150?text=Expert+1'}
+                  className="w-72 h-40 rounded-lg"
+                />
+              </div>
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
               <button
                 className="mb-2 px-4 w-[244px] h-[36px] text-white rounded-[30px] bg-black"
-                // onClick={clickModal}
                 onClick={() => setActiveComponent('EditProfile')}
               >
                 프로필 수정하기 ✏️
               </button>
-              {/* {showModal && <EditProfile clickModal={clickModal} />} */}
 
               <button
                 className="mb-2 px-4 w-[244px] h-[36px] text-white rounded-[30px] bg-black"

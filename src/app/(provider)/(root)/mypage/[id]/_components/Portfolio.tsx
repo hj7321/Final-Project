@@ -5,17 +5,32 @@ import EditPortfolio from './EditPortfolio';
 import EddPortfolio from './EddPortFolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface EditProfileProps {
   clickModal: () => void;
 }
 
+interface PoData {
+  id: string;
+  created_at: string;
+  user_id: string;
+  title: string;
+  content: string;
+  portfolio_img: string[];
+  lang_category: string;
+}
+
 export default function Portfolio() {
   const { id } = useParams();
+  const queryClient = useQueryClient();
+
+  const params = useParams();
+  const paramsId = params.id as string;
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [eddModal, setEddModal] = useState(false);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
   const getPortfolio = async () => {
     const response = await fetch('/api/portFolio');
@@ -32,7 +47,9 @@ export default function Portfolio() {
     enabled: !!id
   });
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (portfolioId: string) => {
+    setSelectedPortfolioId(portfolioId);
+
     setEditModalOpen(true);
   };
 
@@ -46,6 +63,31 @@ export default function Portfolio() {
 
   const closeEddmodal = () => {
     setEddModal(false);
+  };
+
+  const deleteComment = async (id: string) => {
+    const response = await fetch('/api/portFolio', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(id)
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  };
+
+  const { mutate: deleteMutation } = useMutation<PoData, Error, string>({
+    mutationFn: (id) => deleteComment(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['porifolio', paramsId] })
+  });
+
+  const handleDelete = async (id: string) => {
+    try {
+      deleteMutation(id);
+    } catch (error) {
+      console.error('삭제에 실패했습니다.', error);
+    }
   };
 
   return (
@@ -87,11 +129,14 @@ export default function Portfolio() {
                     >
                       {post.content}
                     </p>
-                    <button onClick={handleOpenModal} className="mt-4 p-2 w-64  bg-gray-400 text-xl text-white rounded">
+                    <button
+                      onClick={() => handleOpenModal(post.id)}
+                      className="mt-4 p-2 w-64  bg-gray-400 text-xl text-white rounded"
+                    >
                       포트폴리오 수정
                     </button>
                     <button
-                      onClick={handleOpenModal}
+                      onClick={() => handleDelete(post.id)}
                       className="mt-4 p-2 ml-5 w-64 text-xl bg-gray-400 text-white rounded"
                     >
                       포트폴리오 삭제
@@ -103,7 +148,7 @@ export default function Portfolio() {
           </div>
         </>
       )}
-      {editModalOpen && <EditPortfolio clickModal={handleCloseModal} />}
+      {editModalOpen && <EditPortfolio clickModal={handleCloseModal} portfolioId={selectedPortfolioId} />}
       {eddModal && <EddPortfolio clickModal={closeEddmodal} />}
     </div>
   );
