@@ -147,8 +147,86 @@ export default function ProDetail() {
           </button>
         </div>
         {activeTab === 'portfolio' && (
-          <div className="mt-4">
-            <p>포트폴리오 내용이 들어갑니다.</p>
+          <div className="mt-4 flex flex-row justify-start flex-wrap">
+            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+              <div className='w-[3/4] h-[140px]'>
+                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+              </div>
+              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+                <p>Javascript</p>
+                <p className='ml-3'>Next.JS</p>
+              </div>
+              <div className='my-2'>
+                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+              </div>
+              <div className='text-xs'>
+                <p>2024.07 ~ 2024.08</p>
+              </div>
+            </div>
+
+            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+              <div className='w-[3/4] h-[140px]'>
+                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+              </div>
+              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+                <p>Javascript</p>
+                <p className='ml-3'>Next.JS</p>
+              </div>
+              <div className='my-2'>
+                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+              </div>
+              <div className='text-xs'>
+                <p>2024.07 ~ 2024.08</p>
+              </div>
+            </div>
+
+            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+              <div className='w-[3/4] h-[140px]'>
+                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+              </div>
+              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+                <p>Javascript</p>
+                <p className='ml-3'>Next.JS</p>
+              </div>
+              <div className='my-2'>
+                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+              </div>
+              <div className='text-xs'>
+                <p>2024.07 ~ 2024.08</p>
+              </div>
+            </div>
+
+            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+              <div className='w-[3/4] h-[140px]'>
+                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+              </div>
+              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+                <p>Javascript</p>
+                <p className='ml-3'>Next.JS</p>
+              </div>
+              <div className='my-2'>
+                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+              </div>
+              <div className='text-xs'>
+                <p>2024.07 ~ 2024.08</p>
+              </div>
+            </div>
+
+            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+              <div className='w-[3/4] h-[140px]'>
+                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+              </div>
+              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+                <p>Javascript</p>
+                <p className='ml-3'>Next.JS</p>
+              </div>
+              <div className='my-2'>
+                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+              </div>
+              <div className='text-xs'>
+                <p>2024.07 ~ 2024.08</p>
+              </div>
+            </div>
           </div>
         )}
         {activeTab === 'service' && (
