@@ -34,7 +34,7 @@ export default function ProDetail() {
   }, [id]);
 
   if (!post || !user) {
-    return <p>Loading...</p>;
+    return <p>로딩중</p>;
   }
 
   return (
