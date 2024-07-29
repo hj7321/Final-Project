@@ -1,24 +1,71 @@
-import { useUserData } from '@/app/api/mypage/[id]/route';
-import { Users } from '@/types/type';
-import { createClient } from '@/utils/supabase/client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+'use client';
 import { useParams } from 'next/navigation';
+import { useUserData } from '@/app/api/mypage/[id]/route';
+import { useQuery } from '@tanstack/react-query';
+import type { Portfolio } from '@/types/type';
+import { useState, useEffect } from 'react';
 
 interface EditPortfolioProps {
   clickModal: () => void;
+  portfolioId: string | null;
 }
 
-const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal }) => {
+const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
+  const userId = params.id as string;
 
-  const id = params.id as string;
+  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
 
-  const { data: userData, isLoading, error } = useUserData(id);
+  const getPortfolio = async () => {
+    const response = await fetch(`/api/portFolio/${portfolioId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  };
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  const { data: portfolioData, isLoading: portfolioLoading } = useQuery<Portfolio>({
+    queryKey: ['portfolio', portfolioId],
+    queryFn: getPortfolio,
+    enabled: !!portfolioId
+  });
 
-  if (error) {
-    return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+
+  useEffect(() => {
+    if (portfolioData) {
+      setTitle(portfolioData.title || '');
+      setContent(portfolioData.content || '');
+    }
+  }, [portfolioData]);
+
+  const handleSave = async () => {
+    const response = await fetch('/api/portFolio', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: portfolioId,
+        title,
+        content
+      })
+    });
+
+    if (response.ok) {
+      clickModal();
+    } else {
+      console.error('수정에 실패했습니다.');
+    }
+  };
+
+  if (userLoading || portfolioLoading) {
+    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (userError) {
+    return <div className="h-screen flex items-center justify-center">Error: {userError.message}</div>;
   }
 
   return (
@@ -29,38 +76,29 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal }) => {
         </button>
         <div className="flex">
           <div className="w-[30%] pr-4">
-            <h1 className="text-2xl font-bold mb-4"> {userData?.data?.nickname}</h1>
+            <h1 className="text-2xl font-bold mb-4">{userData?.data?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700"> 프로젝트 이름</label>
+                <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
                 <input
-                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
-                <textarea
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  rows={4}
-                ></textarea>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">태그</label>
                 <input
-                  type="text"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">참여 기간</label>
-                <input
-                  type="text"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                />
+                ></input>
               </div>
               <div className="flex justify-end">
-                <button className="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button
+                  onClick={handleSave}
+                  className="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
                   저장
                 </button>
               </div>
@@ -73,7 +111,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal }) => {
                 type="file"
                 className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
               />
-              <div className="mt-4 flex flex-wrap space-y-4">{/* 사진을 여기에 추가하면 됩니다 */}</div>
+              <div className="mt-4 flex flex-wrap space-y-4"></div>
             </div>
           </div>
         </div>
