@@ -2,19 +2,28 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을 
+import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
+import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
 
 interface PostData {
   post_img: string[];
 }
 interface UserData {
+  id: string; // 유저 ID 추가
   nickname: string;
   profile_img: string;
 }
+
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState('portfolio');
-  const { id } = useParams();
+  const { id: paramId } = useParams();
+  const id = paramId as string; //추가 : id를 문자열로 변환
+
+  const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
+  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +41,18 @@ export default function ProDetail() {
     };
     fetchData();
   }, [id]);
+
+ //추가//
+
+  const handleInquiry = () => { // 문의하기 버튼 클릭 시 실행되는 함수
+    if (!currentUserId || !user?.id || !id) { // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
+      console.error('No user logged in, author ID or post ID missing');
+      return;
+    }
+    toggleChat(); // 채팅 창 열림/닫힘 상태를 토글
+  };
+
+//여기까지 //
 
   if (!post || !user) {
     return <p>로딩중</p>;
@@ -85,7 +106,7 @@ export default function ProDetail() {
             </p>
           </div>
           <div className="mx-auto w-[85%] mt-5 flex flex-col">
-            <button className="w-full h-full bg-[#253CE5] py-2 rounded-xl flex flex-row justify-center items-center">
+            <button className="w-full h-full bg-[#253CE5] py-2 rounded-xl flex flex-row justify-center items-center" onClick={handleInquiry}> {/* handleInquiry 함수가 문의하기 버튼 클릭 시 실행됨 */}
               <span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -200,7 +221,7 @@ export default function ProDetail() {
               <div className='w-[3/4] h-[140px]'>
                 <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
               </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
+              <div className='flex flex-row justify-start items=center mt-3 text-xs'>
                 <p>Javascript</p>
                 <p className='ml-3'>Next.JS</p>
               </div>
@@ -214,7 +235,7 @@ export default function ProDetail() {
 
             <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
               <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+                <img src="#" alt="#" className='w-full 하다 h-full bg-slate-400 rounded-xl' />
               </div>
               <div className='flex flex-row justify-start items-center mt-3 text-xs'>
                 <p>Javascript</p>
@@ -289,6 +310,8 @@ export default function ProDetail() {
           </div>
         )}
       </div>
+      {/* 채팅모달 */}
+      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}
     </div>
   );
 }
