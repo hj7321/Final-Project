@@ -1,3 +1,5 @@
+import { CODEUSVG } from "@/components/dumy"
+
 interface ImageUploadProps {
   images : File[]
   handleImageChange : (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -22,9 +24,9 @@ export default function ImageUpload({images, handleImageDelete, handleImageChang
         </div>
         {images.length < 1 && (
           <label 
-            className="w-[60px] h-[60px] flex items-center justify-center relative rounded-full mt-4 cursor-pointer"
-            style={{backgroundImage : "url('../images/image_select.jpeg')", backgroundSize : 'cover', backgroundPosition : 'center'}}
+            className="w-[60px] h-[60px] bg-gray-100 flex items-center justify-center relative rounded-full mt-4 cursor-pointer"
           >
+            <img src={CODEUSVG} alt="" className="w-[36px] h-[36px] " />
             <input
               type="file"
               multiple
