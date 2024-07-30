@@ -14,10 +14,20 @@ interface UserData {
   nickname: string;
   profile_img: string;
 }
-
+interface PortfolioData {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  portfolio_img: string;
+  lang_category: string[];
+  start_date: string;
+  end_date: string;
+}
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
+  const [portfolio, setPortfolio] = useState<PortfolioData[]>([])
   const [activeTab, setActiveTab] = useState('portfolio');
   const { id: paramId } = useParams();
   const id = paramId as string; //추가 : id를 문자열로 변환
@@ -33,17 +43,17 @@ export default function ProDetail() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log('fetch',data)
         setPost(data.postData);
         setUser(data.userData);
+        setPortfolio(data.portfolioData);
       } catch (error) {
         console.error('Fetch data error:', error);
       }
     };
     fetchData();
   }, [id]);
-
  //추가//
-
   const handleInquiry = () => { // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) { // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
@@ -169,86 +179,23 @@ export default function ProDetail() {
         </div>
         {activeTab === 'portfolio' && (
           <div className="mt-4 flex flex-row justify-start flex-wrap">
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+          {portfolio.map((item) => (
+            <div key={item.id} className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
               <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+                <img src={item.portfolio_img} alt={item.title} className='w-full h-full bg-slate-400 rounded-xl' />
               </div>
               <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
+                <p>{item.lang_category}</p>
               </div>
               <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+                <p className='font-bold text-lg line-clamp-1'>{item.title}</p>
               </div>
               <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
+                <p>{item.start_date} ~ {item.end_date}</p>
               </div>
             </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items=center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full 하다 h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-          </div>
+          ))}
+        </div>
         )}
         {activeTab === 'service' && (
           <div className="mt-4">
