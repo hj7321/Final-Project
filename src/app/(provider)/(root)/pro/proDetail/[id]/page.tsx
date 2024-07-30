@@ -42,7 +42,7 @@ export default function ProDetail() {
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
           <div className="h-[150px] w-[150px] border-2 rounded-full mx-auto mt-5">
-            <img src={user.profile_img} alt="user_profile" className="object-cover" />
+            <img src={user.profile_img} alt="user_profile" className="object-cover h-full w-full rounded-full" />
           </div>
           <div className="mx-auto text-2xl mt-4">
             <p>{user.nickname}</p>
@@ -91,8 +91,8 @@ export default function ProDetail() {
                   <path
                     d="M10.9488 15.1464L15.3133 19.8976C15.9018 20.5383 16.9712 20.1738 17.046 19.3071L18.2924 4.86566C18.3632 4.04436 17.4658 3.49486 16.7665 3.93141L4.47075 11.6075C3.73276 12.0682 3.89438 13.1864 4.73262 13.4193L10.9488 15.1464ZM10.9488 15.1464L15.2052 8.19459"
                     stroke="white"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
