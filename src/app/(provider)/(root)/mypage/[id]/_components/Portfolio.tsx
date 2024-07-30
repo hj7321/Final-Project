@@ -6,7 +6,7 @@ import EddPortfolio from './EddPortFolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import useAuthStore from '@/zustand/authStore';
+import DetailModal from './DetailPortfolio';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -31,6 +31,8 @@ export default function Portfolio() {
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [eddModal, setEddModal] = useState(false);
+  const [detailModal, setDetailModal] = useState(false);
+
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
   const getPortfolio = async () => {
@@ -64,6 +66,16 @@ export default function Portfolio() {
 
   const closeEddmodal = () => {
     setEddModal(false);
+  };
+
+  const openDetailModal = (portfolioId: string) => {
+    setSelectedPortfolioId(portfolioId);
+
+    setDetailModal(true);
+  };
+
+  const closeDetailModal = () => {
+    setDetailModal(false);
   };
 
   const deleteComment = async (id: string) => {
@@ -124,7 +136,8 @@ export default function Portfolio() {
                         ? post.portfolio_img[0]
                         : 'https://via.placeholder.com/150?text=No+Image'
                     }
-                    className="w-72 h-40 rounded-lg"
+                    className="w-72 h-40 rounded-lg cursor-pointer lg:hover:scale-110"
+                    onClick={() => openDetailModal(post.id)}
                   />
                   <div className="ml-8 flex-1">
                     <p className="font-bold text-[20px] mb-2">{post.title}</p>
@@ -160,6 +173,7 @@ export default function Portfolio() {
         </>
       )}
       {editModalOpen && <EditPortfolio clickModal={handleCloseModal} portfolioId={selectedPortfolioId} />}
+      {detailModal && <DetailModal clickModal={closeDetailModal} portfolioId={selectedPortfolioId} />}
       {eddModal && <EddPortfolio clickModal={closeEddmodal} />}
     </div>
   );

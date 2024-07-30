@@ -13,10 +13,15 @@ interface EditPortfolioProps {
 const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
   const userId = params.id as string;
+  const { id } = useParams();
 
   const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
 
   const getPortfolio = async () => {
+    if (!portfolioId) {
+      throw new Error('포트폴리오 ID가 지정되지 않았습니다.');
+    }
+
     const response = await fetch(`/api/portFolio/${portfolioId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -34,15 +39,35 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     enabled: !!portfolioId
   });
 
+  const getsPortfolio = async () => {
+    const response = await fetch('/api/portFolio');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: Portfolio[] = await response.json();
+    return data.filter((post) => post.user_id === id);
+  };
+
+  const { data } = useQuery<Portfolio[]>({
+    queryKey: ['posts', id],
+    queryFn: getsPortfolio,
+    enabled: !!id
+  });
+
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
-    if (portfolioData) {
-      setTitle(portfolioData.title || '');
-      setContent(portfolioData.content || '');
+    if (data && portfolioId) {
+      const portfolio = data.find((p) => p.id === portfolioId);
+      if (portfolio) {
+        setTitle(portfolio.title || '');
+        setContent(portfolio.content || '');
+      }
     }
-  }, [portfolioData]);
+  }, [data, portfolioId]);
+
+  console.log('portfolioData', portfolioData);
 
   const handleSave = async () => {
     const response = await fetch('/api/portFolio', {
@@ -88,6 +113,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
+
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}

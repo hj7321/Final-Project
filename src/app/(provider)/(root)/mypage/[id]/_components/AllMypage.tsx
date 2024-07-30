@@ -93,7 +93,7 @@ export default function AllMypage() {
   }
 
   const liStyle = 'text-gray-700 cursor-pointer';
-  const activeStyle = 'text-[#253CE5] cursor-pointer font-bold';
+  const activeStyle = 'text-primary-500 cursor-pointer font-bold';
 
   return (
     <div className="flex flex-col max-w-[80%] m-auto bg-white">
@@ -113,14 +113,14 @@ export default function AllMypage() {
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
               <button
-                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-[#253CE5]"
+                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500"
                 onClick={() => setActiveComponent('EditProfile')}
               >
                 프로필 수정하기 ✏️
               </button>
 
               <button
-                className="mb-2 px-4 w-[244px] h-[36px] text-[#253CE5] border border-primary-500 rounded-md bg-white"
+                className="mb-2 px-4 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white"
                 onClick={() => mutation.mutate(Users?.data?.is_pro)}
               >
                 {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}

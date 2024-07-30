@@ -14,12 +14,9 @@ export default function QnaPostList() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    console.log('data', data);
 
     return data.filter((post) => post.post_category === 'QnA' && post.user_id === id);
   };
-
-  console.log('id', id);
 
   const { data, isLoading, error } = useQuery<CommunityPosts[]>({
     queryKey: ['post', id],

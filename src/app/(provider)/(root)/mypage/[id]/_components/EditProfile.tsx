@@ -49,7 +49,6 @@ export default function EditProfile() {
       data: { publicUrl }
     } = supabase.storage.from('portfolio_bucket_image/profile').getPublicUrl(fileName);
     setPublicUrl(publicUrl);
-    console.log('publicUrl', publicUrl);
     return publicUrl;
   };
 
@@ -95,7 +94,6 @@ export default function EditProfile() {
     if (uploadImg) {
       try {
         imageUrl = await uploadImage(uploadImg);
-        console.log('Image uploaded successfully:', imageUrl);
       } catch (error) {
         console.error('Error uploading image:', error);
       }
