@@ -43,11 +43,12 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const info = await request.json();
+    console.log('info', info);
 
     const supabase = createClient();
     const { data, error } = await supabase
       .from('Portfolio')
-      .update({ title: info.title, content: info.content })
+      .update({ title: info.title, content: info.content, start_date: info.start_date })
       .eq('id', info.id);
 
     return NextResponse.json(data);

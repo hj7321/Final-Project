@@ -56,6 +56,10 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
+  const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
     if (data && portfolioId) {
@@ -63,6 +67,8 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       if (portfolio) {
         setTitle(portfolio.title || '');
         setContent(portfolio.content || '');
+        setStartDate(portfolio.start_date || '');
+        setEndDate(portfolio.end_date || '');
       }
     }
   }, [data, portfolioId]);
@@ -127,6 +133,22 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 ></input>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">참여 기간</label>
+                <input
+                  type="date"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                ~
+                <input
+                  type="date"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
               </div>
               <div className="flex justify-end">
                 <button

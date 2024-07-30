@@ -10,7 +10,10 @@ interface AddPortfolioProps {
   clickModal: () => void;
 }
 
-type PortfolioData = Omit<Portfolio, 'id' | 'created_at'>;
+type PortfolioData = Omit<Portfolio, 'id' | 'created_at'> & {
+  start_date: string;
+  end_date: string;
+};
 
 const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
   const params = useParams();
@@ -26,6 +29,8 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   const savePortfolio = async (data: PortfolioData) => {
     const response = await fetch('/api/portFolio', {
@@ -69,6 +74,10 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
       alert('언어를 선택해주세요.');
       return;
     }
+    if (!startDate || !endDate) {
+      alert('참여 기간을 선택해주세요.');
+      return;
+    }
 
     try {
       const uploadPromises = [];
@@ -85,7 +94,9 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
         content,
         portfolio_img: uploadedUrls,
         user_id: id,
-        lang_category: selectedLanguage
+        lang_category: selectedLanguage,
+        start_date: startDate,
+        end_date: endDate
       };
 
       addMutation(portfolioData);
@@ -187,9 +198,17 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
             <div className="relative w-1/2">
               <label className="block text-sm font-medium text-gray-700">참여 기간</label>
               <input
-                type="text"
-                placeholder="0000.00.00"
+                type="date"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              ~
+              <input
+                type="date"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
             <div className="relative w-1/2">
