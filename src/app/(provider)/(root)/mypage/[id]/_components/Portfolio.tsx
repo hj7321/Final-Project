@@ -156,13 +156,13 @@ export default function Portfolio() {
                     </p>
                     <button
                       onClick={() => handleOpenModal(post.id)}
-                      className="mt-4 p-2 w-64  bg-gray-400 text-xl text-white rounded"
+                      className="mt-4 p-2 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
                     >
                       포트폴리오 수정
                     </button>
                     <button
                       onClick={() => handleDelete(post.id)}
-                      className="mt-4 p-2 ml-5 w-64 text-xl bg-gray-400 text-white rounded"
+                      className="mt-4 p-2 ml-5 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
                     >
                       포트폴리오 삭제
                     </button>

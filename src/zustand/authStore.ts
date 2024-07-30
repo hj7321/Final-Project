@@ -15,6 +15,7 @@ import { create, StoreApi, UseBoundStore } from 'zustand';
 interface AuthState {
   isLoading: boolean;
   isLogin: boolean;
+  isPro: boolean | null;
   userId: Users['id'] | null;
   userData: UserMetadata | null;
   login: () => void;
@@ -34,19 +35,16 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
       data: { session }
     } = await supabase.auth.getSession();
 
-    // const session = await fetch('/api/auth', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   }
-    // }).then((res) => res.json());
     console.log(session);
 
+    const { data } = await supabase.from('Users').select('is_pro').eq('id', session!.user!.id);
+
     set({
+      isLoading: false,
       isLogin: !!session,
+      isPro: data && data[0].is_pro,
       userId: session?.user?.id || null,
-      userData: session?.user?.user_metadata || null,
-      isLoading: false
+      userData: session?.user?.user_metadata || null
     });
   };
 
@@ -55,6 +53,7 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
   return {
     isLoading: true,
     isLogin: false,
+    isPro: false,
     userId: null,
     userData: null,
     login: () => set({ isLogin: true }),
