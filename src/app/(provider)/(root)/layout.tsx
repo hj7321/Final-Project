@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body style={{ fontFamily: 'SUIT Variable, sans-serif' }}>
         <QueryProvider>
           <Header />
           {children}
