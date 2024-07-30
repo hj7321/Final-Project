@@ -35,7 +35,6 @@ export default function CreateCard() {
   
   const handleFormSubmit = async () => {
     const newPostId = await handleSubmit();
-    console.log('New Post ID:', newPostId); // 디버깅 로그
     if (newPostId !== null && newPostId !== undefined) {
       route.push(`/pro/proDetail/${newPostId}`);
     }
