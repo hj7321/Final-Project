@@ -15,6 +15,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+  const [otherUser, setOtherUser] = useState<{ nickname: string, profile_img: string } | null>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -55,7 +56,41 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
       }
     };
 
+    const fetchOtherUser = async () => {
+      if (!currentUser) return;
+
+      const { data: chatData, error: chatError } = await supabase
+        .from('Chat')
+        .select('consumer_id, pro_id')
+        .eq('chat_room_id', chatRoomId);
+
+      if (chatError) {
+        console.error('Error fetching chat data:', chatError);
+        return;
+      }
+
+      if (chatData.length === 0) {
+        console.error('No chat data found');
+        return;
+      }
+
+      const otherUserId = chatData[0].consumer_id === currentUser.id ? chatData[0].pro_id : chatData[0].consumer_id;
+
+      const { data: userData, error: userError } = await supabase
+        .from('Users')
+        .select('nickname, profile_img')
+        .eq('id', otherUserId)
+        .single();
+
+      if (userError) {
+        console.error('Error fetching user data:', userError);
+      } else {
+        setOtherUser(userData);
+      }
+    };
+
     fetchMessages();
+    fetchOtherUser();
 
     const chatChannel = supabase
       .channel('realtime:chat')
@@ -94,34 +129,47 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-4 rounded-md w-1/2">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-xl h-5/6">
         <button onClick={onClose} className="text-black float-right">닫기</button>
-        <h1 className="text-2xl font-bold mb-4">채팅방</h1>
-        <div className="h-64 overflow-y-scroll border border-gray-300 p-4 rounded-md">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`p-2 rounded-md ${message.consumer_id === currentUser?.id ? 'bg-gray-500 text-white' : 'bg-gray-300 text-black'}`}>
-                <strong>{message.consumer_id === currentUser?.id ? '나 ' : message.consumer_id}:</strong> {message.content}
-                <span className="block text-sm text-gray-500">{new Date(message.created_at).toLocaleString()}</span>
+        <div className="flex items-center mb-6">
+          {otherUser && (
+            <>
+              <img src={otherUser.profile_img} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
+              <div>
+                <h2 className="text-xl font-bold">{otherUser.nickname}</h2>
+                <p className="text-sm text-gray-600">연락 가능 시간: AM 9 - PM 6</p>
+                <p className="text-sm text-gray-600">평균 응답 속도: 30분 이내</p>
               </div>
-            </div>
-          ))}
+            </>
+          )}
         </div>
-        <form onSubmit={handleSendMessage} className="flex mt-4">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded-md mr-2"
-            placeholder="문의사항을 입력하세요"
-          />
-          <button type="submit" className="p-2 bg-gray-500 text-white rounded-md">
-            전송
-          </button>
-        </form>
+        <div className="flex flex-col h-5/6 justify-between border border-gray-300 rounded-xl bg-gray-100 ">
+          <div className="overflow-y-scroll mb-4 p-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`p-3 rounded-lg max-w-xs ${message.consumer_id === currentUser?.id ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'} break-words`}>
+                  <strong>{message.consumer_id === currentUser?.id ? '나 ' : otherUser?.nickname}:</strong> {message.content}
+                  <span className="block text-xs text-gray-500 mt-1">{new Date(message.created_at).toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={handleSendMessage} className="flex items-center p-4 bg-white rounded-b-xl">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              className="flex-1 p-2 border border-gray-300 rounded-lg mr-2"
+              placeholder="메시지를 입력하세요"
+            />
+            <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg">
+              보내기
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
