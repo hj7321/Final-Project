@@ -8,7 +8,6 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 
 export default function CreateCard() {
@@ -33,6 +32,15 @@ export default function CreateCard() {
   const handleNavigation = () => {
     route.push('/pro')
   }
+  
+  const handleFormSubmit = async () => {
+    const newPostId = await handleSubmit();
+    console.log('New Post ID:', newPostId); // 디버깅 로그
+    if (newPostId !== null && newPostId !== undefined) {
+      route.push(`/pro/proDetail/${newPostId}`);
+    }
+  };
+
   return (
     <div className="max-w-[1240px] mx-auto my-6">
       <div className='mb-5 cursor-pointer group max-w-[65px] max-h-[65px]' onClick={handleNavigation}>
@@ -47,7 +55,7 @@ export default function CreateCard() {
       <LanguageSelect language={language} handleLanguageSelect={handleLanguageSelect}/>
       <ImageUpload images={images} handleImageChange={handleImageChange} handleImageDelete={handleImageDelete}/>
       <DescriptionInput description={description} setDescription={setDescription}/>
-      <SubmitButton handleSubmit={handleSubmit}/>
+      <SubmitButton handleFormSubmit={handleFormSubmit}/>
     </div>
   );
 }
