@@ -1,3 +1,4 @@
+
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
     const supabase = createClient();
     const uploadedImageUrls = await Promise.all(images.map(image => uploadImageAndGetUrl(supabase, image)));
 
-    const { error } = await supabase.from('Request Posts').insert([
+    const { data, error } = await supabase.from('Request Posts').insert([
       {
         user_id: userId,
         title,
@@ -44,13 +45,13 @@ export async function POST(request: NextRequest) {
         price: price,
         post_img: uploadedImageUrls
       }
-    ]);
+    ]).select('id').single();
 
     if (error) {
       throw new Error('데이터베이스 삽입 실패');
     }
 
-    return NextResponse.json({ message: '게시글이 작성되었습니다!' });
+    return NextResponse.json({ id: data.id, message: '게시글이 작성되었습니다!' });
   } catch (error) {
     console.error('오류 발생', error);
     return NextResponse.json({ error: '오류가 발생했습니다' }, { status: 500 });

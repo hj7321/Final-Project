@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을 
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
+import useAuthStore from '@/zustand/authStore';
 
 interface PostData {
   post_img: string[];
@@ -14,14 +15,24 @@ interface UserData {
   nickname: string;
   profile_img: string;
 }
-
+interface PortfolioData {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  portfolio_img: string;
+  lang_category: string[];
+  start_date: string;
+  end_date: string;
+}
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
+  const [portfolio, setPortfolio] = useState<PortfolioData[]>([])
   const [activeTab, setActiveTab] = useState('portfolio');
   const { id: paramId } = useParams();
   const id = paramId as string; //추가 : id를 문자열로 변환
-
+  const { userData } = useAuthStore()
   const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
@@ -33,17 +44,17 @@ export default function ProDetail() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log('fetch',data)
         setPost(data.postData);
         setUser(data.userData);
+        setPortfolio(data.portfolioData);
       } catch (error) {
         console.error('Fetch data error:', error);
       }
     };
     fetchData();
   }, [id]);
-
  //추가//
-
   const handleInquiry = () => { // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) { // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
@@ -63,7 +74,7 @@ export default function ProDetail() {
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
           <div className="h-[150px] w-[150px] border-2 rounded-full mx-auto mt-5">
-            <img src={user.profile_img} alt="user_profile" className="object-cover" />
+            <img src={user.profile_img} alt="user_profile" className="object-cover h-full w-full rounded-full" />
           </div>
           <div className="mx-auto text-2xl mt-4">
             <p>{user.nickname}</p>
@@ -106,20 +117,20 @@ export default function ProDetail() {
             </p>
           </div>
           <div className="mx-auto w-[85%] mt-5 flex flex-col">
-            <button className="w-full h-full bg-[#253CE5] py-2 rounded-xl flex flex-row justify-center items-center" onClick={handleInquiry}> {/* handleInquiry 함수가 문의하기 버튼 클릭 시 실행됨 */}
+            <button className="w-full h-full bg-primary-500 hover:bg-primary-600 py-2 rounded-xl flex flex-row justify-center items-center" onClick={handleInquiry}> {/* handleInquiry 함수가 문의하기 버튼 클릭 시 실행됨 */}
               <span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M10.9488 15.1464L15.3133 19.8976C15.9018 20.5383 16.9712 20.1738 17.046 19.3071L18.2924 4.86566C18.3632 4.04436 17.4658 3.49486 16.7665 3.93141L4.47075 11.6075C3.73276 12.0682 3.89438 13.1864 4.73262 13.4193L10.9488 15.1464ZM10.9488 15.1464L15.2052 8.19459"
                     stroke="white"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
               <span className="text-white">문의하기</span>
             </button>
-            <button className="w-full h-full border-[#253CE5] border py-2 rounded-xl mt-2 flex flex-row justify-center items-center">
+            <button className="w-full h-full hover:bg-primary-50 border-primary-500 border py-2 rounded-xl mt-2 flex flex-row justify-center items-center">
               <span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -132,7 +143,7 @@ export default function ProDetail() {
                   />
                 </svg>
               </span>
-              <span className="text-[#253CE5]">구매하기</span>
+              <span className="text-primary-500">구매하기</span>
             </button>
           </div>
         </div>
@@ -144,7 +155,7 @@ export default function ProDetail() {
         <div className="flex justify-start space-x-4 border-gray-300 pb-2">
           <button
             className={`text-lg ${
-              activeTab === 'portfolio' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+              activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab('portfolio')}
           >
@@ -152,7 +163,7 @@ export default function ProDetail() {
           </button>
           <button
             className={`text-lg ${
-              activeTab === 'service' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+              activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab('service')}
           >
@@ -160,7 +171,7 @@ export default function ProDetail() {
           </button>
           <button
             className={`text-lg ${
-              activeTab === 'reviews' ? 'text-[#253CE5] border-b-2 border-[#253CE5] font-bold ' : 'text-gray-500'
+              activeTab === 'reviews' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab('reviews')}
           >
@@ -169,86 +180,23 @@ export default function ProDetail() {
         </div>
         {activeTab === 'portfolio' && (
           <div className="mt-4 flex flex-row justify-start flex-wrap">
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
+          {portfolio.map((item) => (
+            <div key={item.id} className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
               <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
+                <img src={item.portfolio_img} alt={item.title} className='w-full h-full bg-slate-400 rounded-xl' />
               </div>
               <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
+                <p>{item.lang_category}</p>
               </div>
               <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
+                <p className='font-bold text-lg line-clamp-1'>{item.title}</p>
               </div>
               <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
+                <p>{item.start_date} ~ {item.end_date}</p>
               </div>
             </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items=center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-
-            <div className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src="#" alt="#" className='w-full 하다 h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>Javascript</p>
-                <p className='ml-3'>Next.JS</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>실시간 채팅 어플</p>
-              </div>
-              <div className='text-xs'>
-                <p>2024.07 ~ 2024.08</p>
-              </div>
-            </div>
-          </div>
+          ))}
+        </div>
         )}
         {activeTab === 'service' && (
           <div className="mt-4">
@@ -257,40 +205,6 @@ export default function ProDetail() {
         )}
         {activeTab === 'reviews' && (
           <div className="mt-4 flex flex-col justify-center items-center">
-            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
-              <div>
-                <p>⭐️⭐️⭐️⭐️⭐️</p>
-              </div>
-              <div className='line-clamp-1 my-2'>
-                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
-              </div>
-              <div className='flex flex-row text-sm font-thin'>
-                <div>
-                  <p>작성자 : 코듀</p>
-                </div>
-                <div className='mx-2'>
-                  <p>작성일 : 2024.08.01</p>
-                </div>
-              </div>
-            </div>
-
-            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
-              <div>
-                <p>⭐️⭐️⭐️⭐️⭐️</p>
-              </div>
-              <div className='line-clamp-1 my-2'>
-                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
-              </div>
-              <div className='flex flex-row text-sm font-thin'>
-                <div>
-                  <p>작성자 : 코듀</p>
-                </div>
-                <div className='mx-2'>
-                  <p>작성일 : 2024.08.01</p>
-                </div>
-              </div>
-            </div>
-
             <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
               <div>
                 <p>⭐️⭐️⭐️⭐️⭐️</p>
