@@ -21,16 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <link
-          href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css"
-          rel="stylesheet"
-        />
-        <style>{`
-          body { font-family: 'SUITE Variable', sans-serif; }
-        `}</style>
-      </Head>
-      <body className={inter.className}>
+      <body style={{ fontFamily: 'SUIT Variable, sans-serif' }}>
         <QueryProvider>
           <Header />
           {children}
