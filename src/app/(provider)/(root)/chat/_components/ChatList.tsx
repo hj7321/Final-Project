@@ -16,6 +16,7 @@ interface ChatRoomInfo {
   user_profile_img: string;
   latest_message: string;
   latest_message_time: string;
+  unread_count: number;
 }
 
 const ChatList = () => {
@@ -36,80 +37,105 @@ const ChatList = () => {
     fetchSession();
   }, []);
 
+  const fetchChatRooms = async () => {
+    if (!currentUserId) return;
+
+    const { data: chatData, error: chatError } = await supabase
+      .from('Chat')
+      .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at')
+      .or(`consumer_id.eq.${currentUserId},pro_id.eq.${currentUserId}`);
+
+    if (chatError) {
+      console.error('Error fetching chat rooms:', chatError.message);
+      return;
+    }
+
+    if (chatData && chatData.length > 0) {
+      const chatRoomInfoPromises = chatData.map(async (chatRoom) => {
+        if (!chatRoom.post_id) {
+          return null;
+        }
+
+        const { data: postData, error: postError } = await supabase
+          .from('Request Posts')
+          .select('title, lang_category')
+          .eq('id', chatRoom.post_id)
+          .single();
+
+        const otherUserId = chatRoom.consumer_id === currentUserId ? chatRoom.pro_id : chatRoom.consumer_id;
+        
+        const { data: userData, error: userError } = await supabase
+          .from('Users')
+          .select('nickname, profile_img')
+          .eq('id', otherUserId)
+          .single();
+
+        const { data: latestMessageData, error: latestMessageError } = await supabase
+          .from('Chat')
+          .select('content, created_at')
+          .eq('chat_room_id', chatRoom.chat_room_id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        const { count: unreadCount, error: unreadCountError } = await supabase
+          .from('Chat')
+          .select('*', { count: 'exact' })
+          .eq('chat_room_id', chatRoom.chat_room_id)
+          .eq('is_read', false)
+          .neq('consumer_id', currentUserId);
+
+        if (postError) {
+          console.error('Error fetching post data:', postError.message);
+          return null;
+        }
+
+        if (userError) {
+          console.error('Error fetching user data:', userError.message);
+          return null;
+        }
+
+        if (latestMessageError) {
+          console.error('Error fetching latest message:', latestMessageError.message);
+          return null;
+        }
+
+        if (unreadCountError) {
+          console.error('Error fetching unread count:', unreadCountError.message);
+          return null;
+        }
+
+        return {
+          chat_room_id: chatRoom.chat_room_id,
+          post_lang_category: postData?.lang_category || [],
+          post_title: postData?.title || '제목 없음',
+          user_nickname: userData?.nickname || '알 수 없음',
+          user_profile_img: userData?.profile_img || '',
+          latest_message: latestMessageData?.content || '메시지가 없습니다.',
+          latest_message_time: latestMessageData?.created_at || '',
+          unread_count: unreadCount || 0,
+        } as ChatRoomInfo;
+      });
+
+      const resolvedChatRooms = (await Promise.all(chatRoomInfoPromises)).filter(Boolean) as ChatRoomInfo[];
+      resolvedChatRooms.sort((a, b) => new Date(b.latest_message_time).getTime() - new Date(a.latest_message_time).getTime());
+      setChatRooms(resolvedChatRooms);
+    }
+  };
+
   useEffect(() => {
-    const fetchChatRooms = async () => {
-      if (!currentUserId) return;
-
-      const { data: chatData, error: chatError } = await supabase
-        .from('Chat')
-        .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at')
-        .or(`consumer_id.eq.${currentUserId},pro_id.eq.${currentUserId}`);
-
-      if (chatError) {
-        console.error('Error fetching chat rooms:', chatError.message);
-        return;
-      }
-
-      if (chatData && chatData.length > 0) {
-        const chatRoomInfoPromises = chatData.map(async (chatRoom) => {
-          if (!chatRoom.post_id) {
-            return null;
-          }
-
-          const { data: postData, error: postError } = await supabase
-            .from('Request Posts')
-            .select('title, lang_category')
-            .eq('id', chatRoom.post_id)
-            .single();
-
-          const otherUserId = chatRoom.consumer_id === currentUserId ? chatRoom.pro_id : chatRoom.consumer_id;
-          
-          const { data: userData, error: userError } = await supabase
-            .from('Users')
-            .select('nickname, profile_img')
-            .eq('id', otherUserId)
-            .single();
-
-          const { data: latestMessageData, error: latestMessageError } = await supabase
-            .from('Chat')
-            .select('content, created_at')
-            .eq('chat_room_id', chatRoom.chat_room_id)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-
-          if (postError) {
-            console.error('Error fetching post data:', postError.message);
-            return null;
-          }
-
-          if (userError) {
-            console.error('Error fetching user data:', userError.message);
-            return null;
-          }
-
-          if (latestMessageError) {
-            console.error('Error fetching latest message:', latestMessageError.message);
-            return null;
-          }
-
-          return {
-            chat_room_id: chatRoom.chat_room_id,
-            post_lang_category: postData?.lang_category || [],
-            post_title: postData?.title || '제목 없음',
-            user_nickname: userData?.nickname || '알 수 없음',
-            user_profile_img: userData?.profile_img || '',
-            latest_message: latestMessageData?.content || '메시지가 없습니다.',
-            latest_message_time: new Date(latestMessageData?.created_at).toLocaleDateString(),
-          } as ChatRoomInfo;
-        });
-
-        const resolvedChatRooms = (await Promise.all(chatRoomInfoPromises)).filter(Boolean) as ChatRoomInfo[];
-        setChatRooms(resolvedChatRooms);
-      }
-    };
-
     fetchChatRooms();
+
+    const chatChannel = supabase
+      .channel('realtime:chat')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat' }, () => {
+        fetchChatRooms(); // 새 메시지가 추가될 때마다 채팅방 목록을 다시 가져옵니다.
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(chatChannel);
+    };
   }, [currentUserId]);
 
   const getCategoryImage = (category: string) => {
@@ -130,6 +156,7 @@ const ChatList = () => {
 
   const closeChatModal = () => {
     setCurrentChatRoomId(null);
+    fetchChatRooms(); // 모달을 닫을 때 채팅방 목록을 다시 가져옵니다.
   };
 
   return (
@@ -156,9 +183,12 @@ const ChatList = () => {
               <div className='flex items-center justify-center'>
                 <p className="text-xl font-bold item-center">{room.user_nickname}</p>
                 <p>님</p>
+                {room.unread_count > 0 && (
+                  <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2">{room.unread_count}</span>
+                )}
               </div>
               <p className="text-gray-600 px-12 mt-1">{truncateMessage(room.latest_message, 36)}</p>
-              <p className="text-sm text-gray-500 mt-2">{room.latest_message_time}</p>
+              <p className="text-sm text-gray-500 mt-2">{new Date(room.latest_message_time).toLocaleDateString()}</p>
             </div>
           </div>
         ))}

@@ -26,6 +26,20 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
   }, []);
 
   useEffect(() => {
+    const markMessagesAsRead = async () => {
+      if (!currentUser) return;
+
+      const { error } = await supabase
+        .from('Chat')
+        .update({ is_read: true })
+        .eq('chat_room_id', chatRoomId)
+        .neq('consumer_id', currentUser.id);
+
+      if (error) {
+        console.error('Error marking messages as read:', error.message);
+      }
+    };
+
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from('Chat')
@@ -37,6 +51,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
         console.error('Error fetching messages:', error);
       } else {
         setMessages(data as ChatMessage[]);
+        markMessagesAsRead(); // 메시지를 읽었을 때 바로 읽음 처리
       }
     };
 
@@ -52,7 +67,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [chatRoomId]);
+  }, [chatRoomId, currentUser]);
 
   const handleSendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -66,6 +81,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
         pro_id: currentUser.id, // 이 부분은 실제 사용 시 변경 필요
         content: newMessage,
         chat_room_id: chatRoomId,
+        is_read: false, // 새로운 메시지는 읽지 않음으로 표시
       },
     ]);
 
