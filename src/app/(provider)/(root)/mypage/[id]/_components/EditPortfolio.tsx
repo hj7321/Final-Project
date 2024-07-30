@@ -159,7 +159,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               />
             )}
             {portfolioData && portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0 ? (
-              portfolioData.portfolio_img.map((img, index) => (
+              portfolioData.portfolio_img.map((img: string, index: number) => (
                 <img
                   key={index}
                   src={img}

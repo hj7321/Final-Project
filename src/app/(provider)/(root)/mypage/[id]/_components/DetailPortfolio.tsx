@@ -135,7 +135,7 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
             {portfolioData && portfolioData.portfolio_img && portfolioData.portfolio_img.length > 1 ? (
               portfolioData.portfolio_img
                 .slice(1)
-                .map((img, index) => (
+                .map((img: string, index: number) => (
                   <img
                     key={index}
                     src={img}

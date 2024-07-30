@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import EditPortfolio from './EditPortfolio';
-import EddPortfolio from './EddPortFolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DetailModal from './DetailPortfolio';
+import AddPortfolio from './AddPortFolio';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -174,7 +174,7 @@ export default function Portfolio() {
       )}
       {editModalOpen && <EditPortfolio clickModal={handleCloseModal} portfolioId={selectedPortfolioId} />}
       {detailModal && <DetailModal clickModal={closeDetailModal} portfolioId={selectedPortfolioId} />}
-      {eddModal && <EddPortfolio clickModal={closeEddmodal} />}
+      {eddModal && <AddPortfolio clickModal={closeEddmodal} />}
     </div>
   );
 }

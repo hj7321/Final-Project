@@ -6,13 +6,13 @@ import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
-interface EddPortfolioProps {
+interface AddPortfolioProps {
   clickModal: () => void;
 }
 
 type PortfolioData = Omit<Portfolio, 'id' | 'created_at'>;
 
-const EddPortfolio: React.FC<EddPortfolioProps> = ({ clickModal }) => {
+const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
   const params = useParams();
   const id = params.id as string;
   const queryClient = useQueryClient();
@@ -223,4 +223,4 @@ const EddPortfolio: React.FC<EddPortfolioProps> = ({ clickModal }) => {
   );
 };
 
-export default EddPortfolio;
+export default AddPortfolio;
