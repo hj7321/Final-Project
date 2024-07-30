@@ -50,6 +50,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4321447a1a6af8a2983c64f22e0a37393471fcd9
             foreignKeyName: "Accounts_request_post_id_fkey"
             columns: ["request_post_id"]
             isOneToOne: false
@@ -58,7 +62,63 @@ export type Database = {
           },
         ]
       }
+<<<<<<< HEAD
       Chat: {
+        Row: {
+          chat_room_id: string
+          consumer_id: string
+          content: string
+          created_at: string | null
+          id: string
+          pro_id: string
+        }
+        Insert: {
+          chat_room_id?: string
+          consumer_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          pro_id: string
+        }
+        Update: {
+          chat_room_id?: string
+          consumer_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          pro_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Chat_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Chat_pro_id_fkey"
+            columns: ["pro_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "Community Comments": {
+=======
+            foreignKeyName: 'Accounts_request_post_id_fkey';
+            columns: ['request_post_id'];
+            isOneToOne: false;
+            referencedRelation: 'Request Posts';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
+=======
+>>>>>>> 4321447a1a6af8a2983c64f22e0a37393471fcd9
+      Chat: {
+>>>>>>> cb46d48541af593653a0422526ee78c05dcdfdb3
         Row: {
           chat_room_id: string
           consumer_id: string
