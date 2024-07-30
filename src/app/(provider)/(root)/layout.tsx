@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import '@/app/globals.css';
 import Footer from '@/components/ footer';
 import QueryProvider from '../Provider';
+import Head from 'next/head';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <link
+          href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css"
+          rel="stylesheet"
+        />
+        <style>{`
+          body { font-family: 'SUITE Variable', sans-serif; }
+        `}</style>
+      </Head>
       <body className={inter.className}>
         <QueryProvider>
           <Header />
