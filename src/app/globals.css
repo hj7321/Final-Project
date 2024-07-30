@@ -3,6 +3,19 @@
 @tailwind utilities;
 @import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
 
+.custom-checkbox {
+  @apply appearance-none relative w-[16px] h-[16px] border border-grey-200 rounded-[3px] cursor-pointer bg-white;
+}
+
+.custom-checkbox:checked {
+  @apply bg-primary-500 border-primary-500;
+}
+
+.custom-checkbox:checked::before {
+  content: '✔';
+  @apply absolute top-[-5.5px] text-white;
+}
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
