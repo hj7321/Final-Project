@@ -84,7 +84,9 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       body: JSON.stringify({
         id: portfolioId,
         title,
-        content
+        content,
+        start_date: startDate,
+        end_date: endDate
       })
     });
 

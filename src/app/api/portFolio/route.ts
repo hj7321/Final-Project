@@ -48,7 +48,7 @@ export async function PUT(request: NextRequest) {
     const supabase = createClient();
     const { data, error } = await supabase
       .from('Portfolio')
-      .update({ title: info.title, content: info.content, start_date: info.start_date })
+      .update({ title: info.title, content: info.content, start_date: info.start_date, end_date: info.end_date })
       .eq('id', info.id);
 
     return NextResponse.json(data);

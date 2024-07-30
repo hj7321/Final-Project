@@ -140,6 +140,7 @@ export default function Portfolio() {
                     onClick={() => openDetailModal(post.id)}
                   />
                   <div className="ml-8 flex-1">
+                    <p className="text-base text-gray-500 ">{post.lang_category} </p>
                     <p className="font-bold text-[20px] mb-2">{post.title}</p>
                     <p
                       className="text-[16px] mb-2"
