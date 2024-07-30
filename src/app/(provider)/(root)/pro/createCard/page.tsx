@@ -8,11 +8,10 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
-import { CodeCategories } from '@/components/dumy';
+import { useState } from 'react';
 
 
 export default function CreateCard() {
-  CodeCategories
   const route = useRouter()
   const {
     title,
@@ -27,7 +26,6 @@ export default function CreateCard() {
     handleImageDelete,
     handleLanguageSelect,
     handleSubmit,
-    codeLang,
     price,
     setPrice
   } = useCreateCard()
@@ -37,11 +35,16 @@ export default function CreateCard() {
   }
   return (
     <div className="max-w-[1240px] mx-auto my-6">
-      <div className='text-4xl border-2 border-solid px-4 py-2 inline-block rounded-full font-thin mb-3 cursor-pointer' onClick={handleNavigation}>X</div>
+      <div className='mb-5 cursor-pointer group max-w-[65px] max-h-[65px]' onClick={handleNavigation}>
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="63" height="63" rx="31.5" className='stroke-gray-300 group-hover:stroke-gray-400'/>
+          <path d="M24 24L40 40M40 24L24 40" className='stroke-gray-300 group-hover:stroke-gray-400' strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
       <h1 className="mb-[20px] text-2xl">전문가 의뢰 등록하기</h1>
       <TitleInput title={title} setTitle={setTitle}/>
       <PriceInput price={price} setPrice={setPrice}/>
-      <LanguageSelect codeLang={codeLang} language={language} handleLanguageSelect={handleLanguageSelect}/>
+      <LanguageSelect language={language} handleLanguageSelect={handleLanguageSelect}/>
       <ImageUpload images={images} handleImageChange={handleImageChange} handleImageDelete={handleImageDelete}/>
       <DescriptionInput description={description} setDescription={setDescription}/>
       <SubmitButton handleSubmit={handleSubmit}/>

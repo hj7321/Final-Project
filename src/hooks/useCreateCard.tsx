@@ -4,18 +4,6 @@ import useAuthStore from "@/zustand/authStore";
 import { useState } from "react";
 
 const supabase = createClient()
-const codeLang = [
-  'HTML/CSS',
-  'JavaScript',
-  'Java',
-  'Python',
-  'C/C++/C#',
-  'TypeScript',
-  'React',
-  'Android/IOS',
-  'Next.JS',
-  'Git/Github'
-];
 
 export default function useCreateCard() {
   const [title, setTitle] = useState<string>('');
@@ -54,6 +42,10 @@ export default function useCreateCard() {
     }
     if(!price) {
       alert('가격을 입력해주세요')
+      return
+    }
+    if(images.length === 0) {
+      alert('이미지는 최소 1개 이상 올려주세요')
       return
     }
     if(language.length < 1) {
@@ -106,7 +98,6 @@ export default function useCreateCard() {
     handleImageDelete,
     handleLanguageSelect,
     handleSubmit,
-    codeLang,
     price,
     setPrice
   }
