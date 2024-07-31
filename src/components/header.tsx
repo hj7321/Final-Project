@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
-import HeaderButton from './HeaderButton';
 
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
