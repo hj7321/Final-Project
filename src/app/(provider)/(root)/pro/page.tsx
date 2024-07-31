@@ -3,7 +3,7 @@
 import { CodeCategories } from '@/components/dumy';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Posts {
   id: string;
@@ -16,14 +16,13 @@ interface Posts {
 }
 
 export default function proMainPage() {
-  const [posts, setPosts] = useState<Posts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Posts[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
 
-  const fetchData = async (page: number, languages: string[] = []) => {
+  const fetchData = useCallback(async (page: number, languages: string[] = []) => {
     try {
       const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
       const url = `/api/proMain?page=${page}${langQuery}`;
@@ -32,10 +31,8 @@ export default function proMainPage() {
 
       if (data && Array.isArray(data)) {
         if (page === 0) {
-          setPosts(data);
           setFilteredPosts(data);
         } else {
-          setPosts((prevPosts) => [...prevPosts, ...data]);
           setFilteredPosts((prevPosts) => [...prevPosts, ...data]);
         }
       } else {
@@ -44,38 +41,29 @@ export default function proMainPage() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData(page, selectedLanguages);
   }, [page, selectedLanguages]);
 
   useEffect(() => {
-    if (selectedLanguages.length > 0 && Array.isArray(posts)) {
-      const filtered = posts.filter((post) =>
-        selectedLanguages.some((lang) =>
-          post.lang_category?.some(
-            (category) => category.replace(/\s+/g, '').toLowerCase() === lang.replace(/\s+/g, '').toLowerCase()
-          )
-        )
-      );
-      setFilteredPosts(filtered);
-    } else {
-      setFilteredPosts(posts);
-    }
-  }, [selectedLanguages, posts]);
-
-  useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !loading) {
         setLoading(true);
-        setPage((prevPage) => prevPage + 1);
-        setLoading(false);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading]);
+
+  useEffect(() => {
+    if (loading) {
+      fetchData(page, selectedLanguages).then(() => {
+        setLoading(false);
+      });
+    }
   }, [loading]);
 
   const handleLanguageFilter = (lang: string) => {
@@ -87,9 +75,11 @@ export default function proMainPage() {
     setPage(0);
     fetchData(0, newSelectedLanguages);
   };
+
   const handleNavigation = () => {
     route.push('/pro/createCard');
   };
+
   return (
     <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
       <div className="flex flex-row justify-end mt-[20px]">
