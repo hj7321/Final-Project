@@ -161,35 +161,38 @@ const ChatList = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">나의 문의내역</h1>
+      <h1 className="text-xl font-semibold mb-4">나의 문의내역</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
-            className="py-4 px-2 border border-gray-300 rounded-xl cursor-pointer hover:border-primary-400"
+            className="flex flex-col justify-between py-5 px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-lg hover:shadow-primary-100"
             onClick={() => openChatModal(room.chat_room_id)}
+            style={{ height: '255px', maxWidth: '220px', maxHeight : '255px' }}
           >
-            <div className="flex items-center justify-center mb-2">
-              <div className='flex items-center'>
-                <Image src={getCategoryImage(room.post_lang_category[0])} alt={room.post_lang_category[0]} width={40} height={40} className="w-8 h-8 mr-2" />
-                <div className="text-xs">{room.post_lang_category[0]}</div>
+            <div>
+              <div className="flex items-center justify-center mt-2 mb-2">
+                <div className='flex items-center'>
+                  <Image src={getCategoryImage(room.post_lang_category[0])} alt={room.post_lang_category[0]} width={10} height={10} className="w-6 h-6 mr-2" />
+                  <div className="text-sm font-normal">{room.post_lang_category[0]}</div>
+                </div>
+                <h3 className="text-xs font-bold items-center ml-2">{room.post_title}</h3>
               </div>
-              <h3 className="text-xs font-bold items-center ml-4">{room.post_title}</h3>
-            </div>
-            <div className="flex items-center justify-center mt-2 mb-2">
-              <Image src={room.user_profile_img} alt="상대 프로필" width={48} height={48} className="w-12 h-12 border border-gray-300 rounded-full" />
-            </div>
-            <div className="text-center">
-              <div className='flex items-center justify-center'>
-                <p className="text-sm font-bold item-center">{room.user_nickname}</p>
-                <p className="text-sm">님</p>
-                {room.unread_count > 0 && (
-                  <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2">{room.unread_count}</span>
-                )}
+              <div className="flex items-center justify-center mt-2 mb-2">
+                <Image src={room.user_profile_img} alt="상대 프로필" width={20} height={20} className="w-12 h-12 mt-3 border border-gray-300 rounded-full" />
               </div>
-              <p className="text-gray-600 text-xs mt-1">{truncateMessage(room.latest_message, 36)}</p>
-              <p className="text-xs text-gray-500 mt-2">{new Date(room.latest_message_time).toLocaleDateString()}</p>
+              <div className="text-center">
+                <div className='flex items-center justify-center mt-4'>
+                  <p className="text-sm font-semibold item-center">{room.user_nickname}</p>
+                  <p className="text-sm font-normal ml-1">님</p>
+                  {room.unread_count > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-2">{room.unread_count}</span>
+                  )}
+                </div>
+                <p className="text-gray-500 font-normal text-xs mt-1">{truncateMessage(room.latest_message, 40)}</p>
+              </div>
             </div>
+            <p className="text-xs font-normal text-gray-400 mt-2 self-center">{new Date(room.latest_message_time).toLocaleDateString()}</p>
           </div>
         ))}
       </div>
