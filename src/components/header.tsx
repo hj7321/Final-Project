@@ -23,21 +23,18 @@ export default function Header() {
   const supabase = createClient();
   console.log('헤더');
 
-  useEffect;
+  const handleGetSession = async () => {
+    console.log('함수 호출');
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
 
+    console.log(session);
+    setSession(session?.access_token);
+  };
   useEffect(() => {
-    const handleGetSession = async () => {
-      console.log('함수 호출');
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-      console.log(session);
-      setSession(session?.access_token);
-    };
-
     handleGetSession();
-  }, []);
+  }, [handleGetSession]);
 
   useEffect(() => {
     const initialize = async () => {
