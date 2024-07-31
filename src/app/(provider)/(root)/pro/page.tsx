@@ -15,7 +15,7 @@ interface Posts {
   price: number;
 }
 
-export default function proMainPage() {
+export default function ProMainPage() {
   const [posts, setPosts] = useState<Posts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Posts[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
