@@ -30,7 +30,7 @@ export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
-  const [activeTab, setActiveTab] = useState('portfolio');
+  const [activeTab, setActiveTab] = useState('service');
   const { id: paramId } = useParams();
   const id = paramId as string; //추가 : id를 문자열로 변환
   const { userData } = useAuthStore();
@@ -78,23 +78,15 @@ export default function ProDetail() {
     if (section) {
       const sectionRect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-  
+
       // 섹션 중앙을 뷰포트 중앙에 맞추도록 오프셋 계산
       const yOffset = (viewportHeight - sectionRect.height) / 2;
       const y = sectionRect.top + window.scrollY - yOffset;
-  
-      console.log(`Section height: ${sectionRect.height}`);
-      console.log(`Viewport height: ${viewportHeight}`);
-      console.log(`Calculated yOffset: ${yOffset}`);
-      console.log(`Scrolling to: ${y}`);
-  
+
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-  
-  
-  
-  
+
   return (
     <div className="max-w-[1280px] mx-auto p-4">
       <div className="flex flex-row justify-between">
@@ -186,30 +178,30 @@ export default function ProDetail() {
         <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-0 bg-yellow-400">
           <ul className="flex justify-start space-x-4">
             <li
-              id="portfolio"
+              id="service"
               className={`text-lg ${
-                activeTab === 'portfolio'
+                activeTab === 'service'
                   ? 'text-primary-500 border-b-2 border-primary-500 font-bold '
                   : 'text-gray-500'
               }`}
               onClick={(e) => {
-                e.preventDefault()
-                handleTabClick('portfolio','section1')
+                e.preventDefault();
+                handleTabClick('service', 'section1');
               }}
             >
-              <a href="#section1">포트폴리오</a>
+              <a href="#section1">서비스 정보</a>
             </li>
             <li
-              id="service"
+              id="portfolio"
               className={`text-lg ${
-                activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
+                activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
               }`}
               onClick={(e) => {
-                e.preventDefault()
-                handleTabClick('service','section2')
+                e.preventDefault();
+                handleTabClick('portfolio', 'section2');
               }}
             >
-              <a href="#section2">서비스 정보</a>
+              <a href="#section2">포트폴리오</a>
             </li>
             <li
               id="reviews"
@@ -217,8 +209,8 @@ export default function ProDetail() {
                 activeTab === 'reviews' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
               }`}
               onClick={(e) => {
-                e.preventDefault()
-                handleTabClick('review','section3')
+                e.preventDefault();
+                handleTabClick('reviews', 'section3');
               }}
             >
               <a href="#section3">리뷰</a>
@@ -251,6 +243,34 @@ export default function ProDetail() {
         </div>
         <div>
           <div id="section1" className="">
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+          </div>
+          <div id="section2" className="bg-blue-500">
             <div className="mt-4 flex flex-row justify-start flex-wrap">
               {portfolio.map((item) => (
                 <div key={item.id} className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2">
@@ -271,34 +291,6 @@ export default function ProDetail() {
                 </div>
               ))}
             </div>
-          </div>
-          <div id="section2" className="bg-blue-500">
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
           </div>
           <div id="section3" className="h-[800px] bg-slate-500">
             리뷰임
