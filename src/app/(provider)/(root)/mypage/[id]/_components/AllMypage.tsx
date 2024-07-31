@@ -12,6 +12,7 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
 import ReceiveReview from './ReceiveReview';
 import SendReview from './SendReview';
+import ChatList from '../../../chat/_components/ChatList';
 
 export default function AllMypage() {
   const { id } = useParams();
@@ -37,6 +38,8 @@ export default function AllMypage() {
         return <ReceiveReview />;
       case 'SendReview':
         return <SendReview />;
+      case 'MyChatList':
+        return <ChatList />;
     }
   };
 
@@ -154,6 +157,12 @@ export default function AllMypage() {
               onClick={() => setActiveComponent('AccountList')}
             >
               거래내역
+            </li>
+            <li
+              className={activeComponent === 'MyChatList' ? activeStyle : liStyle}
+              onClick={() => setActiveComponent('MyChatList')}
+            >
+              내 채팅 목록
             </li>
             {Users?.data?.is_pro ? (
               <li
