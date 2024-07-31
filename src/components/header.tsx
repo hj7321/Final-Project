@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
-import HeaderButton from './HeaderButton';
 import clsx from 'clsx';
 import { createClient } from '@/utils/supabase/client';
 import { Session } from 'inspector';
@@ -20,7 +19,7 @@ export default function Header() {
   const router = useRouter();
   const { isLogin, logout, userId, initializeAuthState, isLoading } = useAuthStore();
 
-  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
+  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId!);
 
   const supabase = createClient();
   console.log('헤더');
@@ -124,7 +123,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-[24px]">
             <Link href={`/mypage/${userId}`}>
-              <b className="text-primary-500">{userData?.data.nickname}</b>님
+              <b className="text-primary-500">{userData?.data?.nickname}</b>님
             </Link>
             <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
               로그아웃
