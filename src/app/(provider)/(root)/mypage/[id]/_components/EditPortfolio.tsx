@@ -13,10 +13,15 @@ interface EditPortfolioProps {
 const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
   const userId = params.id as string;
+  const { id } = useParams();
 
   const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
 
   const getPortfolio = async () => {
+    if (!portfolioId) {
+      throw new Error('포트폴리오 ID가 지정되지 않았습니다.');
+    }
+
     const response = await fetch(`/api/portFolio/${portfolioId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -24,21 +29,51 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     return response.json();
   };
 
-  const { data: portfolioData, isLoading: portfolioLoading } = useQuery<Portfolio>({
+  const {
+    data: portfolioData,
+    isLoading: portfolioLoading,
+    error: portfolioError
+  } = useQuery<Portfolio>({
     queryKey: ['portfolio', portfolioId],
     queryFn: getPortfolio,
     enabled: !!portfolioId
   });
 
+  const getsPortfolio = async () => {
+    const response = await fetch('/api/portFolio');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: Portfolio[] = await response.json();
+    return data.filter((post) => post.user_id === id);
+  };
+
+  const { data } = useQuery<Portfolio[]>({
+    queryKey: ['posts', id],
+    queryFn: getsPortfolio,
+    enabled: !!id
+  });
+
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
+  const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
-    if (portfolioData) {
-      setTitle(portfolioData.title || '');
-      setContent(portfolioData.content || '');
+    if (data && portfolioId) {
+      const portfolio = data.find((p) => p.id === portfolioId);
+      if (portfolio) {
+        setTitle(portfolio.title || '');
+        setContent(portfolio.content || '');
+        setStartDate(portfolio.start_date || '');
+        setEndDate(portfolio.end_date || '');
+      }
     }
-  }, [portfolioData]);
+  }, [data, portfolioId]);
+
+  console.log('portfolioData', portfolioData);
 
   const handleSave = async () => {
     const response = await fetch('/api/portFolio', {
@@ -49,7 +84,9 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       body: JSON.stringify({
         id: portfolioId,
         title,
-        content
+        content,
+        start_date: startDate,
+        end_date: endDate
       })
     });
 
@@ -64,8 +101,12 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     return <div className="h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  if (userError) {
-    return <div className="h-screen flex items-center justify-center">Error: {userError.message}</div>;
+  if (userError || portfolioError) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Error: {userError?.message || portfolioError?.message}
+      </div>
+    );
   }
 
   return (
@@ -80,6 +121,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
+
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -93,6 +135,22 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 ></input>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">참여 기간</label>
+                <input
+                  type="date"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                ~
+                <input
+                  type="date"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
               </div>
               <div className="flex justify-end">
                 <button
@@ -113,6 +171,33 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               />
               <div className="mt-4 flex flex-wrap space-y-4"></div>
             </div>
+            썸네일
+            {portfolioData && (
+              <img
+                src={
+                  portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0
+                    ? portfolioData.portfolio_img[0]
+                    : 'https://via.placeholder.com/150?text=No+Image'
+                }
+                alt="Portfolio Image"
+              />
+            )}
+            {portfolioData && portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0 ? (
+              portfolioData.portfolio_img.map((img: string, index: number) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`Portfolio image ${index}`}
+                  className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+                />
+              ))
+            ) : (
+              <img
+                src="https://via.placeholder.com/150?text=No+Image"
+                alt="No Image"
+                className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+              />
+            )}
           </div>
         </div>
       </div>

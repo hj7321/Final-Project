@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { CommunityPosts } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
+import useAuthStore from '@/zustand/authStore';
 
 export default function QnaPostList() {
   const { id } = useParams();
@@ -13,7 +14,8 @@ export default function QnaPostList() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    return data.filter((post) => post.post_category === 'QnA');
+
+    return data.filter((post) => post.post_category === 'QnA' && post.user_id === id);
   };
 
   const { data, isLoading, error } = useQuery<CommunityPosts[]>({

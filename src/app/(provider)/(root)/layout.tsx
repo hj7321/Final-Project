@@ -4,6 +4,7 @@ import Header from '@/components/header';
 import '@/app/globals.css';
 import Footer from '@/components/ footer';
 import QueryProvider from '../Provider';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
   title: '코듀(CodeU)',
