@@ -5,38 +5,13 @@ import Languages from './Languages';
 import Latest from './Latest';
 import Popularity from './Popularity';
 
-interface Post {
-  id: string;
-  created_at: string;
-  title: string;
-  content: string;
-  post_category: string;
-  user_id: string;
-  post_img: string[];
-  lang_category: string[];
-}
-
 export default function CompletePostList() {
   const [view, setView] = useState<boolean>(true);
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
 
   const handleListChange = () => {
     setView(!view);
   };
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch('/api/posts');
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
-    fetchPosts();
-  }, []);
-  // 일단 잘 모르겠는데 작성함
 
   return (
     <div className="flex gap-[32px] mt-[30px]">
@@ -51,7 +26,7 @@ export default function CompletePostList() {
             인기 순
           </p>
         </div>
-        <div>{view ? <Latest posts={posts} /> : <Popularity posts={posts} />}</div>
+        <div>{view ? <Latest /> : <Popularity />}</div>
       </div>
     </div>
   );
