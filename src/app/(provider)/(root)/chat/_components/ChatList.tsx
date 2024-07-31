@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { ChatMessage } from '@/types/type';
 import ChatModal from './ChatModal';
 import { CodeCategories } from '@/components/dumy';
 
@@ -129,7 +128,7 @@ const ChatList = () => {
     const chatChannel = supabase
       .channel('realtime:chat')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat' }, () => {
-        fetchChatRooms(); // 새 메시지가 추가될 때마다 채팅방 목록을 다시 가져옵니다.
+        fetchChatRooms(); // 새 메시지가 추가될 때마다 채팅방 목록을 다시 가져옴.
       })
       .subscribe();
 
@@ -166,7 +165,7 @@ const ChatList = () => {
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
-            className="py-8 px-4 border border-gray-300 rounded-3xl cursor-pointer"
+            className="py-8 px-4 border border-gray-300 rounded-3xl cursor-pointer hover:border-primary-400"
             onClick={() => openChatModal(room.chat_room_id)}
           >
             <div className="flex items-center justify-center mb-4">

@@ -129,7 +129,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-2xl w-full max-w-xl h-5/6">
+      <div className="bg-white p-5 rounded-xl w-1/3 max-w-xl h-5/6">
         <button onClick={onClose} className="text-black float-right">닫기</button>
         <div className="flex items-center mb-6">
           {otherUser && (
@@ -143,16 +143,16 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
             </>
           )}
         </div>
-        <div className="flex flex-col h-5/6 justify-between border border-gray-300 rounded-xl bg-gray-100 ">
+        <div className="flex flex-col h-5/6 justify-between border border-gray-300 rounded-xl bg-gray-100 overflow-hidden">
           <div className="overflow-y-scroll mb-4 p-4">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`p-3 rounded-lg max-w-xs ${message.consumer_id === currentUser?.id ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'} break-words`}>
+                <div className={`p-3 rounded-lg text-xs max-w-xs ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-200 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
                   <strong>{message.consumer_id === currentUser?.id ? '나 ' : otherUser?.nickname}:</strong> {message.content}
-                  <span className="block text-xs text-gray-500 mt-1">{new Date(message.created_at).toLocaleString()}</span>
+                  {/* <span className="block text-[10px] text-gray-500 mt-1">{new Date(message.created_at).toLocaleString()}</span> */}
                 </div>
               </div>
             ))}
@@ -165,7 +165,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
               className="flex-1 p-2 border border-gray-300 rounded-lg mr-2"
               placeholder="메시지를 입력하세요"
             />
-            <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg">
+            <button type="submit" className="p-2 bg-primary-500 text-white rounded-lg">
               보내기
             </button>
           </form>
