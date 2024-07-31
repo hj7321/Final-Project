@@ -1,197 +1,229 @@
-// 'use client'
+'use client';
+import { CommunityPosts } from '@/types/type';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useRef, useState, ChangeEvent } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import useAuthStore from '@/zustand/authStore';
 
-// import { CommunityPosts } from '@/types/type';
-// import { createClient } from '@/utils/supabase/client';
-// import useAuthStore from '@/zustand/authStore';
-// import { useMutation, useQuery } from '@tanstack/react-query';
-// import Link from 'next/link';
-// import { useParams } from 'next/navigation';
-// import { useRouter } from 'next/router';
-// import { useEffect, useRef, useState } from 'react';
+interface AddPortfolioProps {
+  clickModal: () => void;
+}
 
-// export default function CreatePost() {
-//   const categoryRef = useRef<HTMLSelectElement>(null);
-//   const postCategoryRef = useRef<HTMLInputElement>(null);
-//   const titleRef = useRef<HTMLInputElement>(null);
-//   const langCategory = useRef<HTMLInputElement>(null);
-//   const userRef = useRef<HTMLInputElement>(null);
-//   const contentRef = useRef<HTMLTextAreaElement>(null);
+type CommunityPostsData = Omit<CommunityPosts, 'id' | 'created_at'> & {
+  post_category: string;
+  post_img: string[] | null;
+  user_id: string;
+};
 
-//   const [file, setFile] = useState<File | null>(null);
-//   const [imgUrl, setImgUrl] = useState<string | null>('');
-//   const user = useAuthStore((state) => state.Users);
-//   const router = useRouter();
-//   const { id } = useParams();
+const CreatePost: React.FC<AddPortfolioProps> = ({ clickModal }) => {
+  const params = useParams();
+  const id = params.id as string;
+  const queryClient = useQueryClient();
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const user = useAuthStore((state) => state.userId) as string | null; // 유저 정보 가져오기
 
-//   const getProfileDate = async () => {
-//     if (user) {
-//       const supabase = createClient();
-//       const data = await supabase.from('Users').select('*').eq('id', user.id).maybeSingle();
-//       return data;
-//     }
-//   };
-//   const { data: users } = useQuery({
-//     queryKey: ['users', user?.id],
-//     queryFn: getProfileDate
-//   });
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [selectedLanguage, setSelectedLanguage] = useState<string[]>([]);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [additionalImages, setAdditionalImages] = useState<File[]>([]);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-//   const getPostData = async () => {
-//     const response = await fetch('/api/post');
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//     }
-//     const data: CommunityPosts[] = await response.json();
-//     const post: CommunityPosts | undefined = data.find((post) => post.id === id);
-//     if (!post) {
-//       return;
-//     }
-//     if (titleRef.current) titleRef.current.value = post.title;
-//     if (postCategoryRef.current) postCategoryRef.current.value = post.post_category;
-//     if (contentRef.current) contentRef.current.value = post.content;
-//     if (langCategory.current) langCategory.current.value = post.lang_category;
-//     if (userRef.current) userRef.current.value = users?.data?.nickname as string;
+  const savePost = async (data: CommunityPostsData) => {
+    const response = await fetch('/api/communityAdd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  };
 
-//     setImgUrl(post.post_img);
-//   };
+  const uploadImage = async (file: File) => {
+    const supabase = createClient();
+    const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const { data, error } = await supabase.storage.from('community_post_image').upload(fileName, file);
+    if (error) throw error;
+    const { publicUrl } = supabase.storage.from('community_post_image').getPublicUrl(fileName).data;
+    return publicUrl;
+  };
 
-//   useEffect(() => {
-//     if (id !== 'new') {
-//       getPostData();
-//     }
-//   }, [id]);
+  const { mutate: addMutation } = useMutation<CommunityPosts, unknown, CommunityPostsData>({
+    mutationFn: (data: CommunityPostsData) => savePost(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment'] });
+      if (contentRef.current) {
+        contentRef.current.value = '';
+      }
+      alert('게시글 등록이 완료되었습니다.');
+      clickModal();
+    }
+  });
 
-//   const savePost = async (data: TPostData) => {
-//     const response = await fetch('/api/post', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   };
+  const handleSubmit = async () => {
+    if (!title) {
+      alert('제목을 입력해주세요.');
+      return;
+    }
+    if (!selectedCategory) {
+      alert('카테고리를 선택해주세요.');
+      return;
+    }
+    if (selectedLanguage.length === 0) {
+      alert('언어를 선택해주세요.');
+      return;
+    }
+    if (!content) {
+      alert('내용을 입력해주세요.');
+      return;
+    }
 
-//   const editPost = async (data: TPostData) => {
-//     const response = await fetch('/api/post', {
-//       method: 'PUT',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(data)
-//     });
-//     return response.json();
-//   };
+    try {
+      const uploadPromises = [];
+      if (thumbnail) {
+        uploadPromises.push(uploadImage(thumbnail));
+      }
+      additionalImages.forEach((file) => uploadPromises.push(uploadImage(file)));
 
-//   const { mutate: saveMutation } = useMutation<CommunityPosts, unknown, TPostData>({
-//     mutationFn: (data: TPostData) => (id === 'new' ? savePost(data) : editPost(data))
-//   });
+      const uploadedUrls = await Promise.all(uploadPromises);
+      setImageUrls(uploadedUrls);
 
-//   const uploadImg = async (): Promise<string | null> => {
-//     if (!file) {
-//       return imgUrl;
-//     }
-//     const newFileName = uuidv4();
-//     const supabase = createClient();
-//     const { data, error } = await supabase.storage.from('post').upload(`${newFileName}`, file);
-//     if (error) {
-//         alert(`파일이 업로드 되지 않습니다.${error}`)
-//         return null;
-//     }
-//     const res = await supabase.storage.from('post').getPublicUrl(data.path);
-//     return res.data.publicUrl;
-//   };
+      if (!user) {
+        alert('유저 정보가 없습니다.');
+        return;
+      }
 
-//   const handlePostSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     const img_url = (await uploadImg()) || '';
-//     const postData: TPostData = {
-//       category: categoryRef.current?.value || '',
-//       lang_category: langCategory.current?.value || '',
-//       post_category: postCategoryRef.current?.value || '',
-//       content: contentRef.current?.value || '',
-//       img_url: img_url,
-//       user_nickname: users?.data?.nickname || '',
-//       user_id: user?.id as string,
-//       id: id === 'new' ? uuidv4() : (id as string)
-//     };
+      const CommunityPostsData: CommunityPostsData = {
+        title,
+        content,
+        user_id: user,
+        post_img: uploadedUrls,
+        post_category: selectedCategory,
+        lang_category: selectedLanguage
+      };
 
-//     if (
-//       !postData.category ||
-//       !postData.store_name ||
-//       !postData.menu_name ||
-//       !postData.order_date ||
-//       !postData.address ||
-//       !postData.rating ||
-//       !postData.content ||
-//       !postData.img_url
-//     ) {
-//       alert('빈칸을 채워주세요!');
-//       return;
-//     }
-//     saveMutation(postData);
-//     alert('작성이 완료되었습니다.');
-//     router.push('/');
-//   };
+      addMutation(CommunityPostsData);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
 
-//   return (
-//     <>
-//       <div className="max-w-[1024px] mx-auto my-20">
-//         <h1 className="text-center mt-10 mb-3 text-2xl font-bold">오늘의 식당 기록</h1>
-//         <h3 className="text-center mb-10 text-lg">식당과 메뉴를 공유해주세요!</h3>
+  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setThumbnail(file);
+      setThumbnailPreview(URL.createObjectURL(file));
+    }
+  };
 
-//         <form className="w-full pt-[40px] pb-[100px] px-[15px] lg:px-[140px] shadow-lg" onSubmit={handlePostSubmit}>
-//           <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-y-8">
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">유형</label>
-//               <select className="p-2 border rounded-md" ref={categoryRef}>
-//                 <option value="방문">방문</option>
-//                 <option value="배달">배달</option>
-//               </select>
-//             </div>
+  const handleLanguageChange = (language: string) => {
+    if (selectedLanguage.includes(language)) {
+      setSelectedLanguage(selectedLanguage.filter((lang) => lang !== language));
+    } else {
+      setSelectedLanguage([...selectedLanguage, language]);
+    }
+  };
 
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">식당이름</label>
-//               <input className="p-2 border rounded-md" type="text" ref={storeRef} />
-//             </div>
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">메뉴이름</label>
-//               <input className="p-2 border rounded-md" type="text" ref={menuRef} />
-//             </div>
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">주문날짜</label>
-//               <input className="p-2 border rounded-md" type="date" ref={orderDateRef} />
-//             </div>
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">작성자</label>
-//               <input
-//                 className="p-2 border rounded-md"
-//                 type="text"
-//                 ref={userRef}
-//                 defaultValue={users?.data?.nickname}
-//               />
-//             </div>
-//             <div className="flex items-center">
-//               <label className="w-[80px] sm:w-[120px] font-bold">주소</label>
-//               <input className="p-2 border rounded-md" placeholder="OO시 OO구 OO동" type="text" ref={addressRef} />
-//             </div>
-//           </div>
-//           <ProductsImage setFile={setFile} />
-//           <div className="mt-5">
-//             <textarea
-//               className="w-full h-[400px] p-5 border rounded-md resize-none"
-//               name="text"
-//               placeholder="내용을 입력해주세요."
-//               ref={contentRef}
-//             ></textarea>
-//           </div>
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+  };
 
-//           <div className="mt-5 text-right space-x-2">
-//             <button className="rounded py-2 px-4 bg-gray-400 border-gray-400 text-center text-white font-bold">
-//               <Link href={'/'}>뒤로가기</Link>
-//             </button>
-//             <button>{id === 'new' ? '작성하기' : '수정완료'}</button>
-//           </div>
-//         </form>
-//       </div>
-//     </>
-//   );
-// }
-// function uuidv4() {
-//     throw new Error('Function not implemented.');
-// }
+  return (
+    <div className="flex m-auto max-w-[80%] justify-center">
+      <h1 className="flex text-2xl font-bold mb-4">포트폴리오 등록하기</h1>
+      <div className="mt-10 space-y-4">
+        <div className="relative rounded-md">
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold text-black pointer-events-none">
+            제목
+          </span>
+          <input
+            type="text"
+            placeholder="제목을 입력해주세요"
+            className="w-full pl-24 pr-4 py-2 rounded-md text-lg font-semibold"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="relative rounded-md">
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold text-black pointer-events-none">
+            카테고리
+          </span>
+          <select
+            className="w-full pl-24 pr-4 py-2 rounded-md text-lg font-semibold"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="">카테고리를 선택해주세요</option>
+            <option value="QnA">QnA</option>
+            <option value="Insight">Insight</option>
+          </select>
+        </div>
+        <div className="flex space-x-4">
+          <div className="w-1/2">
+            {thumbnailPreview && <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-2 w-full h-auto" />}
+            <label className="block text-sm font-medium text-gray-700"> 이미지를 등록해주세요.</label>
+            <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">언어 선택 </label>
+          <div className="flex flex-wrap gap-2">
+            {[
+              'HTML/CSS',
+              'JavaScript',
+              'Java',
+              'Python',
+              'C/C++/C#',
+              'TypeScript',
+              'React',
+              'Android/iOS',
+              'Next.js',
+              'Git/GitHub'
+            ].map((language) => (
+              <div key={language} className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={language}
+                  name="language"
+                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  checked={selectedLanguage.includes(language)}
+                  onChange={() => handleLanguageChange(language)}
+                />
+                <label htmlFor={language} className="ml-2 block text-sm text-gray-900">
+                  {language}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">내용</label>
+          <textarea
+            placeholder="내용을 입력해주세요."
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            rows={6}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea>
+        </div>
+        <div className="flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="bg-black text-white px-6 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            등록하기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CreatePost;
