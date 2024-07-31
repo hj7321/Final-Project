@@ -3,6 +3,8 @@
 import useAuthStore from '@/zustand/authStore';
 import { useRouter } from 'next/navigation';
 
+const buttonStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] bg-black text-white font-bold';
+
 export default function SignUpComplete() {
   const { isLogin, userId, userData } = useAuthStore();
   const router = useRouter();
@@ -19,8 +21,6 @@ export default function SignUpComplete() {
     }
     router.replace('/');
   };
-
-  const buttonStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] bg-black text-white font-bold';
 
   return (
     <section className="text-center content-center h-[525px]">
