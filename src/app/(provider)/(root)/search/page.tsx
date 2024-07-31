@@ -49,7 +49,14 @@ export default function Search() {
             onClick={() => handleFilter(tab)}
             className={`px-4 py-2 ${selectedTab === tab ? 'border-b-2 border-black text-black' : 'text-black'}`}
           >
-            {tab} {tab === '전체' ? counts.total : tab === 'Q&A' ? counts.qna : tab === '인사이트' ? counts.insight : counts.request}
+            {tab}{' '}
+            {tab === '전체'
+              ? counts.total
+              : tab === 'Q&A'
+              ? counts.qna
+              : tab === '인사이트'
+              ? counts.insight
+              : counts.request}
           </button>
         ))}
       </div>

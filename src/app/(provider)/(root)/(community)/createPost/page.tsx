@@ -29,7 +29,6 @@ const CreatePost: React.FC<AddPortfolioProps> = ({ clickModal }) => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-  const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 

@@ -1,9 +1,9 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { useUserData } from '@/app/api/mypage/[id]/route';
 import { useQuery } from '@tanstack/react-query';
 import type { Portfolio } from '@/types/type';
 import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 interface EditPortfolioProps {
   clickModal: () => void;
@@ -15,7 +15,33 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   const userId = params.id as string;
   const { id } = useParams();
 
-  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
+  // const getUserData = async (id: string) => {
+  //   const response = await fetch(`/api/user/${id}`);
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+  //   return response.json();
+  // };
+
+  // const {
+  //   data: userData,
+  //   isLoading: userLoading,
+  //   error: userError
+  // } = useQuery(['user', userId], () => getUserData(userId));
+
+  const getUserData = async () => {
+    const supabase = createClient();
+    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+    return data;
+  };
+  const {
+    data: Users,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData
+  });
 
   const getPortfolio = async () => {
     if (!portfolioId) {
@@ -45,13 +71,13 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: Portfolio[] = await response.json();
-    return data.filter((post) => post.user_id === id);
+    return data.filter((post) => post.user_id === userId);
   };
 
   const { data } = useQuery<Portfolio[]>({
-    queryKey: ['posts', id],
+    queryKey: ['posts', userId],
     queryFn: getsPortfolio,
-    enabled: !!id
+    enabled: !!userId
   });
 
   const [title, setTitle] = useState<string>('');
@@ -72,8 +98,6 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       }
     }
   }, [data, portfolioId]);
-
-  console.log('portfolioData', portfolioData);
 
   const handleSave = async () => {
     const response = await fetch('/api/portFolio', {
@@ -97,17 +121,17 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     }
   };
 
-  if (userLoading || portfolioLoading) {
-    return <div className="h-screen flex items-center justify-center">Loading...</div>;
-  }
+  // if (userLoading || portfolioLoading) {
+  //   return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  // }
 
-  if (userError || portfolioError) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        Error: {userError?.message || portfolioError?.message}
-      </div>
-    );
-  }
+  // if (userError || portfolioError) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       Error: {userError?.message || portfolioError?.message}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -117,11 +141,10 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         </button>
         <div className="flex">
           <div className="w-[30%] pr-4">
-            <h1 className="text-2xl font-bold mb-4">{userData?.data?.nickname}</h1>
+            <h1 className="text-2xl font-bold mb-4">{Users?.data?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
-
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
