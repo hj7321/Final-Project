@@ -14,7 +14,7 @@ export default function InsightPostList() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    return data.filter((post) => post.post_category === 'Insight');
+    return data.filter((post) => post.post_category === 'Insight' && post.user_id === id);
   };
 
   const { data, isLoading, error } = useQuery<CommunityPosts[]>({

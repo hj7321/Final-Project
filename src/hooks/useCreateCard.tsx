@@ -1,26 +1,16 @@
 
 import { createClient } from "@/utils/supabase/client";
+import useAuthStore from "@/zustand/authStore";
 import { useState } from "react";
 
 const supabase = createClient()
-const codeLang = [
-  'HTML/CSS',
-  'JavaScript',
-  'Java',
-  'Python',
-  'C / C++ / C#',
-  'TypeScript',
-  'React',
-  'Android / IOS',
-  'Next.JS',
-  'Git / Github'
-];
 
 export default function useCreateCard() {
   const [title, setTitle] = useState<string>('');
   const [language, setLanguage] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [description, setDescription] = useState<string>('');
+  const [price, setPrice] = useState<number | "">("")
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -41,45 +31,62 @@ export default function useCreateCard() {
       prevLanguage.includes(lang) ? prevLanguage.filter((l) => l !== lang) : [...prevLanguage, lang]
     );
   };
-  const handleSubmit = async () => {
-    if(!title.trim()) {
-      alert('제목을 입력해주세요')
-      return
-    }
-    if(language.length < 1) {
-      alert('언어는 1개 이상 선택해야 합니다')
-      return
-    }
-    if(!description.trim()) {
-      alert('내용을 입력해주세요')
-      return
-    }
-    try {
-      const formData = new FormData()
-      formData.append('title', title)
-      formData.append('description', description)
-      formData.append('language', JSON.stringify(language))
-      images.forEach((image) => {
-        formData.append('images', image)
-      })
-
-      const response = await fetch('/api/createCard', {
-        method : 'POST',
-        body : formData
-      })
-      if (response.ok) {
-        alert('게시글이 작성되었습니다 !')
-        setTitle('')
-        setLanguage([])
-        setImages([])
-        setDescription('')
-      } else {
-        alert('오류 발생')
-      }
-    } catch (error) {
-      alert(error)
-    }
+const handleSubmit = async (): Promise<number | null> => {
+  const { userId } = useAuthStore.getState();
+  if (!userId) {
+    throw new Error('로그인되어 있지 않습니다');
   }
+  if (!title.trim()) {
+    alert('제목을 입력해주세요');
+    return null;
+  }
+  if (!price) {
+    alert('가격을 입력해주세요');
+    return null;
+  }
+  if (language.length < 1) {
+    alert('언어는 1개 이상 선택해야 합니다');
+    return null;
+  }
+  if (!description.trim()) {
+    alert('내용을 입력해주세요');
+    return null;
+  }
+  try {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('language', JSON.stringify(language));
+    formData.append('price', price.toString());
+    formData.append('userId', userId);
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+
+    const response = await fetch('/api/createCard', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Data received from server:', data); // 디버깅 로그
+      alert('게시글이 작성되었습니다!');
+      setTitle('');
+      setLanguage([]);
+      setImages([]);
+      setPrice("");
+      setDescription('');
+      return data.id; // 새로 생성된 게시물 ID 반환
+    } else {
+      alert('오류 발생');
+      return null;
+    }
+  } catch (error) {
+    alert(error);
+    return null;
+  }
+};
   return {
     title,
     setTitle,
@@ -93,6 +100,7 @@ export default function useCreateCard() {
     handleImageDelete,
     handleLanguageSelect,
     handleSubmit,
-    codeLang,
+    price,
+    setPrice
   }
 }

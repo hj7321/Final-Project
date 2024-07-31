@@ -59,6 +59,7 @@ export type Database = {
           content: string;
           created_at: string | null;
           id: string;
+          post_id: string | null;
           pro_id: string;
         };
         Insert: {
@@ -67,6 +68,7 @@ export type Database = {
           content: string;
           created_at?: string | null;
           id?: string;
+          post_id?: string | null;
           pro_id: string;
         };
         Update: {
@@ -75,6 +77,7 @@ export type Database = {
           content?: string;
           created_at?: string | null;
           id?: string;
+          post_id?: string | null;
           pro_id?: string;
         };
         Relationships: [
@@ -207,27 +210,33 @@ export type Database = {
         Row: {
           content: string;
           created_at: string;
+          end_date: string | null;
           id: string;
           lang_category: string | null;
           portfolio_img: string[] | null;
+          start_date: string | null;
           title: string;
           user_id: string;
         };
         Insert: {
           content: string;
           created_at?: string;
+          end_date?: string | null;
           id?: string;
           lang_category?: string | null;
           portfolio_img?: string[] | null;
+          start_date?: string | null;
           title: string;
           user_id?: string;
         };
         Update: {
           content?: string;
           created_at?: string;
+          end_date?: string | null;
           id?: string;
           lang_category?: string | null;
           portfolio_img?: string[] | null;
+          start_date?: string | null;
           title?: string;
           user_id?: string;
         };
@@ -320,31 +329,31 @@ export type Database = {
         Row: {
           birth: string | null;
           created_at: string;
-          email: string | null;
+          email: string;
           id: string;
           is_pro: boolean | null;
           name: string | null;
-          nickname: string | null;
+          nickname: string;
           profile_img: string | null;
         };
         Insert: {
           birth?: string | null;
           created_at?: string;
-          email?: string | null;
+          email: string;
           id?: string;
           is_pro?: boolean | null;
           name?: string | null;
-          nickname?: string | null;
+          nickname: string;
           profile_img?: string | null;
         };
         Update: {
           birth?: string | null;
           created_at?: string;
-          email?: string | null;
+          email?: string;
           id?: string;
           is_pro?: boolean | null;
           name?: string | null;
-          nickname?: string | null;
+          nickname?: string;
           profile_img?: string | null;
         };
         Relationships: [

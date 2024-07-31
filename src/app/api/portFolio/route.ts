@@ -39,3 +39,36 @@ export async function GET() {
     return NextResponse.json({ error: '데이터를 가져오는 데 실패했습니다.' });
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const info = await request.json();
+    console.log('info', info);
+
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('Portfolio')
+      .update({ title: info.title, content: info.content, start_date: info.start_date, end_date: info.end_date })
+      .eq('id', info.id);
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: '수정에 실패했습니다.' });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const info = await request.json();
+
+    const supabase = createClient();
+    const { data, error } = await supabase.from('Portfolio').delete().eq('id', info.id);
+
+    if (error) {
+      return NextResponse.json({ error: error }, { status: 400 });
+    }
+    return NextResponse.json({ message: '삭제되었습니다.' });
+  } catch (error) {
+    return NextResponse.json({ error: '삭제에 실패했습니다.' });
+  }
+}

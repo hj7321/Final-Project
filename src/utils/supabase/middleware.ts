@@ -36,11 +36,17 @@ export async function updateSession(request: NextRequest) {
   // 사용자가 없는데(세션 만료) 의뢰 또는 커뮤티니 글쓰기 페이지인 경우 로그인 페이지로 리디렉션
   if (
     !user &&
-    (request.nextUrl.pathname.startsWith('/pro/createCard') || request.nextUrl.pathname.startsWith('/createPost'))
+    (request.nextUrl.pathname.startsWith('/pro/createCard') ||
+      request.nextUrl.pathname.startsWith('/createPost') ||
+      request.nextUrl.pathname.startsWith('/mypage'))
   ) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
+  }
+
+  if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname === '/signup')) {
+    return NextResponse.redirect(request.nextUrl.origin);
   }
 
   // 반드시 supabaseResponse 객체를 그대로 반환해야 한다.

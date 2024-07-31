@@ -1,10 +1,15 @@
 import { createClient } from '@/utils/supabase/client';
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server';
+=======
+import { useParams } from 'next/navigation';
+import { NextResponse } from 'next/server';
+>>>>>>> 447e5f015a78fd70828202ba6667114d5a7fd464
 
 export async function GET() {
   try {
     const supabase = createClient();
-    const { data } = await supabase.from('Community Posts').select('*');
+    const { data } = await supabase.from('Community Posts').select('*').limit(100);
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ error: '데이터를 가져오는 데 실패했습니다.' });
