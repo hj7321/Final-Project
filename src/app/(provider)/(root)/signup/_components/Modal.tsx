@@ -16,7 +16,7 @@ export default function Modal({ onClose, modalNum }: ModalProp) {
         <button onClick={onClose} className="absolute top-[-1px] right-[10px] text-[25px]">
           &times;
         </button>
-        <h1 className="w-[201px] h-[30px] mb-[32px] text-[20px] text-center font-bold">{modalTitle[modalNum]}</h1>
+        <h1 className="w-[600px] h-[30px] mb-[32px] text-[20px] text-center font-bold">{modalTitle[modalNum]}</h1>
         <div className="w-[600px] h-[520px] bg-grey-50 p-[32px] overflow-y-auto text-[12px]">
           {modalNum === 0 ? <TermsOfService /> : modalNum === 1 ? <PersonalInfo /> : <Marketing />}
         </div>
