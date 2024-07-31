@@ -6,9 +6,7 @@ import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import { createClient } from '@/utils/supabase/client';
-import { Session } from 'inspector';
 import Image from 'next/image';
-import { useUserData } from '@/app/api/mypage/[id]/route';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
@@ -17,14 +15,10 @@ export default function Header() {
   const [number, setNumber] = useState<number>(0);
   const [session, setSession] = useState<string | null | undefined>(null);
   const router = useRouter();
-  const { isLogin, logout, userId, initializeAuthState, isLoading } = useAuthStore();
-
-  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId!);
+  const { isLogin, logout, userId, userData, initializeAuthState, isLoading } = useAuthStore();
 
   const supabase = createClient();
   console.log('헤더');
-
-  useEffect;
 
   useEffect(() => {
     const handleGetSession = async () => {
@@ -36,9 +30,8 @@ export default function Header() {
       console.log(session);
       setSession(session?.access_token);
     };
-
     handleGetSession();
-  }, []);
+  }, [supabase.auth]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -123,7 +116,8 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-[24px]">
             <Link href={`/mypage/${userId}`}>
-              <b className="text-primary-500">{userData?.data?.nickname}</b>님
+              {/* <b className="text-primary-500">{userData && userData.data?.nickname}</b>님 */}
+              <b>{userData?.name || userData?.user_name}</b>님
             </Link>
             <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
               로그아웃

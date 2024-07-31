@@ -6,7 +6,6 @@ import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 �
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
 import useAuthStore from '@/zustand/authStore';
-import Link from 'next/link';
 
 interface PostData {
   post_img: string[];
