@@ -4,6 +4,7 @@ import Header from '@/components/header';
 import '@/app/globals.css';
 import Footer from '@/components/ footer';
 import QueryProvider from '../Provider';
+import TopButton from '@/components/TopButton';
 
 export const metadata: Metadata = {
   title: '코듀(CodeU)',
@@ -21,6 +22,7 @@ export default function RootLayout({
         <QueryProvider>
           <Header />
           {children}
+          <TopButton />
           <Footer />
         </QueryProvider>
       </body>

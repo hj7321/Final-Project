@@ -1,9 +1,9 @@
-export default function TermsOfService() {
-  const h2Style = 'font-semibold text-[13px]';
-  const h3Style = 'font-semibold';
-  const ulStyle = 'list-disc list-inside';
-  const liStyle = 'ml-[6px]';
+const h2Style = 'font-semibold text-[13px]';
+const h3Style = 'font-semibold';
+const ulStyle = 'list-disc list-inside';
+const liStyle = 'ml-[6px]';
 
+export default function TermsOfService() {
   return (
     <>
       <h2 className={h2Style}>제 1 장 총칙</h2>

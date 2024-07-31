@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import ChatModal from './ChatModal';
 import { CodeCategories } from '@/components/dumy';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -170,13 +171,13 @@ const ChatList = () => {
           >
             <div className="flex items-center justify-center mb-4">
               <div className='flex items-center'>
-                <img src={getCategoryImage(room.post_lang_category[0])} alt={room.post_lang_category[0]} className="w-10 h-10 mr-2" />
-                <h2 className="text-md">{room.post_lang_category[0]}</h2>
+                <Image src={getCategoryImage(room.post_lang_category[0])} alt={room.post_lang_category[0]} className="w-10 h-10 mr-2" />
+                <div className="text-xs">{room.post_lang_category[0]}</div>
               </div>
-              <h3 className="text-lg font-bold items-center ml-4">{room.post_title}</h3>
+              <h3 className="text-xs font-bold items-center ml-4">{room.post_title}</h3>
             </div>
             <div className="flex items-center justify-center mt-4 mb-4">
-              <img src={room.user_profile_img} alt="상대 프로필" className="w-24 h-24 border border-gray-300 rounded-full" />
+              <Image src={room.user_profile_img} alt="상대 프로필" className="w-24 h-24 border border-gray-300 rounded-full" />
             </div>
             <div className="text-center">
               <div className='flex items-center justify-center'>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { ChatMessage } from '@/types/type';
+import { Chat, Users } from '@/types/type';
 
 const supabase = createClient();
 
@@ -12,10 +12,10 @@ type ChatModalProps = {
 };
 
 const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<Chat[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
-  const [otherUser, setOtherUser] = useState<{ nickname: string, profile_img: string } | null>(null);
+  const [otherUser, setOtherUser] = useState<Users | null>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -51,7 +51,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
       if (error) {
         console.error('Error fetching messages:', error);
       } else {
-        setMessages(data as ChatMessage[]);
+        setMessages(data as Chat[]);
         markMessagesAsRead(); // 메시지를 읽었을 때 바로 읽음 처리
       }
     };
@@ -85,7 +85,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
       if (userError) {
         console.error('Error fetching user data:', userError);
       } else {
-        setOtherUser(userData);
+        setOtherUser(userData as Users);
       }
     };
 
@@ -95,7 +95,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
     const chatChannel = supabase
       .channel('realtime:chat')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat', filter: `chat_room_id=eq.${chatRoomId}` }, (payload) => {
-        setMessages((prevMessages) => [...prevMessages, payload.new as ChatMessage]);
+        setMessages((prevMessages) => [...prevMessages, payload.new as Chat]);
       })
       .subscribe();
 
@@ -134,7 +134,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
         <div className="flex items-center mb-6">
           {otherUser && (
             <>
-              <img src={otherUser.profile_img} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
+              <img src={otherUser.profile_img ?? ''} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
               <div>
                 <h2 className="text-xl font-bold">{otherUser.nickname}</h2>
                 <p className="text-sm text-gray-600">연락 가능 시간: AM 9 - PM 6</p>
@@ -152,7 +152,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
               >
                 <div className={`p-3 rounded-lg text-xs max-w-xs ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-200 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
                   <strong>{message.consumer_id === currentUser?.id ? '나 ' : otherUser?.nickname}:</strong> {message.content}
-                  {/* <span className="block text-[10px] text-gray-500 mt-1">{new Date(message.created_at).toLocaleString()}</span> */}
                 </div>
               </div>
             ))}
