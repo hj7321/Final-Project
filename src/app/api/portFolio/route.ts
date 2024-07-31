@@ -43,11 +43,12 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const info = await request.json();
+    console.log('info', info);
 
     const supabase = createClient();
     const { data, error } = await supabase
       .from('Portfolio')
-      .update({ title: info.title, content: info.content })
+      .update({ title: info.title, content: info.content, start_date: info.start_date, end_date: info.end_date })
       .eq('id', info.id);
 
     return NextResponse.json(data);
@@ -62,7 +63,6 @@ export async function DELETE(request: NextRequest) {
 
     const supabase = createClient();
     const { data, error } = await supabase.from('Portfolio').delete().eq('id', info.id);
-    console.log('data', data);
 
     if (error) {
       return NextResponse.json({ error: error }, { status: 400 });

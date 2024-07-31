@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import EditPortfolio from './EditPortfolio';
-import EddPortfolio from './EddPortFolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import DetailModal from './DetailPortfolio';
+import AddPortfolio from './AddPortFolio';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -30,6 +31,8 @@ export default function Portfolio() {
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [eddModal, setEddModal] = useState(false);
+  const [detailModal, setDetailModal] = useState(false);
+
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
   const getPortfolio = async () => {
@@ -65,11 +68,21 @@ export default function Portfolio() {
     setEddModal(false);
   };
 
+  const openDetailModal = (portfolioId: string) => {
+    setSelectedPortfolioId(portfolioId);
+
+    setDetailModal(true);
+  };
+
+  const closeDetailModal = () => {
+    setDetailModal(false);
+  };
+
   const deleteComment = async (id: string) => {
     const response = await fetch('/api/portFolio', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(id)
+      body: JSON.stringify({ id })
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -82,11 +95,14 @@ export default function Portfolio() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['porifolio', paramsId] })
   });
 
-  const handleDelete = async (id: string) => {
-    try {
-      deleteMutation(id);
-    } catch (error) {
-      console.error('삭제에 실패했습니다.', error);
+  const handleDelete = (id: string) => {
+    const confirmed = confirm('정말로 삭제하시겠습니까?');
+    if (confirmed) {
+      try {
+        deleteMutation(id);
+      } catch (error) {
+        console.error('삭제에 실패했습니다.', error);
+      }
     }
   };
 
@@ -114,8 +130,17 @@ export default function Portfolio() {
             {data?.map((post) => (
               <div key={post.id} className="bg-white p-4 rounded-2xl">
                 <div className="flex mr-20">
-                  <img src="https://via.placeholder.com/150?text=Expert+1" className="w-72 h-40 rounded-lg" />
+                  <img
+                    src={
+                      post.portfolio_img && post.portfolio_img.length > 0
+                        ? post.portfolio_img[0]
+                        : 'https://via.placeholder.com/150?text=No+Image'
+                    }
+                    className="w-72 h-40 rounded-lg cursor-pointer lg:hover:scale-110"
+                    onClick={() => openDetailModal(post.id)}
+                  />
                   <div className="ml-8 flex-1">
+                    <p className="text-base text-gray-500 ">{post.lang_category} </p>
                     <p className="font-bold text-[20px] mb-2">{post.title}</p>
                     <p
                       className="text-[16px] mb-2"
@@ -131,13 +156,13 @@ export default function Portfolio() {
                     </p>
                     <button
                       onClick={() => handleOpenModal(post.id)}
-                      className="mt-4 p-2 w-64  bg-gray-400 text-xl text-white rounded"
+                      className="mt-4 p-2 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
                     >
                       포트폴리오 수정
                     </button>
                     <button
                       onClick={() => handleDelete(post.id)}
-                      className="mt-4 p-2 ml-5 w-64 text-xl bg-gray-400 text-white rounded"
+                      className="mt-4 p-2 ml-5 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
                     >
                       포트폴리오 삭제
                     </button>
@@ -149,7 +174,8 @@ export default function Portfolio() {
         </>
       )}
       {editModalOpen && <EditPortfolio clickModal={handleCloseModal} portfolioId={selectedPortfolioId} />}
-      {eddModal && <EddPortfolio clickModal={closeEddmodal} />}
+      {detailModal && <DetailModal clickModal={closeDetailModal} portfolioId={selectedPortfolioId} />}
+      {eddModal && <AddPortfolio clickModal={closeEddmodal} />}
     </div>
   );
 }

@@ -9,6 +9,8 @@ import { useState, FormEvent, ChangeEvent } from 'react';
 export default function EditProfile() {
   const [nickname, setNickname] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [birth, setBirth] = useState<string>('');
+
   const [previewImage, setPreviewImage] = useState<string>('');
   const [uploadImg, setUploadImg] = useState<File | null>(null);
   const [publicUrl, setPublicUrl] = useState<string>('');
@@ -33,9 +35,9 @@ export default function EditProfile() {
     queryFn: getUserData
   });
 
-  const changeUserType = async (nickname: string, profile_img: string) => {
+  const changeUserType = async (nickname: string, profile_img: string, name: string, birth: string) => {
     const supabase = createClient();
-    const { data, error } = await supabase.from('Users').update({ nickname, profile_img }).eq('id', id);
+    const { data, error } = await supabase.from('Users').update({ nickname, profile_img, name, birth }).eq('id', id);
     if (error) throw error;
     return data;
   };
@@ -43,20 +45,28 @@ export default function EditProfile() {
   const uploadImage = async (file: File) => {
     const supabase = createClient();
     const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const { data, error } = await supabase.storage.from('portfolio_bucket_image').upload(fileName, file);
+    const { data, error } = await supabase.storage.from('portfolio_bucket_image/profile').upload(fileName, file);
     if (error) throw error;
     const {
       data: { publicUrl }
-    } = supabase.storage.from('portfolio_bucket_image').getPublicUrl(fileName);
+    } = supabase.storage.from('portfolio_bucket_image/profile').getPublicUrl(fileName);
     setPublicUrl(publicUrl);
-    console.log('publicUrl', publicUrl);
     return publicUrl;
   };
 
   const mutation = useMutation({
-    mutationFn: ({ nickname, profile_img }: { nickname: string; profile_img: string }) =>
-      changeUserType(nickname, profile_img),
-    onMutate: async (newData: { nickname: string; profile_img: string }) => {
+    mutationFn: ({
+      nickname,
+      profile_img,
+      name,
+      birth
+    }: {
+      nickname: string;
+      profile_img: string;
+      name: string;
+      birth: string;
+    }) => changeUserType(nickname, profile_img, name, birth),
+    onMutate: async (newData: { nickname: string; profile_img: string; name: string; birth: string }) => {
       await queryClient.cancelQueries({ queryKey: ['Users', id] });
 
       const previousUserData = queryClient.getQueryData<Users>(['Users', id]);
@@ -64,13 +74,19 @@ export default function EditProfile() {
       queryClient.setQueryData(['Users', id], (old: any) => ({
         ...old,
         nickname: newData.nickname,
-        profile_img: newData.profile_img
+        profile_img: newData.profile_img,
+        name: newData.name,
+        birth: newData.birth
       }));
 
       return { previousUserData };
     },
     onError: (err, newData, context) => {
       queryClient.setQueryData(['Users'], context?.previousUserData);
+    },
+    onSuccess: () => {
+      alert('프로필이 성공적으로 수정되었습니다.');
+      window.location.reload();
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['Users'] });
@@ -91,12 +107,13 @@ export default function EditProfile() {
     if (uploadImg) {
       try {
         imageUrl = await uploadImage(uploadImg);
-        console.log('Image uploaded successfully:', imageUrl);
       } catch (error) {
         console.error('Error uploading image:', error);
       }
     }
-    mutation.mutate({ nickname, profile_img: imageUrl });
+
+    const formattedBirth = birth.replace(/-/g, ''); // YYYY-MM-DD 형식에서 YYYYMMDD 형식으로 변환
+    mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
   };
 
   if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
@@ -104,9 +121,6 @@ export default function EditProfile() {
   if (error) {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
   }
-
-  const birth = userData?.birth;
-  const formattedBirth = `${birth?.substring(0, 4)}년 ${birth?.substring(4, 6)}월 ${birth?.substring(6, 8)}일`;
 
   return (
     <>
@@ -162,11 +176,17 @@ export default function EditProfile() {
           </div>
         </div>
         <div className="mb-20">
-          <div className="relative border py-6 border-gray-500 rounded-md">
+          <div className="relative border  border-gray-500 rounded-md">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black pointer-events-none">
               생일
             </span>
-            <span className="w-full h-20 pl-24 pr-4 rounded-md font-normal"> {formattedBirth}</span>
+            <input
+              type="date"
+              id="birth"
+              value={birth}
+              onChange={(e) => setBirth(e.target.value)}
+              className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
+            />{' '}
           </div>
         </div>
         <div className="flex mx-0 justify-between">
