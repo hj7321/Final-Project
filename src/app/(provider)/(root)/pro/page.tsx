@@ -16,6 +16,7 @@ interface Posts {
 }
 
 export default function ProMainPage() {
+  const [posts, setPosts] = useState<Posts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Posts[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);

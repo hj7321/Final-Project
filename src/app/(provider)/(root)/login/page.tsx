@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEventHandler, useRef, useState } from 'react';
@@ -18,7 +19,7 @@ const inputs = [
 export default function LoginPage() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [inputValues, setInputValue] = useState<(string | null)[]>(Array(inputs.length).fill(''));
+  const [inputValues, setInputValue] = useState<string[]>(Array(inputs.length).fill(''));
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
@@ -189,18 +190,29 @@ export default function LoginPage() {
           />
         </svg>
         {inputs.map((input, idx) => (
-          <div key={idx} className="flex flex-col items-center relative">
+          <div key={input.id} className="flex flex-col items-center relative">
             <div
               className={clsx(
-                idx === selectedIdx || inputValues[idx]!.length > 0
-                  ? 'h-[70px] w-[400px] border border-black rounded-[8px] px-[16px] pt-[6px]'
-                  : 'h-[56px] w-[400px] border border-main p-[16px] rounded-[8px]'
+                // idx === selectedIdx || inputValues[idx]!.length > 0
+                //   ? 'h-[70px] w-[400px] border border-primary-500 rounded-[8px] px-[16px] pt-[6px]'
+                //   : 'h-[56px] w-[400px] border border-grey-100 p-[16px] rounded-[8px]'
+                idx === selectedIdx && 'h-[70px] w-[400px] border border-primary-500 rounded-[8px] px-[16px] pt-[6px]',
+                idx != selectedIdx &&
+                  inputValues[idx].length > 0 &&
+                  'h-[70px] w-[400px] border border-grey-300 rounded-[8px] px-[16px] pt-[6px]',
+                idx !== selectedIdx &&
+                  inputValues[idx].length === 0 &&
+                  'h-[56px] w-[400px] border border-grey-100 p-[16px] rounded-[8px]'
               )}
             >
               <label
                 className={clsx(
-                  idx === selectedIdx || inputValues[idx]!.length > 0 ? 'flex' : 'hidden',
-                  'self-start text-[12px]'
+                  // idx === selectedIdx || inputValues[idx]!.length > 0 ? 'flex' : 'hidden',
+                  // 'self-start text-[12px]'
+                  'self-start text-[12px]',
+                  (idx === selectedIdx || inputValues[idx]!.length > 0) && 'flex text-primary-500',
+                  idx != selectedIdx && inputValues[idx].length > 0 && 'flex text-grey-300',
+                  idx !== selectedIdx && inputValues[idx].length === 0 && 'hidden'
                 )}
                 htmlFor={input.id}
               >
@@ -210,7 +222,8 @@ export default function LoginPage() {
                 <input
                   className={clsx(
                     (idx === selectedIdx || inputValues[idx]!.length > 0) &&
-                      'w-[312px] outline-none border-none p-0 mt-[5px]'
+                      'w-[312px] outline-none border-none p-0 mt-[5px]',
+                    'placeholder-grey-300'
                   )}
                   type={showPassword ? 'text' : input.type}
                   id={input.id}
@@ -219,50 +232,27 @@ export default function LoginPage() {
                   ref={(el) => {
                     inputRefs.current[idx] = el;
                   }}
-                  onClick={() => setSelectedIdx(idx)}
+                  onFocus={() => setSelectedIdx(idx)}
+                  onBlur={() => setSelectedIdx(null)}
                   value={inputValues[idx] || ''}
                   onChange={(e) => handleInputChange(idx, e)}
                 />
                 {input.icon && (
                   <button type="button" className="flex items-center" onClick={handleTogglePassword}>
-                    <svg
-                      className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'block' : 'hidden')}
-                      width="24"
-                      height="25"
-                      viewBox="0 0 24 25"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M14.9997 12.2241C14.9997 13.881 13.6566 15.2241 11.9997 15.2241C10.3429 15.2241 8.99971 13.881 8.99971 12.2241C8.99971 10.5673 10.3429 9.22412 11.9997 9.22412C13.6566 9.22412 14.9997 10.5673 14.9997 12.2241Z"
-                        stroke="black"
-                      />
-                      <path
-                        d="M19.1613 11.1526C19.5612 11.6211 19.7611 11.8554 19.7611 12.2241C19.7611 12.5929 19.5612 12.8271 19.1613 13.2957C17.8496 14.8324 15.1353 17.4792 11.9997 17.4792C8.8641 17.4792 6.14983 14.8324 4.83814 13.2957C4.43823 12.8271 4.23828 12.5929 4.23828 12.2241C4.23828 11.8554 4.43823 11.6211 4.83814 11.1526C6.14983 9.6158 8.8641 6.96899 11.9997 6.96899C15.1353 6.96899 17.8496 9.6158 19.1613 11.1526Z"
-                        stroke="black"
-                      />
-                    </svg>
-                    <svg
+                    <Image
+                      src="/closedEye.svg"
+                      alt="비밀번호 숨기기"
+                      width={24}
+                      height={24}
                       className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'hidden' : 'block')}
-                      width="24"
-                      height="25"
-                      viewBox="0 0 24 25"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clipRule="evenodd"
-                        d="M6.47352 8.81945C5.6371 9.51906 4.94926 10.2522 4.45783 10.828L4.39811 10.8977C4.05659 11.296 3.73828 11.6672 3.73828 12.2241C3.73828 12.7811 4.05659 13.1523 4.39811 13.5505L4.45783 13.6203C5.12934 14.407 6.16759 15.4877 7.45054 16.375C8.73034 17.2601 10.292 17.9792 11.9997 17.9792C13.0481 17.9792 14.0414 17.7082 14.9482 17.2942L14.1866 16.5326C13.4863 16.8115 12.752 16.9792 11.9997 16.9792C10.5718 16.9792 9.20853 16.375 8.01937 15.5525C6.83335 14.7322 5.85862 13.7211 5.21845 12.9711C4.7818 12.4595 4.73828 12.3723 4.73828 12.2241C4.73828 12.076 4.7818 11.9888 5.21845 11.4772C5.70101 10.9118 6.37367 10.1981 7.18363 9.52956L6.47352 8.81945ZM8.70219 11.0481C8.5711 11.4157 8.49971 11.8116 8.49971 12.2241C8.49971 14.1571 10.0667 15.7241 11.9997 15.7241C12.4123 15.7241 12.8082 15.6527 13.1757 15.5216L12.3534 14.6993C12.2378 14.7157 12.1198 14.7241 11.9997 14.7241C10.619 14.7241 9.49971 13.6048 9.49971 12.2241C9.49971 12.1041 9.50818 11.986 9.52454 11.8705L8.70219 11.0481ZM11.6457 9.74899L10.8234 8.9267C11.191 8.79554 11.587 8.72412 11.9997 8.72412C13.9327 8.72412 15.4997 10.2911 15.4997 12.2241C15.4997 12.6368 15.4283 13.0328 15.2971 13.4004L14.4748 12.5781C14.4912 12.4625 14.4997 12.3443 14.4997 12.2241C14.4997 10.8434 13.3804 9.72412 11.9997 9.72412C11.8795 9.72412 11.7613 9.7326 11.6457 9.74899ZM16.8156 14.9189C17.6256 14.2503 18.2984 13.5365 18.781 12.9711C19.2176 12.4595 19.2611 12.3723 19.2611 12.2241C19.2611 12.076 19.2176 11.9888 18.781 11.4772C18.1408 10.7272 17.1661 9.71601 15.9801 8.89572C14.7909 8.07327 13.4276 7.46899 11.9997 7.46899C11.2474 7.46899 10.5129 7.63675 9.8125 7.91579L9.05092 7.1542C9.95785 6.74007 10.9513 6.46899 11.9997 6.46899C13.7074 6.46899 15.2691 7.18812 16.5489 8.07327C17.8318 8.96059 18.8701 10.0412 19.5416 10.828L19.6013 10.8977L19.6013 10.8977C19.9428 11.296 20.2611 11.6672 20.2611 12.2241C20.2611 12.7811 19.9428 13.1523 19.6013 13.5505L19.5416 13.6203C19.0501 14.1961 18.3622 14.9293 17.5257 15.629L16.8156 14.9189Z"
-                        fill="black"
-                      />
-                      <path
-                        fill-rule="evenodd"
-                        clipRule="evenodd"
-                        d="M3.67184 3.89596C3.8671 3.7007 4.18368 3.7007 4.37894 3.89596L20.328 19.8451C20.5233 20.0403 20.5233 20.3569 20.328 20.5522C20.1328 20.7474 19.8162 20.7474 19.6209 20.5522L3.67184 4.60307C3.47658 4.4078 3.47658 4.09122 3.67184 3.89596Z"
-                        fill="black"
-                      />
-                    </svg>
+                    />
+                    <Image
+                      src="/openedEye.svg"
+                      alt="비밀번호 보기"
+                      width={24}
+                      height={24}
+                      className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'block' : 'hidden')}
+                    />
                   </button>
                 )}
               </div>
@@ -290,52 +280,15 @@ export default function LoginPage() {
         <p className="text-[#afafaf] text-[12px] mb-[24px]">─────────── 다른 방법으로 로그인 ───────────</p>
         <div className="flex flex-col items-center gap-[16px]">
           <button onClick={handleKakaoLogin} className={clsx(buttonStyle, 'bg-[#fee500] hover:bg-[#EED600]')}>
-            <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_734_3680)">
-                <path
-                  fill-rule="evenodd"
-                  clipRule="evenodd"
-                  d="M12.75 1.59985C5.708 1.59985 0 6.00988 0 11.4489C0 14.8316 2.20774 17.8136 5.56966 19.5872L4.15512 24.7546C4.03015 25.2111 4.55234 25.5751 4.95332 25.3105L11.1539 21.2181C11.6772 21.2686 12.2089 21.2981 12.75 21.2981C19.7915 21.2981 25.4999 16.8883 25.4999 11.4489C25.4999 6.00988 19.7915 1.59985 12.75 1.59985"
-                  fill="black"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_734_3680">
-                  <rect width="25.4999" height="25.5" fill="white" transform="translate(0 0.75)" />
-                </clipPath>
-              </defs>
-            </svg>
+            <Image src="/kakao.svg" alt="카카오" width={26} height={27} />
             카카오로 로그인하기
           </button>
           <button onClick={handleGoogleLogin} className={clsx(buttonStyle, 'bg-[#F8F9FD] hover:bg-[#E2E5F3]')}>
-            <svg width="26" height="27" viewBox="0 0 103 105" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M102.019 53.204C102.08 49.6257 101.711 46.053 100.919 42.563H52.0508V61.879H80.7358C80.1924 65.2658 78.9696 68.5078 77.1409 71.4099C75.3122 74.3119 72.9155 76.8141 70.0948 78.766L69.9948 79.413L85.4468 91.383L86.5168 91.49C96.3478 82.41 102.017 69.05 102.017 53.204"
-                fill="#4285F4"
-              />
-              <path
-                d="M52.0488 104.1C66.1018 104.1 77.8998 99.473 86.5178 91.492L70.0928 78.768C65.6978 81.834 59.7988 83.974 52.0488 83.974C45.4668 83.9355 39.064 81.8253 33.7489 77.9427C28.4338 74.0602 24.4763 68.6025 22.4378 62.344L21.8278 62.396L5.76078 74.83L5.55078 75.414C9.87802 84.0381 16.5189 91.2885 24.7308 96.3544C32.9427 101.42 42.402 104.102 52.0508 104.1"
-                fill="#34A853"
-              />
-              <path
-                d="M22.4388 62.3439C21.3003 59.0307 20.7129 55.5532 20.6998 52.0499C20.7208 48.5523 21.2866 45.0793 22.3768 41.7559L22.3478 41.0659L6.08381 28.4319L5.55181 28.6849C1.90142 35.9324 0 43.9345 0 52.0494C0 60.1643 1.90142 68.1664 5.55181 75.4139L22.4388 62.3439Z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M52.0508 20.126C59.5091 20.0101 66.7224 22.7878 72.1768 27.876L86.8668 13.533C77.4451 4.69427 64.9685 -0.155404 52.0508 -4.13142e-05C42.4021 -0.00233698 32.9429 2.67933 24.731 7.74511C16.5191 12.8109 9.87816 20.0611 5.55078 28.685L22.3818 41.756C24.4403 35.4985 28.411 30.045 33.7339 26.1644C39.0569 22.2837 45.4636 20.1717 52.0508 20.126Z"
-                fill="#EB4335"
-              />
-            </svg>
+            <Image src="/google.svg" alt="구글" width={26} height={27} />
             Google로 로그인하기
           </button>
           <button onClick={handleGitHubLogin} className={clsx(buttonStyle, 'bg-[#ECEDF0] hover:bg-[#D9DEE3]')}>
-            <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect y="0.75" width="25.5" height="25.5" rx="12.75" fill="white" />
-              <path
-                d="M12.75 0.75C19.7944 0.75 25.5 6.45562 25.5 13.5C25.4993 16.1714 24.6609 18.7754 23.1027 20.9454C21.5446 23.1154 19.3452 24.7421 16.8141 25.5966C16.1766 25.7241 15.9375 25.3256 15.9375 24.9909C15.9375 24.5606 15.9534 23.19 15.9534 21.4847C15.9534 20.2894 15.555 19.5244 15.0928 19.1259C17.9297 18.8072 20.91 17.7234 20.91 12.8306C20.91 11.4281 20.4159 10.2966 19.6031 9.40406C19.7306 9.08531 20.1769 7.77844 19.4756 6.02531C19.4756 6.02531 18.4078 5.67469 15.9694 7.33219C14.9494 7.04531 13.8656 6.90187 12.7819 6.90187C11.6981 6.90187 10.6144 7.04531 9.59438 7.33219C7.15594 5.69062 6.08813 6.02531 6.08813 6.02531C5.38688 7.77844 5.83313 9.08531 5.96063 9.40406C5.14781 10.2966 4.65375 11.4441 4.65375 12.8306C4.65375 17.7075 7.61813 18.8072 10.455 19.1259C10.0884 19.4447 9.75375 20.0025 9.64219 20.8312C8.90907 21.1659 7.07625 21.7078 5.92875 19.7794C5.68969 19.3969 4.9725 18.4566 3.96844 18.4725C2.90063 18.4884 3.53813 19.0781 3.98438 19.3172C4.52625 19.62 5.14781 20.7516 5.29125 21.1181C5.54625 21.8353 6.375 23.2059 9.57844 22.6162C9.57844 23.6841 9.59438 24.6881 9.59438 24.9909C9.59438 25.3256 9.35531 25.7081 8.71781 25.5966C6.17839 24.7513 3.96961 23.1279 2.40479 20.9566C0.839981 18.7853 -0.00140326 16.1764 1.75681e-06 13.5C1.75681e-06 6.45562 5.70563 0.75 12.75 0.75Z"
-                fill="#24292F"
-              />
-            </svg>
+            <Image src="/github.svg" alt="깃허브" width={26} height={27} />
             GitHub로 로그인하기
           </button>
         </div>

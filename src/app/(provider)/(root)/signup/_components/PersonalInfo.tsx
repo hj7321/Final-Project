@@ -1,8 +1,8 @@
-export default function PersonalInfo() {
-  const h2Style = 'font-semibold text-[13px]';
-  const ulStyle = 'list-disc list-inside';
-  const liStyle = 'ml-[6px]';
+const h2Style = 'font-semibold text-[13px]';
+const ulStyle = 'list-disc list-inside';
+const liStyle = 'ml-[6px]';
 
+export default function PersonalInfo() {
   return (
     <>
       <p>
