@@ -91,6 +91,7 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
 
       const portfolioData: PortfolioData = {
         title,
+
         content,
         portfolio_img: uploadedUrls,
         user_id: id,

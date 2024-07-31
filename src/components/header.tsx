@@ -122,7 +122,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-[24px]">
             <Link href={`/mypage/${userId}`}>
-              <b className="text-primary-500">{userData && userData.data!.nickname}</b>님
+              <b className="text-primary-500">{userData && userData.data?.nickname}</b>님
             </Link>
             <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
               로그아웃
