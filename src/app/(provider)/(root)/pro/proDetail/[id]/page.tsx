@@ -33,7 +33,7 @@ export default function ProDetail() {
   const [activeTab, setActiveTab] = useState('service');
   const { id: paramId } = useParams();
   const id = paramId as string; //추가 : id를 문자열로 변환
-  const { userData } = useAuthStore();
+
   const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
@@ -175,7 +175,7 @@ export default function ProDetail() {
         </div>
       </div>
       <div className="mt-8">
-        <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-0 bg-white">
+        <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-[71px] bg-white">
           <ul className="flex justify-start space-x-4">
             <li
               id="service"
@@ -216,30 +216,6 @@ export default function ProDetail() {
               <a href="#section3">리뷰</a>
             </li>
           </ul>
-          {/* <li
-            className={`text-lg ${
-              activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('portfolio')}
-          >
-            <a href='#section1'>포트폴리오</a>
-          </li>
-          <button
-            className={`text-lg ${
-              activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('service')}
-          >
-            서비스 정보
-          </button>
-          <button
-            className={`text-lg ${
-              activeTab === 'reviews' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('reviews')}
-          >
-            리뷰
-          </button> */}
         </div>
         <div>
           <div id="section1" className="p-2 my-2">
@@ -263,7 +239,7 @@ export default function ProDetail() {
                       <img
                         src={item.portfolio_img}
                         alt={item.title}
-                        className="w-full h-full bg-slate-400 rounded-xl"
+                        className="w-full h-full rounded-xl object-cover"
                       />
                     </div>
                     <div className="flex flex-row justify-start items-center mt-3 text-xs">
@@ -304,51 +280,6 @@ export default function ProDetail() {
             </div>
           </div>
         </div>
-        {/* {activeTab === 'portfolio' && (
-          <div className="mt-4 flex flex-row justify-start flex-wrap">
-          {portfolio.map((item) => (
-            <div key={item.id} className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
-              <div className='w-[3/4] h-[140px]'>
-                <img src={item.portfolio_img} alt={item.title} className='w-full h-full bg-slate-400 rounded-xl' />
-              </div>
-              <div className='flex flex-row justify-start items-center mt-3 text-xs'>
-                <p>{item.lang_category}</p>
-              </div>
-              <div className='my-2'>
-                <p className='font-bold text-lg line-clamp-1'>{item.title}</p>
-              </div>
-              <div className='text-xs'>
-                <p>{item.start_date} ~ {item.end_date}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        )}
-        {activeTab === 'service' && (
-          <div className="mt-4">
-            <p>서비스 정보 내용이 들어갑니다.</p>
-          </div>
-        )}
-        {activeTab === 'reviews' && (
-          <div className="mt-4 flex flex-col justify-center items-center">
-            <div className='mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3'>
-              <div>
-                <p>⭐️⭐️⭐️⭐️⭐️</p>
-              </div>
-              <div className='line-clamp-1 my-2'>
-                <p className='text-xl font-medium'>리뷰 내용 입니다 !</p>
-              </div>
-              <div className='flex flex-row text-sm font-thin'>
-                <div>
-                  <p>작성자 : 코듀</p>
-                </div>
-                <div className='mx-2'>
-                  <p>작성일 : 2024.08.01</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
       </div>
       {/* 채팅모달 */}
       {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}
