@@ -26,25 +26,12 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-xl w-[1200px] h-[780px] flex">
-        <span onClick={() => onClose()}>
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect
-              x="0.5"
-              y="0.5"
-              width="63"
-              height="63"
-              rx="31.5"
-              className="stroke-gray-300 group-hover:stroke-gray-400"
-            />
-            <path
-              d="M24 24L40 40M40 24L24 40"
-              className="stroke-gray-300 group-hover:stroke-gray-400"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+      <div className="bg-white p-8 rounded-xl w-[1200px] h-[780px]">
+        <div onClick={() => onClose()} className='cursor-pointer float-right'>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4L20 20M20 4L4 20" stroke="#0E0F11" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </span>
+        </div>
       </div>
     </div>
   );
