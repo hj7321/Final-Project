@@ -7,7 +7,7 @@ export async function GET(request: any) {
   const limit = 10;
   const offset = page * limit;
 
-  const languages = JSON.parse(decodeURIComponent(url.searchParams.get('languages') || '[]'));
+  const languages:string[] = JSON.parse(decodeURIComponent(url.searchParams.get('languages') || '[]'));
 
   try {
     const supabase = createClient();
