@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts, RequestPosts } from '@/types/type';
+import Image from 'next/image';
 
 export default function Home() {
   const [qnaPosts, setQnaPosts] = useState<CommunityPosts[]>([]);
@@ -15,14 +16,8 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       const [communityResponse, requestResponse] = await Promise.all([
-        supabase
-          .from('Community Posts')
-          .select('*')
-          .order('created_at', { ascending: false }),
-        supabase
-          .from('Request Posts')
-          .select('*')
-          .order('created_at', { ascending: false })
+        supabase.from('Community Posts').select('*').order('created_at', { ascending: false }),
+        supabase.from('Request Posts').select('*').order('created_at', { ascending: false })
       ]);
 
       const { data: communityPosts, error: communityError } = communityResponse;
@@ -31,8 +26,8 @@ export default function Home() {
       if (communityError) {
         console.error('Error fetching community posts:', communityError);
       } else {
-        const qnaPosts = communityPosts.filter(post => post.post_category === 'QnA');
-        const insightPosts = communityPosts.filter(post => post.post_category === 'Insight');
+        const qnaPosts = communityPosts.filter((post) => post.post_category === 'QnA');
+        const insightPosts = communityPosts.filter((post) => post.post_category === 'Insight');
 
         setQnaPosts(qnaPosts);
         setInsightPosts(insightPosts);
@@ -49,15 +44,15 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="bg-gray-100">
+    <main>
       {/* 메인베너 */}
-      <section
-        className="w-full h-screen bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('https://cdn.pixabay.com/photo/2012/08/25/22/22/saturn-54999_1280.jpg')" }}
-      >
-        <span className="text-white text-2xl bg-black bg-opacity-50 px-4 py-2 rounded">메인 배너</span>
+      <section className="w-full h-screen bg-cover bg-center">
+        <Image src="/mainBanner.svg" alt="메인베너" width={100} height={100} className='w-full h-screen' />
       </section>
 
+      <div className="w-full h-36">섹션나누기</div>
+
+      {/* 여기부터가 커뮤니티섹션 */}
       <section className="w-full h-screen flex flex-col">
         {/* 카테고리 */}
         <div className="bg-white py-8 flex-shrink-0">
@@ -66,7 +61,13 @@ export default function Home() {
             <div className="flex justify-between overflow-x-auto h-full items-center">
               {CodeCategories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center mx-2">
-                  <img src={category.image} alt={category.name} className="w-24 h-24 bg-gray-300 rounded-full" />
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    width={12}
+                    height={12}
+                    className="w-16 h-16 rounded-full"
+                  />
                   <span className="mt-2 text-black text-lg">{category.name}</span>
                 </div>
               ))}
@@ -86,8 +87,11 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {qnaPosts.slice(0,10).map((item) => (
-                    <p key={item.id} className="mb-5">{item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span></p>
+                  {qnaPosts.slice(0, 10).map((item) => (
+                    <p key={item.id} className="mb-5">
+                      {item.title}{' '}
+                      <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
+                    </p>
                   ))}
                 </div>
               </div>
@@ -102,9 +106,10 @@ export default function Home() {
                   </a>
                 </div>
                 <div className="overflow-auto">
-                  {insightPosts.slice(0,10).map((item) => (
+                  {insightPosts.slice(0, 10).map((item) => (
                     <p key={item.id} className="mb-5">
-                      {item.title} <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
+                      {item.title}{' '}
+                      <span className="text-gray-500">{new Date(item.created_at).toLocaleDateString()}</span>
                     </p>
                   ))}
                 </div>
@@ -113,6 +118,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* 여기까지 커뮤니티섹션 */}
+      <div className="w-full h-24">섹션나누기</div>
 
       {/* 전문가 */}
       <section className="container mx-auto px-4 py-8 min-h-screen">
@@ -123,12 +130,11 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* 추후ui수정 */}
+          {/* 추후 ui 수정 */}
           {expertPosts.slice(0, 10).map((expert) => (
             <div key={expert.id} className="bg-white p-2 shadow rounded">
               <img src={expert.post_img[0]} alt={expert.title} className="w-full h-100 object-cover mb-4" />
               <h3 className="font-bold">{expert.title}</h3>
-              {/* <p>{expert.price}</p> */}
               <span className="text-gray-500">{expert.lang_category.join(', ')}</span>
             </div>
           ))}

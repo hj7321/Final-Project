@@ -136,13 +136,6 @@ export type Database = {
             referencedRelation: "Community Posts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Community Comments_community_post_id_fkey1"
-            columns: ["community_post_id"]
-            isOneToOne: true
-            referencedRelation: "Community Posts"
-            referencedColumns: ["id"]
-          },
         ]
       }
       "Community Likes": {
