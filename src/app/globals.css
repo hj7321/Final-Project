@@ -15,8 +15,20 @@
   content: '✔';
   @apply absolute top-[-5.5px] text-white;
 }
+
 html {
   scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: 'SUIT';
+  src: url('/font/SUIT-Medium.ttf') format('truetype');
+  font-weight: normal;
+}
+
+body {
+  font-family: 'SUIT';
+  font-weight: normal;
 }
 
 /* :root {
