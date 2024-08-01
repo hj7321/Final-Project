@@ -166,7 +166,7 @@ const ChatList = () => {
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
-            className="flex flex-col justify-between py-5 px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-lg hover:shadow-primary-100"
+            className="flex flex-col justify-between py-5 px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
             onClick={() => openChatModal(room.chat_room_id)}
             style={{ height: '255px', maxWidth: '220px', maxHeight : '255px' }}
           >

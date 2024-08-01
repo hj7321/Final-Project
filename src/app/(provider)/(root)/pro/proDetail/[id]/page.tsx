@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을 
+import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
 import useAuthStore from '@/zustand/authStore';
@@ -28,11 +28,11 @@ interface PortfolioData {
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
-  const [portfolio, setPortfolio] = useState<PortfolioData[]>([])
-  const [activeTab, setActiveTab] = useState('portfolio');
+  const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
+  const [activeTab, setActiveTab] = useState('service');
   const { id: paramId } = useParams();
   const id = paramId as string; //추가 : id를 문자열로 변환
-  const { userData } = useAuthStore()
+  const { userData } = useAuthStore();
   const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
@@ -44,7 +44,7 @@ export default function ProDetail() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log('fetch',data)
+        console.log('fetch', data);
         setPost(data.postData);
         setUser(data.userData);
         setPortfolio(data.portfolioData);
@@ -54,20 +54,37 @@ export default function ProDetail() {
     };
     fetchData();
   }, [id]);
- //추가//
-  const handleInquiry = () => { // 문의하기 버튼 클릭 시 실행되는 함수
-    if (!currentUserId || !user?.id || !id) { // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
+  //추가//
+  const handleInquiry = () => {
+    // 문의하기 버튼 클릭 시 실행되는 함수
+    if (!currentUserId || !user?.id || !id) {
+      // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
       return;
     }
     toggleChat(); // 채팅 창 열림/닫힘 상태를 토글
   };
 
-//여기까지 //
+  //여기까지 //
 
   if (!post || !user) {
     return <p>로딩중</p>;
   }
+
+  const handleTabClick = (tabId: string, sectionId: string) => {
+    setActiveTab(tabId);
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const sectionRect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // 섹션 중앙을 뷰포트 중앙에 맞추도록 오프셋 계산
+      const yOffset = (viewportHeight - sectionRect.height) / 2;
+      const y = sectionRect.top + window.scrollY - yOffset;
+
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="max-w-[1280px] mx-auto p-4">
@@ -117,7 +134,12 @@ export default function ProDetail() {
             </p>
           </div>
           <div className="mx-auto w-[85%] mt-5 flex flex-col">
-            <button className="w-full h-full bg-primary-500 hover:bg-primary-600 py-2 rounded-xl flex flex-row justify-center items-center" onClick={handleInquiry}> {/* handleInquiry 함수가 문의하기 버튼 클릭 시 실행됨 */}
+            <button
+              className="w-full h-full bg-primary-500 hover:bg-primary-600 py-2 rounded-xl flex flex-row justify-center items-center"
+              onClick={handleInquiry}
+            >
+              {' '}
+              {/* handleInquiry 함수가 문의하기 버튼 클릭 시 실행됨 */}
               <span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -152,15 +174,55 @@ export default function ProDetail() {
         </div>
       </div>
       <div className="mt-8">
-        <div className="flex justify-start space-x-4 border-gray-300 pb-2">
-          <button
+        <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-0 bg-yellow-400">
+          <ul className="flex justify-start space-x-4">
+            <li
+              id="service"
+              className={`text-lg ${
+                activeTab === 'service'
+                  ? 'text-primary-500 border-b-2 border-primary-500 font-bold '
+                  : 'text-gray-500'
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabClick('service', 'section1');
+              }}
+            >
+              <a href="#section1">서비스 정보</a>
+            </li>
+            <li
+              id="portfolio"
+              className={`text-lg ${
+                activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabClick('portfolio', 'section2');
+              }}
+            >
+              <a href="#section2">포트폴리오</a>
+            </li>
+            <li
+              id="reviews"
+              className={`text-lg ${
+                activeTab === 'reviews' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabClick('reviews', 'section3');
+              }}
+            >
+              <a href="#section3">리뷰</a>
+            </li>
+          </ul>
+          {/* <li
             className={`text-lg ${
               activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
             }`}
             onClick={() => setActiveTab('portfolio')}
           >
-            포트폴리오
-          </button>
+            <a href='#section1'>포트폴리오</a>
+          </li>
           <button
             className={`text-lg ${
               activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
@@ -176,9 +238,64 @@ export default function ProDetail() {
             onClick={() => setActiveTab('reviews')}
           >
             리뷰
-          </button>
+          </button> */}
         </div>
-        {activeTab === 'portfolio' && (
+        <div>
+          <div id="section1" className="">
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+            <p>서비스내용</p>
+          </div>
+          <div id="section2" className="bg-blue-500">
+            <div className="mt-4 flex flex-row justify-start flex-wrap">
+              {portfolio.map((item) => (
+                <div key={item.id} className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2">
+                  <div className="w-[3/4] h-[140px]">
+                    <img src={item.portfolio_img} alt={item.title} className="w-full h-full bg-slate-400 rounded-xl" />
+                  </div>
+                  <div className="flex flex-row justify-start items-center mt-3 text-xs">
+                    <p>{item.lang_category}</p>
+                  </div>
+                  <div className="my-2">
+                    <p className="font-bold text-lg line-clamp-1">{item.title}</p>
+                  </div>
+                  <div className="text-xs">
+                    <p>
+                      {item.start_date} ~ {item.end_date}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div id="section3" className="h-[800px] bg-slate-500">
+            리뷰임
+          </div>
+        </div>
+        {/* {activeTab === 'portfolio' && (
           <div className="mt-4 flex flex-row justify-start flex-wrap">
           {portfolio.map((item) => (
             <div key={item.id} className='flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2'>
@@ -222,7 +339,7 @@ export default function ProDetail() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
       {/* 채팅모달 */}
       {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}

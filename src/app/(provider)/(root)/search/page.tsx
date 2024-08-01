@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useSearchPosts from '@/hooks/useSearchPosts';
 
 const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
 
-export default function Search() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
   const { results, filteredResults, setFilteredResults, counts } = useSearchPosts(query);
@@ -82,5 +82,13 @@ export default function Search() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }
