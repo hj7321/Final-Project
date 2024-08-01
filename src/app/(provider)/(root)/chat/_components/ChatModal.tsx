@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Chat, Users } from '@/types/type';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -16,6 +17,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -104,6 +106,12 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
     };
   }, [chatRoomId, currentUser]);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   const handleSendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -113,7 +121,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
     const { error } = await supabase.from('Chat').insert([
       {
         consumer_id: currentUser.id,
-        pro_id: currentUser.id, // 이 부분은 실제 사용 시 변경 필요
+        pro_id: currentUser.id,
         content: newMessage,
         chat_room_id: chatRoomId,
         is_read: false, // 새로운 메시지는 읽지 않음으로 표시
@@ -130,15 +138,15 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-5 rounded-xl w-1/3 max-w-xl h-5/6">
-        <button onClick={onClose} className="text-black float-right">닫기</button>
+        <button onClick={onClose} className="text-black float-right"><Image src="/closeBtnX.svg" alt="닫기버튼" width={20} height={20} /></button>
         <div className="flex items-center mb-6">
           {otherUser && (
             <>
               <img src={otherUser.profile_img ?? ''} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
               <div>
-                <h2 className="text-xl font-bold">{otherUser.nickname}</h2>
-                <p className="text-sm text-gray-600">연락 가능 시간: AM 9 - PM 6</p>
-                <p className="text-sm text-gray-600">평균 응답 속도: 30분 이내</p>
+                <h2 className="text-sm font-semibold">{otherUser.nickname}</h2>
+                <p className="text-sm font-medium text-gray-500">연락 가능 시간: AM 9 - PM 6</p>
+                <p className="text-sm font-medium text-gray-500">평균 응답 속도: 30분 이내</p>
               </div>
             </>
           )}
@@ -150,21 +158,23 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
                 key={message.id}
                 className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`p-3 rounded-lg text-xs max-w-xs ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-200 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
+                <div className={`p-3 rounded-lg text-xs max-w-xs font-medium ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-100 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
                   <strong>{message.consumer_id === currentUser?.id ? '나 ' : otherUser?.nickname}:</strong> {message.content}
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
           <form onSubmit={handleSendMessage} className="flex items-center p-4 bg-white rounded-b-xl">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="flex-1 p-2 border border-gray-300 rounded-lg mr-2"
+              className="flex-1 p-3 border border-gray-300 rounded-lg mr-2 text-sm font-normal py-3"
               placeholder="메시지를 입력하세요"
             />
-            <button type="submit" className="p-2 bg-primary-500 text-white rounded-lg">
+            <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
+              <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
               보내기
             </button>
           </form>
