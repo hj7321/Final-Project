@@ -1,34 +1,52 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { useUserData } from '@/app/api/mypage/[id]/route';
 import { useQuery } from '@tanstack/react-query';
 import type { Portfolio } from '@/types/type';
 import { useState, useEffect } from 'react';
-
+import { createClient } from '@/utils/supabase/client';
 interface EditPortfolioProps {
   clickModal: () => void;
   portfolioId: string | null;
 }
-
 const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
   const userId = params.id as string;
   const { id } = useParams();
-
-  const { data: userData, isLoading: userLoading, error: userError } = useUserData(userId);
-
+  // const getUserData = async (id: string) => {
+  //   const response = await fetch(`/api/user/${id}`);
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+  //   return response.json();
+  // };
+  // const {
+  //   data: userData,
+  //   isLoading: userLoading,
+  //   error: userError
+  // } = useQuery(['user', userId], () => getUserData(userId));
+  const getUserData = async () => {
+    const supabase = createClient();
+    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+    return data;
+  };
+  const {
+    data: Users,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData
+  });
   const getPortfolio = async () => {
     if (!portfolioId) {
       throw new Error('포트폴리오 ID가 지정되지 않았습니다.');
     }
-
     const response = await fetch(`/api/portFolio/${portfolioId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
   };
-
   const {
     data: portfolioData,
     isLoading: portfolioLoading,
@@ -38,29 +56,24 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     queryFn: getPortfolio,
     enabled: !!portfolioId
   });
-
   const getsPortfolio = async () => {
     const response = await fetch('/api/portFolio');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: Portfolio[] = await response.json();
-    return data.filter((post) => post.user_id === id);
+    return data.filter((post) => post.user_id === userId);
   };
-
   const { data } = useQuery<Portfolio[]>({
-    queryKey: ['posts', id],
+    queryKey: ['posts', userId],
     queryFn: getsPortfolio,
-    enabled: !!id
+    enabled: !!userId
   });
-
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-
   const [images, setImages] = useState<File[]>([]);
-
   useEffect(() => {
     if (data && portfolioId) {
       const portfolio = data.find((p) => p.id === portfolioId);
@@ -72,9 +85,6 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       }
     }
   }, [data, portfolioId]);
-
-  console.log('portfolioData', portfolioData);
-
   const handleSave = async () => {
     const response = await fetch('/api/portFolio', {
       method: 'PUT',
@@ -89,26 +99,22 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         end_date: endDate
       })
     });
-
     if (response.ok) {
       clickModal();
     } else {
       console.error('수정에 실패했습니다.');
     }
   };
-
-  if (userLoading || portfolioLoading) {
-    return <div className="h-screen flex items-center justify-center">Loading...</div>;
-  }
-
-  if (userError || portfolioError) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        Error: {userError?.message || portfolioError?.message}
-      </div>
-    );
-  }
-
+  // if (userLoading || portfolioLoading) {
+  //   return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  // }
+  // if (userError || portfolioError) {
+  //   return (
+  //     <div className="h-screen flex items-center justify-center">
+  //       Error: {userError?.message || portfolioError?.message}
+  //     </div>
+  //   );
+  // }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 w-[800px] h-[80%] relative overflow-auto">
@@ -117,11 +123,10 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         </button>
         <div className="flex">
           <div className="w-[30%] pr-4">
-            <h1 className="text-2xl font-bold mb-4">{userData?.data?.nickname}</h1>
+            <h1 className="text-2xl font-bold mb-4">{Users?.data?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
-
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -204,5 +209,4 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     </div>
   );
 };
-
 export default EditPortfolio;
