@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface PortfolioModalProps {
   portfolio: {
@@ -18,56 +18,33 @@ interface PortfolioModalProps {
   onClose: () => void;
 }
 
-const PortfolioModal: React.FC<PortfolioModalProps> = ({
-  portfolio,
-  user,
-  onClose,
-}) => {
+const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClose }) => {
   // lang_category가 배열인지 확인 후 처리
-  const langCategory =
-    Array.isArray(portfolio.lang_category)
-      ? portfolio.lang_category.join(" / ")
-      : portfolio.lang_category; // 배열이 아니면 그대로 사용
+  const langCategory = Array.isArray(portfolio.lang_category)
+    ? portfolio.lang_category.join(' / ')
+    : portfolio.lang_category; // 배열이 아니면 그대로 사용
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-xl w-[1200px] h-[780px] flex">
-        <div className="flex flex-col w-1/2 p-4 space-y-4">
-          <div className="flex items-center space-x-4 mb-5">
-            <img
-              src={user.profile_img}
-              alt={user.nickname}
-              className="w-16 h-16 rounded-full object-cover bg-gray-400"
+        <span onClick={() => onClose()}>
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect
+              x="0.5"
+              y="0.5"
+              width="63"
+              height="63"
+              rx="31.5"
+              className="stroke-gray-300 group-hover:stroke-gray-400"
             />
-            <h2 className="text-xl font-semibold">{user.nickname}</h2>
-          </div>
-          <div className="space-y-2">
-            <p className="text-md font-thin">{langCategory}</p>
-          </div>
-          <div>
-            <h3 className="text-2xl font-bold">{portfolio.title}</h3>
-          </div>
-          <div className="w-[80%] h-[5px] bg-gray-200"></div>
-          <div className="mt-5">
-            <h3 className="text-xl font-semibold">프로젝트 설명</h3>
-            <p className="text-gray-600">
-              <p>{portfolio.description}</p>
-            </p>
-          </div>
-        </div>
-        <div className="w-1/2 p-4">
-          <img
-            src={portfolio.portfolio_img}
-            alt={portfolio.title}
-            className="w-full h-full object-cover rounded-xl shadow-md"
-          />
-        </div>
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-2xl font-bold text-gray-600 hover:text-gray-800"
-        >
-          &times;
-        </button>
+            <path
+              d="M24 24L40 40M40 24L24 40"
+              className="stroke-gray-300 group-hover:stroke-gray-400"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
       </div>
     </div>
   );
