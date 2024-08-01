@@ -8,6 +8,8 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import useAuthStore from '@/zustand/authStore';
 
 
 export default function CreateCard() {
@@ -39,6 +41,7 @@ export default function CreateCard() {
       route.push(`/pro/proDetail/${newPostId}`);
     }
   };
+
 
   return (
     <div className="max-w-[1240px] mx-auto my-6">
