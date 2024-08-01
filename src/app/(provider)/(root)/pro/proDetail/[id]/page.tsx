@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
-import MDEditor, { commands } from '@uiw/react-md-editor'
+import MDEditor from '@uiw/react-md-editor'
 import '@uiw/react-md-editor/markdown-editor.css'
 
 interface PostData {
