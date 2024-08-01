@@ -16,11 +16,4 @@ export type RequestPosts = Tables<'Request Posts'>;
 
 export type RequestReviews = Tables<'Request Reviews'>;
 
-export type ChatMessage = {
-    id: string;
-    consumer_id: string;
-    pro_id: string;
-    content: string;
-    created_at: string;
-    chat_room_id: string;
-  };
+export type Chat =Tables<'Chat'>

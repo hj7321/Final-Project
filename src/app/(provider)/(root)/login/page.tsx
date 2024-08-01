@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEventHandler, useRef, useState } from 'react';
+import Cookies from 'js-cookie';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -66,7 +67,9 @@ export default function LoginPage() {
     setUserId(data.userData.user.id);
     setUserData(data.userData.user.user_metadata);
 
-    router.back(); // 이거 나중에 고쳐야 함!!
+    const redirectPage = Cookies.get('returnPage');
+    Cookies.remove('returnPage');
+    router.replace(redirectPage!);
   };
 
   const handleKakaoLogin = async () => {
@@ -74,11 +77,12 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
-        redirectTo: 'http://localhost:3000/signup/signUpComplete'
+        // redirectTo: 'http://localhost:3000/signup/signUpComplete'
+        redirectTo: 'http://localhost:3000/api/login/callback'
       }
     });
-    if (error) console.log('카카오 로그인 에러');
-    if (data) console.log(data);
+    if (error) console.error('카카오 로그인 에러: ', error);
+    if (data?.url) window.location.href = data.url; // OAuth 인증 페이지로 리디렉션(명시적으로 지정, 이 코드 없어도 됨(추후 삭제?))
   };
 
   const handleGoogleLogin = async () => {
@@ -86,7 +90,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:3000/signup/signUpComplete',
+        redirectTo: 'http://localhost:3000/api/login/callback',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
@@ -102,7 +106,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: 'http://localhost:3000/signup/signUpComplete'
+        redirectTo: 'http://localhost:3000/api/login/callback'
       }
     });
     if (error) console.log('깃허브 로그인 에러');

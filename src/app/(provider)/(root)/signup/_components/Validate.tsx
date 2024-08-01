@@ -1,4 +1,4 @@
-export const validateForms = (form: string, idx: number): boolean | string => {
+export const validateForms = (form: string, idx: number): string => {
   switch (idx) {
     case 0: // 1. 이메일 유효성 검사 함수
       if (!form) return '이메일을 입력해주세요.';
@@ -16,7 +16,7 @@ export const validateForms = (form: string, idx: number): boolean | string => {
       if (domainName.length < 1 || domainName.length > 63) return '도메인 이름의 길이는 1자 이상 63자 이하여야 합니다.';
       if (tld.length < 2) return '최상위 도메인의 길이는 2자 이상이어야 합니다.';
 
-      return true;
+      return '';
     case 1: // 2. 비밀번호 유효성 검사 함수
       if (!form) return '비밀번호를 입력해주세요.';
 
@@ -28,7 +28,7 @@ export const validateForms = (form: string, idx: number): boolean | string => {
       if (!hasAlphabet || !hasDigit || !hasSpecialChar)
         return '비밀번호는 알파벳, 숫자, 특수문자를 각각 최소 하나 이상 포함해야 합니다.';
 
-      return true;
+      return '';
     case 3: // 3. 닉네임 유효성 검사 함수
       if (!form) return '닉네임을 입력해주세요.';
 
@@ -40,7 +40,7 @@ export const validateForms = (form: string, idx: number): boolean | string => {
       const startsOrEndsWithSpaceRegex1 = /^\s|\s$/;
       if (startsOrEndsWithSpaceRegex1.test(form)) return '닉네임은 처음과 끝에 공백을 포함할 수 없습니다.';
 
-      return true;
+      return '';
     case 4: // 4. 이름 유효성 검사 함수
       if (!form) return '이름을 입력해주세요.';
 
@@ -55,7 +55,7 @@ export const validateForms = (form: string, idx: number): boolean | string => {
       const consecutiveSpacesRegex = /\s{2,}/;
       if (consecutiveSpacesRegex.test(form)) return '이름에는 연속으로 두 개 이상의 공백을 포함할 수 없습니다.';
 
-      return true;
+      return '';
     case 5: // 5. 생년월일 유효성 검사 함수
       const currentYear = new Date().getFullYear();
 
@@ -71,7 +71,7 @@ export const validateForms = (form: string, idx: number): boolean | string => {
       const daysInMonth = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
       if (day < 1 || day > daysInMonth[month - 1]) return '일(DD)을 정확히 입력해주세요.';
 
-      return true;
+      return '';
     default:
       return '';
   }

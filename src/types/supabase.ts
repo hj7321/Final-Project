@@ -328,7 +328,6 @@ export type Database = {
           }
         ];
       };
-
       Users: {
         Row: {
           birth: string | null;
