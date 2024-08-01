@@ -95,7 +95,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
           content,
           start_date: startDate,
           end_date: endDate,
-          portfolio_img: allImageUrls // 이미지 URL 배열 포함
+          portfolio_img: allImageUrls
         })
       });
 

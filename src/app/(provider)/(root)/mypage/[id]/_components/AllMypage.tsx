@@ -13,6 +13,7 @@ import { createClient } from '@/utils/supabase/client';
 import ReceiveReview from './ReceiveReview';
 import SendReview from './SendReview';
 import ChatList from '../../../chat/_components/ChatList';
+import Image from 'next/image';
 
 export default function AllMypage() {
   const { id } = useParams();
@@ -105,25 +106,20 @@ export default function AllMypage() {
           <div>
             <div className="flex flex-col items-center mb-6 p-4 rounded-full">
               <div className="w-[180px] h-[180px]  rounded-full mb-4">
-                <img
-                  src={
-                    Users?.data?.profile_img ||
-                    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMCAyMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAuOTM2ODAxIDEyLjIwNFY3Ljk1NjAxQzAuOTAzODAxIDIuMTk2MDEgMy44MTM4IDAgMTAuMDQ3OCAwQzE2LjIxODggMC4wMzYgMTkuMDk1OCAyLjIzMjAxIDE5LjA2MjggNy45NTYwMVYxMi4yMDRDMTkuMDI5OCAxOCAxNS45MzA4IDIwLjQ0OCA5Ljk1MTggMjAuNDQ4QzMuOTcyOCAyMC40NDggMC45NjY4MDEgMTggMC45MzY4MDEgMTIuMjA0WiIgZmlsbD0iIzlGQThCMiIvPgo8L3N2Zz4K'
-                  }
-                  className="w-72 h-40 rounded-full"
-                />
+                <img src={Users?.data?.profile_img || '/colorProfileImg.svg'} className="w-72 h-40 rounded-full" />
               </div>
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
               <button
-                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500"
+                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                 onClick={() => setActiveComponent('EditProfile')}
               >
-                프로필 수정하기 ✏️
+                <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" /> 프로필
+                수정하기
               </button>
 
               <button
-                className="mb-2 px-4 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white"
+                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                 onClick={() => mutation.mutate(Users?.data?.is_pro)}
               >
                 {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}
