@@ -1,17 +1,31 @@
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const info = await request.json();
+    const { id, commentData, userId } = await request.json();
     const supabase = createClient();
-    const { data, error } = await supabase.from('Community Comments').insert(info).select();
+    const { data, error } = await supabase
+      .from('Community Comments')
+      .insert({ contents: commentData, community_post_id: id, user_id: userId })
+      .select('*')
+      .order('created_at', { ascending: false });
     if (error) {
       return NextResponse.json({ error: error }, { status: 400 });
     }
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ error: '댓글 등록에 실패했습니다.' });
+  }
+}
+
+export async function GET() {
+  try {
+    const supabase = createClient();
+    const { data } = await supabase.from('Community Comments').select('*');
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: '데이터를 가져오는 데 실패했습니다.' });
   }
 }
 

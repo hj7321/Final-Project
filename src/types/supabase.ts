@@ -59,6 +59,7 @@ export type Database = {
           content: string;
           created_at: string | null;
           id: string;
+          is_read: boolean | null;
           post_id: string | null;
           pro_id: string;
         };
@@ -68,6 +69,7 @@ export type Database = {
           content: string;
           created_at?: string | null;
           id?: string;
+          is_read?: boolean | null;
           post_id?: string | null;
           pro_id: string;
         };
@@ -77,6 +79,7 @@ export type Database = {
           content?: string;
           created_at?: string | null;
           id?: string;
+          is_read?: boolean | null;
           post_id?: string | null;
           pro_id?: string;
         };
@@ -325,6 +328,7 @@ export type Database = {
           }
         ];
       };
+
       Users: {
         Row: {
           birth: string | null;

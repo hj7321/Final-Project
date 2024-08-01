@@ -9,22 +9,21 @@ const iconSt = 'w-[24px] h-[24px]';
 export default function CommuPost() {
   const { id } = useParams();
 
-  const getPosts = async (): Promise<CommunityPosts[]> => {
+  const getPosts = async (): Promise<CommunityPosts> => {
     const response = await fetch('/api/communityRead');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    return data.find((post) => post.id === id);
+    const filteredData = data.find((post) => post.id === id);
+    return filteredData;
   };
 
-  const { data, isLoading, error } = useQuery<CommunityPosts[]>({
+  const { data, isLoading, error } = useQuery<CommunityPosts>({
     queryKey: ['post', id],
     queryFn: getPosts,
     enabled: !!id
   });
-
-  console.log(data);
 
   return (
     <div className="flex flex-col">
@@ -42,7 +41,7 @@ export default function CommuPost() {
         </ul>
         <p className=" text-base font-bold">작성자</p>
         <div className=" text-base font-bold flex gap-[24px]">
-          <p>{data?.created_at.match(/^\d{4}-\d{2}-\d{2}/)}</p>
+          <p>{data?.created_at}</p>
           <div className="flex">
             <img src={favicon} className={iconSt} />
             <p>54</p>
