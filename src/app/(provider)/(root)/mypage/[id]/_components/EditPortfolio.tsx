@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import type { Portfolio } from '@/types/type';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
 interface EditPortfolioProps {
@@ -13,27 +13,15 @@ interface EditPortfolioProps {
 const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
   const userId = params.id as string;
-  const { id } = useParams();
-
-  // const getUserData = async (id: string) => {
-  //   const response = await fetch(`/api/user/${id}`);
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-  //   return response.json();
-  // };
-
-  // const {
-  //   data: userData,
-  //   isLoading: userLoading,
-  //   error: userError
-  // } = useQuery(['user', userId], () => getUserData(userId));
 
   const getUserData = async () => {
     const supabase = createClient();
-    const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+
+    const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
+    if (error) throw error;
     return data;
   };
+
   const {
     data: Users,
     isLoading,
@@ -41,28 +29,6 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   } = useQuery({
     queryKey: ['Users'],
     queryFn: getUserData
-  });
-
-  const getPortfolio = async () => {
-    if (!portfolioId) {
-      throw new Error('포트폴리오 ID가 지정되지 않았습니다.');
-    }
-
-    const response = await fetch(`/api/portFolio/${portfolioId}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  };
-
-  const {
-    data: portfolioData,
-    isLoading: portfolioLoading,
-    error: portfolioError
-  } = useQuery<Portfolio>({
-    queryKey: ['portfolio', portfolioId],
-    queryFn: getPortfolio,
-    enabled: !!portfolioId
   });
 
   const getsPortfolio = async () => {
@@ -84,8 +50,9 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   const [content, setContent] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-
   const [images, setImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   useEffect(() => {
     if (data && portfolioId) {
@@ -95,43 +62,67 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         setContent(portfolio.content || '');
         setStartDate(portfolio.start_date || '');
         setEndDate(portfolio.end_date || '');
+        setImageUrls(portfolio.portfolio_img || []);
+        setPreviewUrls(portfolio.portfolio_img || []);
       }
     }
   }, [data, portfolioId]);
 
-  const handleSave = async () => {
-    const response = await fetch('/api/portFolio', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        id: portfolioId,
-        title,
-        content,
-        start_date: startDate,
-        end_date: endDate
-      })
-    });
+  const uploadImage = async (file: File) => {
+    const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const supabase = createClient();
 
-    if (response.ok) {
-      clickModal();
-    } else {
-      console.error('수정에 실패했습니다.');
+    const { data, error } = await supabase.storage.from('portfolio_bucket_image/portfolio').upload(fileName, file);
+    if (error) throw error;
+    const { publicUrl } = supabase.storage.from('portfolio_bucket_image/portfolio').getPublicUrl(fileName).data;
+    return publicUrl;
+  };
+
+  const handleSave = async () => {
+    try {
+      const uploadPromises = images.map((file) => uploadImage(file));
+      const uploadedUrls = await Promise.all(uploadPromises);
+      const allImageUrls = [...imageUrls, ...uploadedUrls];
+
+      const response = await fetch('/api/portFolio', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: portfolioId,
+          title,
+          content,
+          start_date: startDate,
+          end_date: endDate,
+          portfolio_img: allImageUrls // 이미지 URL 배열 포함
+        })
+      });
+
+      if (response.ok) {
+        clickModal();
+      } else {
+        console.error('수정에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
 
-  // if (userLoading || portfolioLoading) {
-  //   return <div className="h-screen flex items-center justify-center">Loading...</div>;
-  // }
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setImages((prevImages) => [...prevImages, ...filesArray]);
 
-  // if (userError || portfolioError) {
-  //   return (
-  //     <div className="h-screen flex items-center justify-center">
-  //       Error: {userError?.message || portfolioError?.message}
-  //     </div>
-  //   );
-  // }
+      const previewUrlsArray = filesArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prevUrls) => [...prevUrls, ...previewUrlsArray]);
+    }
+  };
+
+  const handleImageDelete = (url: string) => {
+    setImageUrls((prevUrls) => prevUrls.filter((imgUrl) => imgUrl !== url));
+    setPreviewUrls((prevUrls) => prevUrls.filter((prevUrl) => prevUrl !== url));
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -141,7 +132,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         </button>
         <div className="flex">
           <div className="w-[30%] pr-4">
-            <h1 className="text-2xl font-bold mb-4">{Users?.data?.nickname}</h1>
+            <h1 className="text-2xl font-bold mb-4">{Users?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
@@ -157,7 +148,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                ></input>
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">참여 기간</label>
@@ -191,29 +182,34 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               <input
                 type="file"
                 className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                multiple
+                onChange={handleImageChange}
               />
-              <div className="mt-4 flex flex-wrap space-y-4"></div>
+              <div className="mt-4 flex flex-wrap space-y-4">
+                {previewUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt={`Uploaded ${index}`}
+                      className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+                    />
+                    <button
+                      onClick={() => handleImageDelete(url)}
+                      className="absolute top-0 right-0  text-white rounded-full p-1"
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
             썸네일
-            {portfolioData && (
+            {previewUrls.length > 0 ? (
               <img
-                src={
-                  portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0
-                    ? portfolioData.portfolio_img[0]
-                    : 'https://via.placeholder.com/150?text=No+Image'
-                }
+                src={previewUrls[0]}
                 alt="Portfolio Image"
+                className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
               />
-            )}
-            {portfolioData && portfolioData.portfolio_img && portfolioData.portfolio_img.length > 0 ? (
-              portfolioData.portfolio_img.map((img: string, index: number) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Portfolio image ${index}`}
-                  className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
-                />
-              ))
             ) : (
               <img
                 src="https://via.placeholder.com/150?text=No+Image"
@@ -221,6 +217,17 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                 className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
               />
             )}
+            {previewUrls.length > 1 &&
+              previewUrls
+                .slice(1)
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Portfolio image ${index}`}
+                    className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+                  />
+                ))}
           </div>
         </div>
       </div>

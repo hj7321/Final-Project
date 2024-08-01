@@ -15,6 +15,9 @@
   content: '✔';
   @apply absolute top-[-5.5px] text-white;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 /* :root {
   --foreground-rgb: 0, 0, 0;

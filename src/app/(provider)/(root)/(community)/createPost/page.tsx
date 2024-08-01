@@ -16,7 +16,7 @@ type CommunityPostsData = Omit<CommunityPosts, 'id' | 'created_at'> & {
   user_id: string;
 };
 
-const CreatePost: React.FC<AddPortfolioProps> = ({ clickModal }) => {
+const CreatePost = () => {
   const params = useParams();
   const id = params.id as string;
   const queryClient = useQueryClient();
@@ -61,7 +61,6 @@ const CreatePost: React.FC<AddPortfolioProps> = ({ clickModal }) => {
         contentRef.current.value = '';
       }
       alert('게시글 등록이 완료되었습니다.');
-      clickModal();
     }
   });
 
