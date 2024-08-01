@@ -31,7 +31,7 @@ export default function SignUpForm() {
   const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
   const [showPassword, setShowPassword] = useState<boolean[]>(Array(2).fill(false));
   const [showModal, setShowModal] = useState<number | null>(null);
-  const [inputMsgs, setInputMsgs] = useState<(string | boolean)[]>(Array(inputs.length).fill(''));
+  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill(''));
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false));
   const [emailData, setEmailData] = useState<string[]>(['']);
@@ -105,21 +105,21 @@ export default function SignUpForm() {
   const handleUserDataSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     const areInputValuesNull: string[] = inputValues.filter((value) => value === '');
 
-    if (inputMsgs[0] !== true && inputMsgs[0] !== '') {
+    if (inputMsgs[0] !== '') {
       inputRefs.current[0]!.focus();
       return;
-    } else if (inputMsgs[1] !== true && inputMsgs[1] !== '') {
+    } else if (inputMsgs[1] !== '') {
       inputRefs.current[1]!.focus();
       return;
-    } else if (inputMsgs[2] !== true && inputMsgs[2] !== '') {
+    } else if (inputMsgs[2] !== '') {
       inputRefs.current[2]!.focus();
       return;
-    } else if (inputMsgs[3] !== true && inputMsgs[3] !== '') {
+    } else if (inputMsgs[3] !== '') {
       inputRefs.current[3]!.focus();
-    } else if (inputMsgs[4] !== true && inputMsgs[4] !== '') {
+    } else if (inputMsgs[4] !== '') {
       inputRefs.current[4]!.focus();
       return;
-    } else if (inputMsgs[5] !== true && inputMsgs[5] !== '') {
+    } else if (inputMsgs[5] !== '') {
       inputRefs.current[5]!.focus();
       return;
     } else if (areInputValuesNull.length !== 0) {
@@ -177,26 +177,19 @@ export default function SignUpForm() {
           <div key={input.id} className={clsx(idx % 3 === 2 && 'mb-[48px]', 'flex flex-col items-center relative')}>
             <div
               className={clsx(
-                // idx === selectedIdx || inputValues[idx]!.length > 0
-                //   ? 'h-[70px] w-[400px] border border-primary-500 rounded-[8px] px-[16px] pt-[6px]'
-                //   : 'h-[56px] w-[400px] border border-grey-100 p-[16px] rounded-[8px]'
-                idx === selectedIdx && 'h-[70px] w-[400px] border border-primary-500 rounded-[8px] px-[16px] pt-[6px]',
-                // "focus: h-[70px] w-[400px] border border-primary-500 rounded-[8px] px-[16px] pt-[6px]",
-                idx != selectedIdx &&
-                  inputValues[idx].length > 0 &&
-                  'h-[70px] w-[400px] border border-grey-300 rounded-[8px] px-[16px] pt-[6px]',
-                idx !== selectedIdx &&
-                  inputValues[idx].length === 0 &&
-                  'h-[56px] w-[400px] border border-grey-100 p-[16px] rounded-[8px]'
+                'w-[400px] border rounded-[8px] px-[16px]',
+                // "focus: h-[70px] border-primary-500 pt-[6px]",
+                idx === selectedIdx && 'h-[70px] border-primary-500 pt-[6px]',
+                idx !== selectedIdx && inputValues[idx].length > 0 && 'h-[70px] border-grey-300 pt-[6px]',
+                idx !== selectedIdx && inputValues[idx].length === 0 && 'h-[56px] border-grey-100 py-[16px]',
+                idx !== selectedIdx && inputMsgs[idx] !== '' && 'h-[70px] border-error pt-[6px]'
               )}
             >
               <label
                 className={clsx(
-                  // idx === selectedIdx || inputValues[idx]!.length > 0 ? 'flex' : 'hidden',
-                  // 'self-start text-[12px]'
                   'self-start text-[12px]',
-                  (idx === selectedIdx || inputValues[idx]!.length > 0) && 'flex text-primary-500',
-                  idx != selectedIdx && inputValues[idx].length > 0 && 'flex text-grey-300',
+                  idx === selectedIdx && inputValues[idx].length > 0 && 'flex text-primary-500',
+                  idx !== selectedIdx && inputValues[idx].length > 0 && 'flex text-grey-300',
                   idx !== selectedIdx && inputValues[idx].length === 0 && 'hidden'
                 )}
                 htmlFor={input.id}
@@ -249,7 +242,7 @@ export default function SignUpForm() {
                 )}
               </div>
             </div>
-            <p className="self-start text-[14px] mt-[3px] ml-[3px] text-[red]">{inputMsgs[idx]}</p>
+            <p className="self-start text-[14px] mt-[3px] ml-[3px] text-error">{inputMsgs[idx]}</p>
           </div>
         ))}
 
