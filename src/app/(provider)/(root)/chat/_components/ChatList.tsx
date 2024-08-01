@@ -179,7 +179,7 @@ const ChatList = () => {
                 <h3 className="text-xs font-bold items-center ml-4">{room.post_title}</h3>
               </div>
               <div className="flex items-center justify-center mt-2 mb-2">
-                <Image src={room.user_profile_img} alt="상대 프로필" width={20} height={20} className="w-12 h-12 mt-3 border border-gray-300 rounded-full" />
+                <Image src={room.user_profile_img || '/defaultProfileimg.svg'} alt="상대 프로필" width={20} height={20} className="w-12 h-12 mt-3 border border-gray-300 rounded-full" />
               </div>
               <div className="text-center">
                 <div className='flex items-center justify-center mt-4'>

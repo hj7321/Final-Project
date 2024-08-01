@@ -142,7 +142,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
         <div className="flex items-center mb-6">
           {otherUser && (
             <>
-              <img src={otherUser.profile_img ?? ''} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
+              <img src={otherUser.profile_img || '/defaultProfileimg.svg'} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
               <div>
                 <h2 className="text-sm font-semibold">{otherUser.nickname}</h2>
                 <p className="text-sm font-medium text-gray-500">연락 가능 시간: AM 9 - PM 6</p>
