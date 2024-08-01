@@ -9,6 +9,7 @@ import useAuthStore from '@/zustand/authStore';
 
 interface PostData {
   post_img: string[];
+  content: string;
 }
 interface UserData {
   id: string; // 유저 ID 추가
@@ -174,14 +175,12 @@ export default function ProDetail() {
         </div>
       </div>
       <div className="mt-8">
-        <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-0 bg-yellow-400">
+        <div className="flex justify-start space-x-4 border-gray-300 p-4 sticky top-0 bg-white">
           <ul className="flex justify-start space-x-4">
             <li
               id="service"
               className={`text-lg ${
-                activeTab === 'service'
-                  ? 'text-primary-500 border-b-2 border-primary-500 font-bold '
-                  : 'text-gray-500'
+                activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
               }`}
               onClick={(e) => {
                 e.preventDefault();
@@ -193,7 +192,9 @@ export default function ProDetail() {
             <li
               id="portfolio"
               className={`text-lg ${
-                activeTab === 'portfolio' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
+                activeTab === 'portfolio'
+                  ? 'text-primary-500 border-b-2 border-primary-500 font-bold '
+                  : 'text-gray-500'
               }`}
               onClick={(e) => {
                 e.preventDefault();
@@ -241,58 +242,66 @@ export default function ProDetail() {
           </button> */}
         </div>
         <div>
-          <div id="section1" className="">
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-            <p>서비스내용</p>
-          </div>
-          <div id="section2" className="bg-blue-500">
-            <div className="mt-4 flex flex-row justify-start flex-wrap">
-              {portfolio.map((item) => (
-                <div key={item.id} className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2">
-                  <div className="w-[3/4] h-[140px]">
-                    <img src={item.portfolio_img} alt={item.title} className="w-full h-full bg-slate-400 rounded-xl" />
-                  </div>
-                  <div className="flex flex-row justify-start items-center mt-3 text-xs">
-                    <p>{item.lang_category}</p>
-                  </div>
-                  <div className="my-2">
-                    <p className="font-bold text-lg line-clamp-1">{item.title}</p>
-                  </div>
-                  <div className="text-xs">
-                    <p>
-                      {item.start_date} ~ {item.end_date}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          <div id="section1" className="p-2 my-2">
+            <h1 className="text-2xl my-3">서비스 정보</h1>
+            <div>
+              <p>{post.content}</p>
             </div>
           </div>
-          <div id="section3" className="h-[800px] bg-slate-500">
-            리뷰임
+
+          <div id="section2" className="p-2 my-4">
+            <h1 className="text-2xl my-3">포트폴리오</h1>
+            <div className="mt-4 flex flex-row justify-start flex-wrap">
+              {portfolio.length === 0 ? (
+                <div>
+                  <p>아직 등록된 포트폴리오가 없습니다</p>
+                </div>
+              ) : (
+                portfolio.map((item) => (
+                  <div key={item.id} className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2">
+                    <div className="w-[3/4] h-[140px]">
+                      <img
+                        src={item.portfolio_img}
+                        alt={item.title}
+                        className="w-full h-full bg-slate-400 rounded-xl"
+                      />
+                    </div>
+                    <div className="flex flex-row justify-start items-center mt-3 text-xs">
+                      <p>{item.lang_category}</p>
+                    </div>
+                    <div className="my-2">
+                      <p className="font-bold text-lg line-clamp-1">{item.title}</p>
+                    </div>
+                    <div className="text-xs">
+                      <p>
+                        {item.start_date} ~ {item.end_date}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          <div id="section3" className="p-2 my-4">
+            <h1 className='text-2xl'>리뷰</h1>
+            <div className="mt-4 flex flex-col justify-center items-center">
+              <div className="mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3">
+                <div>
+                  <p>⭐️⭐️⭐️⭐️⭐️</p>
+                </div>
+                <div className="line-clamp-1 my-2">
+                  <p className="text-xl font-medium">리뷰 내용 입니다 !</p>
+                </div>
+                <div className="flex flex-row text-sm font-thin">
+                  <div>
+                    <p>작성자 : 코듀</p>
+                  </div>
+                  <div className="mx-2">
+                    <p>작성일 : 2024.08.01</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {/* {activeTab === 'portfolio' && (
