@@ -27,6 +27,7 @@ export async function GET(request: any) {
       console.error('Error fetching data:', error);
       return NextResponse.json({ error: '데이터를 가져오는데 실패했습니다' });
     }
+    
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching data:', error);
