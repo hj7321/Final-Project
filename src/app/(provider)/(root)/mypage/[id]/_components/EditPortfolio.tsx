@@ -100,7 +100,9 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       });
 
       if (response.ok) {
+        alert('저장 완료');
         clickModal();
+        window.location.reload();
       } else {
         console.error('수정에 실패했습니다.');
       }
@@ -126,12 +128,12 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 w-[800px] h-[80%] relative overflow-auto">
+      <div className="bg-white p-6 w-[1200px] h-[80%] relative overflow-auto">
         <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={clickModal}>
           x
         </button>
         <div className="flex">
-          <div className="w-[30%] pr-4">
+          <div className="w-[40%] pr-4">
             <h1 className="text-2xl font-bold mb-4">{Users?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
@@ -176,9 +178,8 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               </div>
             </div>
           </div>
-          <div className="w-[70%]">
-            <label className="block text-sm font-medium text-gray-700">사진</label>
-            <div className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm">
+          <div className="flex flex-col items-end w-[60%] mt-10 mr-2">
+            <div className="mt-1 p-2 border items-start w-full border-gray-300 rounded-md shadow-sm">
               <input
                 type="file"
                 className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
@@ -205,11 +206,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
             </div>
             썸네일
             {previewUrls.length > 0 ? (
-              <img
-                src={previewUrls[0]}
-                alt="Portfolio Image"
-                className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
-              />
+              <img src={previewUrls[0]} alt="Portfolio Image" className="w-96 object-cover mt-1 mb-4 rounded-md" />
             ) : (
               <img
                 src="https://via.placeholder.com/150?text=No+Image"
@@ -225,7 +222,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                     key={index}
                     src={img}
                     alt={`Portfolio image ${index}`}
-                    className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
+                    className="w-40  object-cover mt-1 mb-4 rounded-md"
                   />
                 ))}
           </div>

@@ -79,7 +79,7 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
   }
 
   const categoryImage = CodeCategories.find((category) => category.name === langCategory)?.image;
-  const userProfileImg = Users?.profile_img ?? '/kakao.svg';
+  const userProfileImg = Users?.profile_img ?? '/defaultProfileimg.svg';
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -89,10 +89,16 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
         </button>
         <div className="flex">
           <div className="w-[40%] pr-4 ml-7">
-            <h1 className="text-xl font-bold mt-20 mb-7">
-              <Image src="/kakao.svg" alt="유저 이미지" width={24} height={24} className="rounded-full mr-4" />
-              {Users?.nickname}
-            </h1>
+            <div className="flex items-center mt-20 mb-7">
+              <Image
+                src={Users?.profile_img ?? '/defaultProfileimg.svg'}
+                alt="유저 이미지"
+                width={36}
+                height={6}
+                className="rounded-full mr-4"
+              />
+              <h1 className="text-xl font-bold">{Users?.nickname}</h1>
+            </div>
             <div className="flex flex-col mx-auto space-y-4">
               <div className="text-lg">
                 {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-10 h-6" />}
