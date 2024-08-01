@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
-import useAuthStore from '@/zustand/authStore';
+import MDEditor, { commands } from '@uiw/react-md-editor'
+import '@uiw/react-md-editor/markdown-editor.css'
 
 interface PostData {
   post_img: string[];
@@ -220,8 +221,11 @@ export default function ProDetail() {
         <div>
           <div id="section1" className="p-2 my-2">
             <h1 className="text-2xl my-3">서비스 정보</h1>
-            <div>
-              <p>{post.content}</p>
+            <div data-color-mode='light'>
+              <MDEditor.Markdown
+                source={post.content}
+              />
+              {/* <p>{post.content}</p> */}
             </div>
           </div>
 
