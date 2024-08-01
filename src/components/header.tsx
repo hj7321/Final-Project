@@ -7,6 +7,7 @@ import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
@@ -59,8 +60,22 @@ export default function Header() {
     router.replace('/');
   };
 
+  const goToLoginPage = () => {
+    const presentPage = window.location.href;
+    const pagePathname = new URL(presentPage).pathname;
+    Cookies.set('returnPage', pagePathname);
+    router.push('/login');
+  };
+
+  const goToSignUpPage = () => {
+    const presentPage = window.location.href;
+    const pagePathname = new URL(presentPage).pathname;
+    Cookies.set('returnPage', pagePathname);
+    router.push('/signup');
+  };
+
   return (
-    <header className="sticky top-0 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] box-border">
+    <header className="sticky top-0 relative z-100 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] border border-grey-100">
       <div className="flex items-center gap-[32px]">
         <Link href="/">
           <div className="w-40 h-16 flex items-center justify-center">
@@ -72,12 +87,12 @@ export default function Header() {
           </div>
         </Link>
         <nav className="ml-4 space-x-[12px]">
-          <a href="#" className="text-grey-700 px-[12px] py-[8px]">
+          <Link href="/qna" className="text-grey-700 px-[12px] py-[8px]">
             Q&A
-          </a>
-          <a href="#" className="text-grey-700 px-[12px] py-[8px]">
+          </Link>
+          <Link href="/insight" className="text-grey-700 px-[12px] py-[8px]">
             인사이트
-          </a>
+          </Link>
           <Link href="/pro" className="text-grey-700 px-[12px] py-[8px]">
             전문가 의뢰
           </Link>
@@ -117,7 +132,7 @@ export default function Header() {
           <div className="flex items-center gap-[24px]">
             <Link href={`/mypage/${userId}`}>
               {/* <b className="text-primary-500">{userData && userData.data?.nickname}</b>님 */}
-              <b>{userData?.name || userData?.user_name}</b>님
+              <b className="text-primary-500">{userData?.name || userData?.user_name}</b>님
             </Link>
             <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
               로그아웃
@@ -126,15 +141,18 @@ export default function Header() {
         </div>
       ) : (
         <div className="flex items-center gap-[16px] text-[16px]">
-          <Link
-            href="/login"
+          <button
+            onClick={goToLoginPage}
             className={clsx(buttonStyle, 'border border-primary-500 hover:bg-primary-50 text-primary-500')}
           >
             로그인
-          </Link>
-          <Link href="/signup" className={clsx(buttonStyle, 'bg-primary-500 hover:bg-primary-700 text-white')}>
+          </button>
+          <button
+            onClick={goToSignUpPage}
+            className={clsx(buttonStyle, 'bg-primary-500 hover:bg-primary-700 text-white')}
+          >
             회원가입
-          </Link>
+          </button>
         </div>
       )}
     </header>

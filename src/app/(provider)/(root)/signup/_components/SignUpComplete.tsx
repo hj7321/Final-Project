@@ -2,6 +2,7 @@
 
 import useAuthStore from '@/zustand/authStore';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const buttonStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] bg-black text-white font-bold';
 
@@ -19,7 +20,9 @@ export default function SignUpComplete() {
         body: JSON.stringify({ userId })
       }).then((res) => res.json());
     }
-    router.replace('/');
+    const redirectPage = Cookies.get('returnPage');
+    Cookies.remove('returnPage');
+    router.replace(redirectPage!);
   };
 
   return (

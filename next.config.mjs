@@ -4,5 +4,4 @@ const nextConfig = {
       domains: ['ivuhyqkdxiwtufnsgxcv.supabase.co', 'lh3.googleusercontent.com'],
       },
 };
-
 export default nextConfig;
