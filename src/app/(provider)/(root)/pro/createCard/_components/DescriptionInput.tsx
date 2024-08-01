@@ -17,7 +17,7 @@ export default function DescriptionInput({description, setDescription} : Descrip
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       ></textarea> */}
-      <MDEditor height={700} value={description} onChange={setDescription}
+      <MDEditor height={700} value={description} onChange={setDescription} className="py-5"
         commands={[
         ]}
       />
