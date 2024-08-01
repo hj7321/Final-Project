@@ -87,12 +87,12 @@ export default function Header() {
           </div>
         </Link>
         <nav className="ml-4 space-x-[12px]">
-          <a href="#" className="text-grey-700 px-[12px] py-[8px]">
+          <Link href="/qna" className="text-grey-700 px-[12px] py-[8px]">
             Q&A
-          </a>
-          <a href="#" className="text-grey-700 px-[12px] py-[8px]">
+          </Link>
+          <Link href="/insight" className="text-grey-700 px-[12px] py-[8px]">
             인사이트
-          </a>
+          </Link>
           <Link href="/pro" className="text-grey-700 px-[12px] py-[8px]">
             전문가 의뢰
           </Link>

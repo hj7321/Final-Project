@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body style={{ fontFamily: 'SUIT Variable, sans-serif' }}>
+      <body>
         <QueryProvider>
           <Header />
           {children}
