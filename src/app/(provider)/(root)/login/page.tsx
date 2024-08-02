@@ -57,7 +57,7 @@ export default function LoginPage() {
       alert(data.errorMsg);
       return;
     }
-    alert('로그인 성공!');
+    console.log('로그인 성공!');
     form.reset();
     login();
     setUserId(data.userData.user.id);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
@@ -8,15 +8,17 @@ import clsx from 'clsx';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
+import { useQuery } from '@tanstack/react-query';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
+const linkStyle = 'text-grey-700 hover:text-primary-500 hover:font-bold px-[12px] py-[8px]';
 
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const [number, setNumber] = useState<number>(0);
   const [session, setSession] = useState<string | null | undefined>(null);
   const router = useRouter();
-  const { isLogin, logout, userId, userData, initializeAuthState, isLoading } = useAuthStore();
+  const { isLogin, logout, userId, initializeAuthState } = useAuthStore();
 
   const supabase = createClient();
 
@@ -43,6 +45,15 @@ export default function Header() {
     const num = Math.random() >= 0.5 ? 0 : 1;
     setNumber(num);
   }, []);
+
+  const getUserData = async () => {
+    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
+    return data;
+  };
+  const { data: Users } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData
+  });
 
   const handleSearch = () => {
     if (searchInput.trim()) {
@@ -85,13 +96,13 @@ export default function Header() {
           </div>
         </Link>
         <nav className="ml-4 space-x-[12px]">
-          <Link href="/qna" className="text-grey-700 px-[12px] py-[8px]">
+          <Link href="/qna" className={linkStyle}>
             Q&A
           </Link>
-          <Link href="/insight" className="text-grey-700 px-[12px] py-[8px]">
+          <Link href="/insight" className={linkStyle}>
             인사이트
           </Link>
-          <Link href="/pro" className="text-grey-700 px-[12px] py-[8px]">
+          <Link href="/pro" className={linkStyle}>
             전문가 의뢰
           </Link>
         </nav>
@@ -110,8 +121,9 @@ export default function Header() {
           <Image src="/searchIcon.svg" alt="돋보기 아이콘" width={24} height={24} />
         </button>
       </div>
-
-      {/* <HeaderButton /> */}
+      {/* <Suspense fallback={<div>로딩중</div>}>
+        <HeaderButton />
+      </Suspense> */}
       {isLogin ? (
         <div className="flex items-center gap-[24px]">
           <div className="flex gap-[12px]">
@@ -119,9 +131,8 @@ export default function Header() {
             <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
           </div>
           <div className="flex items-center gap-[24px]">
-            <Link href={`/mypage/${userId}`}>
-              {/* <b className="text-primary-500">{userData && userData.data?.nickname}</b>님 */}
-              <b className="text-primary-500">{userData?.name || userData?.user_name}</b>님
+            <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700">
+              <b className="text-primary-500 hover:text-primary-700">{Users?.data?.nickname}</b>님
             </Link>
             <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
               로그아웃
