@@ -23,7 +23,7 @@ export default function ProMainPage() {
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
-  const { userId, isPro, } = useAuthStore()
+  const { isPro } = useAuthStore()
 
   const fetchData = useCallback( async (page: number, languages: string[] = []) => {
     try {
