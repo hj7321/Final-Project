@@ -46,6 +46,7 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
     console.log(session);
 
     if (session) {
+      console.log('동작함');
       const { data } = await supabase.from('Users').select('is_pro').eq('id', session.user.id);
 
       set({
