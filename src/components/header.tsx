@@ -51,7 +51,7 @@ export default function Header() {
     return data;
   };
   const { data: Users } = useQuery({
-    queryKey: ['Users'],
+    queryKey: [userId],
     queryFn: getUserData
   });
 
