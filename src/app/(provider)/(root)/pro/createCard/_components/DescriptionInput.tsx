@@ -4,7 +4,7 @@ import '@uiw/react-md-editor/markdown-editor.css'
 
 interface DescriptionInputProps {
   description : string
-  setDescription : (description : string) => void
+  setDescription : (description : any) => void
 }
 
 export default function DescriptionInput({description, setDescription} : DescriptionInputProps) {

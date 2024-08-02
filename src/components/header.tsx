@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-import HeaderButton from './HeaderButton';
 import { useQuery } from '@tanstack/react-query';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
