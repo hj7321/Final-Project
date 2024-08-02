@@ -1,22 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
 
-:root {
+.custom-checkbox {
+  @apply appearance-none relative w-[16px] h-[16px] border border-grey-200 rounded-[3px] cursor-pointer bg-white;
+}
+
+.custom-checkbox:checked {
+  @apply bg-primary-500 border-primary-500;
+}
+
+.custom-checkbox:checked::before {
+  content: '✔';
+  @apply absolute top-[-5.5px] text-white;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: 'SUIT';
+  src: url('/font/SUIT-Medium.ttf') format('truetype');
+  font-weight: normal;
+}
+
+body {
+  font-family: 'SUIT';
+  font-weight: normal;
+}
+
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
-body {
+/* body {
+  font-family: 'SUIT Variable', sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,10 +54,10 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
 
-@layer utilities {
+/* @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
