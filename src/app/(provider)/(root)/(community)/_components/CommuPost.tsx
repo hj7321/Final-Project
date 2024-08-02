@@ -9,19 +9,27 @@ const iconSt = 'w-[24px] h-[24px]';
 export default function CommuPost() {
   const { id } = useParams();
 
-  const getPosts = async (): Promise<CommunityPosts> => {
+  const getPost = async (): Promise<CommunityPosts> => {
     const response = await fetch('/api/communityRead');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    const filteredData = data.find((post) => post.id === id);
-    return filteredData;
+    const filteredData = data.filter((post) => post.id === id) || null;
+    return filteredData[0];
   };
+  //  const [filteredData, setFilteredData] = useState<CommunityPosts | null>(null);
+  //   const filtered: CommunityPosts | null = data.find((post) => post.id === id)|| null;
+  //   setFilteredData(filtered);
+  // } catch (error) {
+  //   console.error('Fetch data error:', error);
+  //   setFilteredData(null);
+  // };
+  // 추후 return문 안에서 filteredData 이용
 
   const { data, isLoading, error } = useQuery<CommunityPosts>({
     queryKey: ['post', id],
-    queryFn: getPosts,
+    queryFn: getPost,
     enabled: !!id
   });
 
@@ -30,22 +38,13 @@ export default function CommuPost() {
       <div className="flex flex-col gap-6 py-6">
         <h1 className="text-2xl font-bold">{data?.title}</h1>
         <ul className="flex gap-[24px]">
-          <li className={langSt}>
-            <img src={favicon} className={iconSt} />
-            <p>HTML/CSS</p>
-          </li>
-          <li className={langSt}>
-            <img src={favicon} className={iconSt} />
-            <p>JavaScript</p>
-          </li>
+          <li className={langSt}>언어 위치</li>
+          <li className={langSt}>언어 위치</li>
         </ul>
         <p className=" text-base font-bold">작성자</p>
         <div className=" text-base font-bold flex gap-[24px]">
           <p>{data?.created_at}</p>
-          <div className="flex">
-            <img src={favicon} className={iconSt} />
-            <p>54</p>
-          </div>
+          <div className="flex">조회수/북마크</div>
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />

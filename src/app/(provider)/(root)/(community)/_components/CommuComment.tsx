@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill';
 import { FormEvent, useState } from 'react';
 import { comment } from 'postcss';
 import { useParams, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -16,8 +17,6 @@ export default function CommuComment() {
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
   const { id } = useParams();
-
-  console.log(id);
 
   const handleCheckLogin = () => {
     if (!isLogin) {
@@ -39,17 +38,31 @@ export default function CommuComment() {
     }).then((res) => res.json());
   };
 
+  const getComments = async (): Promise<CommunityComments[]> => {
+    const response = await fetch('/api/communityComments');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: CommunityComments[] = await response.json();
+
+    const filteredData = data.filter((comment) => comment.community_post_id === id);
+    console.log(filteredData);
+    return filteredData;
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['comment', id],
+    queryFn: getComments,
+    enabled: !!id
+  });
+
+  // data의 총 개수를 계산
+  const commentCount = data ? data.length : 0;
+
   return (
     <div className="flex flex-col">
       <div className="flex gap-[24px]">
-        <div className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>27</p>
-        </div>
-        <div className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>3</p>
-        </div>
+        <div className={langSt}>댓글 개수 {commentCount}</div>
       </div>
       <form onSubmit={handleSubmit} className="flex gap-[32px] mt-[32px]">
         <textarea
