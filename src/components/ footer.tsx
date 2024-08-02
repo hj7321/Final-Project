@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -8,9 +9,19 @@ export default function Footer() {
           <Image src="/logo_kor.svg" alt="한국어 로고" width={120} height={40} />
           <div className="flex gap-[16px]">
             {/* 내배캠 아이콘 */}
+            <Link
+              href="https://nbcamp.spartacodingclub.kr/?next=%2Fmypage%2Fattendance&utm_source=google&utm_medium=pmax&utm_campaign=nbc&utm_content=backend_java&utm_term=&gad_source=1&gclid=CjwKCAjwnK60BhA9EiwAmpHZwy_tgCwAdAyZE5paMiXUQk4lgk0SKd09K-WeExCd4X_IoTlqpmQ9ghoC-88QAvD_BwE"
+              target="_blank"
+            >
+              <Image src="footer_nbcamp.svg" alt="내배캠 아이콘" width={32.5} height={30} className="content-center" />
+            </Link>
             <p className="text-grey-900 font-bold text-[16px]">내일배움캠프 팔색조(A08)</p>
-            <Image src="footer_github.svg" alt="깃허브 아이콘" width={24} height={24} />
-            <Image src="footer_notion.svg" alt="노션 아이콘" width={24} height={24} />
+            <Link href="https://github.com/hj7321/Final-Project" target="_blank">
+              <Image src="footer_github.svg" alt="깃허브 아이콘" width={24} height={24} />
+            </Link>
+            <Link href="https://www.notion.so/teamsparta/A08-77087b93ead74831ab62a973c70d3330" target="_blank">
+              <Image src="footer_notion.svg" alt="노션 아이콘" width={24} height={24} />
+            </Link>
           </div>
         </div>
 
