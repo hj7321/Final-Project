@@ -54,7 +54,7 @@ export default function AllMypage() {
     isLoading,
     error
   } = useQuery({
-    queryKey: [id],
+    queryKey: ['Users'],
     queryFn: getUserData
   });
 
@@ -68,11 +68,11 @@ export default function AllMypage() {
   const mutation = useMutation({
     mutationFn: changeUserType,
     onMutate: async (currentIsPro) => {
-      await queryClient.cancelQueries({ queryKey: ['mypageUser'] });
+      await queryClient.cancelQueries({ queryKey: ['Users'] });
 
-      const previousUserData = queryClient.getQueryData(['mypageUser']);
+      const previousUserData = queryClient.getQueryData(['Users']);
 
-      queryClient.setQueryData(['mypageUser'], (old: { data: any }) => ({
+      queryClient.setQueryData(['Users'], (old: { data: any }) => ({
         ...old,
         data: {
           ...old.data,
@@ -83,10 +83,10 @@ export default function AllMypage() {
       return { previousUserData };
     },
     onError: (err, newTodo, context) => {
-      queryClient.setQueryData(['mypageUser'], context?.previousUserData);
+      queryClient.setQueryData(['Users'], context?.previousUserData);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['mypageUser'] });
+      queryClient.invalidateQueries({ queryKey: ['Users'] });
     }
   });
 

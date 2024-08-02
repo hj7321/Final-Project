@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
+import DescriptionInput from '../../pro/createCard/_components/DescriptionInput';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -210,6 +211,7 @@ const CreatePost = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
+          {/* <DescriptionInput content={content} setContent={setContent} />  */}
         </div>
         <div className="flex justify-end">
           <button
