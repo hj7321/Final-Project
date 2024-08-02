@@ -1,13 +1,8 @@
-/* MDEditor 툴바의 아이콘 크기 변경 */
-.w-md-editor {
-  font-size: 24px;
-  line-height: 1.8;
+.w-md-editor-toolbar {
+  display: none;
 }
-.w-md-editor-text-input {
-  font-size: 24px;
-  line-height: 1.8;
-}
-.w-md-editor-toolbar li > button {
+
+/* .w-md-editor-toolbar li > button {
   padding: 2px;
 }
 .w-md-editor-toolbar li {
@@ -28,12 +23,12 @@
   margin: 10px 10px;
   font-size: 20px;
 }
-/* 미리보기 버튼  */
+
 .w-md-editor-toolbar ul:nth-child(2) {
   display: none;
-}
+} */
 
-/* 미리 보기 */
+
 .w-md-editor-preview {
   display: none;
 }
