@@ -134,7 +134,6 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
         </button>
         <div className="flex">
           <div className="w-[40%] pr-4">
-            <h1 className="text-2xl font-bold mb-4">{Users?.nickname}</h1>
             <div className="flex flex-col space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
@@ -146,10 +145,11 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
-                <input
+                <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  style={{ height: '200px' }}
                 />
               </div>
               <div>

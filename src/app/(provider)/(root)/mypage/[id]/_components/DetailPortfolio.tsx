@@ -79,7 +79,6 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
   }
 
   const categoryImage = CodeCategories.find((category) => category.name === langCategory)?.image;
-  const userProfileImg = Users?.profile_img ?? '/defaultProfileimg.svg';
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -91,35 +90,35 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
           <div className="w-[40%] pr-4 ml-7">
             <div className="flex items-center mt-20 mb-7">
               <Image
-                src={Users?.profile_img ?? '/defaultProfileimg.svg'}
+                src={Users?.profile_img || '/defaultProfileimg.svg'}
                 alt="유저 이미지"
                 width={36}
-                height={6}
-                className="rounded-full mr-4"
+                height={36}
+                className="rounded-[50%] mr-4 overflow-hidden w-20 h-20 "
               />
               <h1 className="text-xl font-bold">{Users?.nickname}</h1>
             </div>
             <div className="flex flex-col mx-auto space-y-4">
-              <div className="text-lg">
-                {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-10 h-6" />}
+              <div className="flex text-base text-gray-500">
+                {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-6 h-6" />}
                 {langCategory}
               </div>
               <div className="mt-8 mb-5">{title}</div>
               <div className="border-t border-gray-300 my-10"></div>
               <div>
                 <label className="block text-xl font-bold my-5 text-black">프로젝트 설명</label>
-                <div className="text-lg font-semibold text-gray-700">{content}</div>
+                <div className="text-lg font-semibold text-gray-500">{content}</div>
               </div>
               <div>
                 <label className="block text-xl font-bold my-5 text-black">참여기간</label>
-                <div className="text-lg font-semibold text-gray-700">
+                <div className="text-lg font-semibold text-gray-500">
                   {startDate} ~ {endDate}
                 </div>
               </div>
               <div className="flex justify-start">
                 <button
                   onClick={editHandle}
-                  className="bg-white text-primary-500 border text-lg font-bold border-primary-500 px-4 py-2 rounded-md shadow-sm hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  className="bg-white text-primary-500 border text-lg  border-primary-500 px-20 py-2 rounded-md shadow-sm hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 >
                   포트폴리오 편집
                 </button>

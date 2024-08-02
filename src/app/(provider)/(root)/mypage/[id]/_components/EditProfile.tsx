@@ -4,7 +4,7 @@ import { Users } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 
 export default function EditProfile() {
   const [nickname, setNickname] = useState<string>('');
@@ -34,6 +34,16 @@ export default function EditProfile() {
     queryKey: ['Users', id],
     queryFn: getUserData
   });
+
+  useEffect(() => {
+    if (userData) {
+      setNickname(userData.nickname || '');
+      setName(userData.name || '');
+      setBirth(userData.birth || '');
+      setPreviewImage(userData.profile_img || '/defaultProfileimg.svg');
+      setPublicUrl(userData.profile_img || '');
+    }
+  }, [userData]);
 
   const changeUserType = async (nickname: string, profile_img: string, name: string, birth: string) => {
     const supabase = createClient();
@@ -101,6 +111,12 @@ export default function EditProfile() {
     }
   };
 
+  const handleImageDelete = () => {
+    setPreviewImage('/defaultProfileimg.svg');
+    setUploadImg(null);
+    setPublicUrl('');
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let imageUrl = publicUrl;
@@ -112,7 +128,7 @@ export default function EditProfile() {
       }
     }
 
-    const formattedBirth = birth.replace(/-/g, ''); // YYYY-MM-DD 형식에서 YYYYMMDD 형식으로 변환
+    const formattedBirth = birth.replace(/-/g, '');
     mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
   };
 
@@ -128,12 +144,23 @@ export default function EditProfile() {
         <h1 className="text-2xl font-bold mb-6">프로필 수정</h1>
         <div className="mb-6">
           <label htmlFor="profilePic" className="block mb-4">
-            <img
-              src={previewImage || 'https://via.placeholder.com/150'}
-              alt="프로필 사진"
-              className="rounded-full w-36 h-36 cursor-pointer"
-            />
-            <input type="file" id="profilePic" className="cursor-pointer text-xl" onChange={handleImageChange} />
+            <div className="relative">
+              <img
+                src={previewImage || '/defaultProfileimg.svg'}
+                alt="프로필 사진"
+                className="rounded-full w-36 h-36 cursor-pointer"
+              />
+              {previewImage !== '/defaultProfileimg.svg' && (
+                <button
+                  type="button"
+                  className="absolute top-1 left-32  text-red-700 rounded-full w-6 h-6 flex items-center justify-center"
+                  onClick={handleImageDelete}
+                >
+                  x
+                </button>
+              )}
+            </div>
+            <input type="file" id="profilePic" className="cursor-pointer text-xl mt-3" onChange={handleImageChange} />
             <div className="mt-2 text-xl text-gray-600">10MB 이내의 이미지 파일을 업로드 해주세요.</div>
           </label>
         </div>
