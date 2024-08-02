@@ -1,8 +1,8 @@
-.w-md-editor-toolbar {
+/* .w-md-editor-toolbar {
   display: none;
-}
+} */
 
-/* .w-md-editor-toolbar li > button {
+.w-md-editor-toolbar li > button {
   padding: 2px;
 }
 .w-md-editor-toolbar li {
@@ -26,10 +26,10 @@
 
 .w-md-editor-toolbar ul:nth-child(2) {
   display: none;
-} */
-
-
-.w-md-editor-preview {
-  display: none;
 }
+
+
+/* .w-md-editor-preview {
+  display: none;
+} */
 
