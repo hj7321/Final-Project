@@ -3,8 +3,8 @@ import MDEditor, { commands } from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 
 interface DescriptionInputProps {
-  description: any;
-  setDescription: (description: string) => void;
+  description : string
+  setDescription : (description : any) => void
 }
 
 export default function DescriptionInput({ description, setDescription }: DescriptionInputProps) {
