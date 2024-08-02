@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { CodeCategories } from '@/components/dumy';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -91,7 +92,6 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
 
       const portfolioData: PortfolioData = {
         title,
-
         content,
         portfolio_img: uploadedUrls,
         user_id: id,
@@ -166,30 +166,29 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">언어 선택 </label>
-            <div className="flex flex-wrap gap-2">
-              {[
-                'HTML/CSS',
-                'JavaScript',
-                'Java',
-                'Python',
-                'C/C++/C#',
-                'TypeScript',
-                'React',
-                'Android/iOS',
-                'Next.js',
-                'Git/GitHub'
-              ].map((language) => (
-                <div key={language} className="flex items-center">
+            <div className="flex flex-row px-4 flex-wrap items-center">
+              {CodeCategories.map((lang, index) => (
+                <div className="flex justify-start items-center mx-5 my-3 w-[100px]" key={index}>
                   <input
-                    type="radio"
-                    id={language}
-                    name="language"
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                    checked={selectedLanguage === language}
-                    onChange={() => handleLanguageChange(language)}
+                    type="checkbox"
+                    name={lang.name}
+                    id={lang.name}
+                    className="hidden "
+                    checked={selectedLanguage === lang.name}
+                    onChange={() => handleLanguageChange(lang.name)}
                   />
-                  <label htmlFor={language} className="ml-2 block text-sm text-gray-900">
-                    {language}
+                  <label
+                    htmlFor={lang.name}
+                    className={`cursor-pointer flex items-center ${
+                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
+                    }`}
+                  >
+                    <img
+                      src={selectedLanguage === lang.name ? lang.image : lang.darkImage}
+                      alt={lang.name}
+                      className="w-[20px] h-[20px]"
+                    />
+                    <p className="ml-2 text-sm">{lang.name}</p>
                   </label>
                 </div>
               ))}
@@ -211,12 +210,6 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
-            </div>
-            <div className="relative w-1/2">
-              <label className="block text-sm font-medium text-gray-700">진행중</label>
-              <div className="mt-1 flex items-center h-10 shadow-sm">
-                <input type="checkbox" className="h-5 w-5 text-indigo-600 border-gray-300 rounded" />
-              </div>
             </div>
           </div>
           <div>
