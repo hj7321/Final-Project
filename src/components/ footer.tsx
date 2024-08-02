@@ -1,9 +1,34 @@
+import Image from 'next/image';
+
 export default function Footer() {
-    return (
-      <footer className="bg-gray-100 p-8 pt-20">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
-          {/* 고객센터 및 전문가센터 */}
-          <div className="col-span-2">
+  return (
+    <footer className="h-[378px] flex flex-col justify-end">
+      <div className="h-[314px] flex flex-col justify-center items-center gap-[30px] pt-[32px] pb-[64px] border border-grey-100 w-[100%]">
+        <div className="w-[302.7px] h-[72px] flex flex-col gap-[8px] justify-center items-center">
+          <Image src="/logo_kor.svg" alt="한국어 로고" width={120} height={40} />
+          <div className="flex gap-[16px]">
+            {/* 내배캠 아이콘 */}
+            <p className="text-grey-900 font-bold text-[16px]">내일배움캠프 팔색조(A08)</p>
+            <Image src="footer_github.svg" alt="깃허브 아이콘" width={24} height={24} />
+            <Image src="footer_notion.svg" alt="노션 아이콘" width={24} height={24} />
+          </div>
+        </div>
+
+        <div className="h-[116px] text-[12px] flex flex-col items-center gap-[24px]">
+          <div className="text-grey-600 flex flex-col items-center gap-[16px]">
+            <p>팀스파르타 ㈜ 사업자 정보</p>
+            <div className="flex flex-col items-center gap-[4px]">
+              <p>
+                대표자: 이범규 │ 사업자 등록번호: 783-86-01715 │ 통신판매업 신고번호: 2020-서울강남-02300 │ 평신교육시설
+                신고번호: 제 661호
+              </p>
+              <p>주소: 서울특별시 강남구 테헤란로44길 8 12층 │ 이메일: contact@teamsparta.co │ 전화: 1522-8016</p>
+            </div>
+          </div>
+          <p className="text-grey-400">Copyright ⓒ 2024 TEAMSPARTA. All rights reserved.</p>
+        </div>
+
+        {/* <div className="col-span-2">
             <div className="flex space-x-4 mb-4">
               <button className="border border-black px-4 py-2 rounded">고객센터</button>
               <button className="border border-black px-4 py-2 rounded">전문가센터</button>
@@ -14,7 +39,6 @@ export default function Footer() {
             </div>
           </div>
   
-          {/* 링크 섹션 */}
           <div>
             <h3 className="font-bold mb-4">CodeU</h3>
             <ul>
@@ -47,15 +71,8 @@ export default function Footer() {
               <li className="mb-2">약관 및 정책</li>
               <li className="mb-2 font-bold">개인정보처리방침</li>
             </ul>
-          </div>
-        </div>
-  
-        {/* 앱 다운로드 버튼 */}
-        <div className="container mx-auto flex justify-center space-x-4 mt-8">
-          <button className="border border-black px-4 py-2 rounded">Google Play</button>
-          <button className="border border-black px-4 py-2 rounded">App Store</button>
-        </div>
-      </footer>
-    );
-  }
-  
+          </div> */}
+      </div>
+    </footer>
+  );
+}
