@@ -151,7 +151,7 @@ export default function ProMainPage() {
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id}>
-              <div className="w-[300px] h-[300px] rounded-lg m-[30px]">
+              <div className="w-[300px] h-[300px] rounded-lg m-[30px] hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <img className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} />
                 )}
