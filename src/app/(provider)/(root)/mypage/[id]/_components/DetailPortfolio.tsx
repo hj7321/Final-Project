@@ -94,13 +94,13 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
                 alt="유저 이미지"
                 width={36}
                 height={36}
-                className="rounded-[50%] mr-4 overflow-hidden "
+                className="rounded-[50%] mr-4 overflow-hidden w-20 h-20 "
               />
               <h1 className="text-xl font-bold">{Users?.nickname}</h1>
             </div>
             <div className="flex flex-col mx-auto space-y-4">
-              <div className="text-lg">
-                {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-10 h-6" />}
+              <div className="flex text-base text-gray-500">
+                {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-6 h-6" />}
                 {langCategory}
               </div>
               <div className="mt-8 mb-5">{title}</div>
