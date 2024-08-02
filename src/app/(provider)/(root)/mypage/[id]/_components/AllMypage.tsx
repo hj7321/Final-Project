@@ -106,7 +106,7 @@ export default function AllMypage() {
           <div>
             <div className="flex flex-col items-center mb-6 p-4 rounded-full">
               <div className="w-[180px] h-[180px]  rounded-full mb-4">
-                <img src={Users?.data?.profile_img || '/colorProfileImg.svg'} className="w-72 h-40 rounded-full" />
+                <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className="w-72 h-40 rounded-[50%]" />
               </div>
               <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
 
@@ -114,14 +114,15 @@ export default function AllMypage() {
                 className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                 onClick={() => setActiveComponent('EditProfile')}
               >
-                <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" /> 프로필
+                <Image src="/pencil.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" /> 프로필
                 수정하기
               </button>
 
               <button
-                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
+                className="mb-2 px-2 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white flex items-center justify-center"
                 onClick={() => mutation.mutate(Users?.data?.is_pro)}
               >
+                <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />{' '}
                 {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}
               </button>
             </div>
@@ -129,6 +130,7 @@ export default function AllMypage() {
 
           <ul className="space-y-4 mt-[64px]">
             <li className="text-[20px] font-bold">나의 활동</li>
+            <div className="border-t border-gray-300 my-10"></div>
 
             <li
               className={activeComponent === 'BookMark' ? activeStyle : liStyle}

@@ -15,7 +15,7 @@ export default function MyPostList() {
         return <InsightPostList />;
     }
   };
-  const isClicked = (postList: string) => (activePostList === postList ? 'text-black' : 'text-gray-400');
+  const isClicked = (postList: string) => (activePostList === postList ? 'text-primary-500' : 'text-gray-400');
 
   return (
     <div className="w-full">
@@ -25,7 +25,7 @@ export default function MyPostList() {
             QnA
           </button>
         </span>
-        <span>ㅣ</span>
+
         <span>
           <button
             className={`mx-2  ${isClicked('InsightPostList')}`}
