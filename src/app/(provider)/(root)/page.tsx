@@ -56,7 +56,7 @@ export default function Home() {
       {/* <div className="w-full h-64 flex items-center mx-auto snap-end">섹션나누기</div> */}
 
       {/* 언어별 카테고리 및 커뮤니티 섹션 */}
-      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start">
+      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start mb-64">
         <div className="bg-white py-4 flex-shrink-0">
           <div className="container mx-auto px-4 h-full px-16">
             <h2 className="text-xl font-bold mb-4">언어별 카테고리</h2>
@@ -120,7 +120,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="w-full h-64 flex items-center mx-auto">섹션나누기</div>
 
       {/* 전문가 섹션 */}
       <section className="container mx-auto py-4 min-h-[calc(100vh-75px)] flex items-center snap-start">
