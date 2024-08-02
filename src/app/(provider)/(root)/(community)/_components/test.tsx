@@ -1,15 +1,14 @@
 // Comment.tsx
-"use client";
-import { createClient } from "@/supabase/client";
-import { Comments } from "@/types/type";
-import { useAuthStore } from "@/zustand/auth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { Notify } from "notiflix";
-import { useRef } from "react";
-import GetComments from "./GetComments";
+'use client';
+import { createClient } from '@/supabase/client';
+import { Comments } from '@/types/type';
+import { useAuthStore } from '@/zustand/auth';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { Notify } from 'notiflix';
+import { useRef } from 'react';
+import GetComments from './GetComments';
 // type CommentsData = Omit<Comments, "id" | "created_at">;
-
 
 export default function Comment() {
   const user = useAuthStore((state) => state.user);
@@ -17,76 +16,71 @@ export default function Comment() {
   const queryClient = useQueryClient();
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
-  // 여기부터 
+  // 여기부터
   const getProfileDate = async () => {
     if (user) {
       const supabase = createClient();
-      const data = await supabase.from("profile").select("*").eq("id", user.id).maybeSingle();
+      const data = await supabase.from('profile').select('*').eq('id', user.id).maybeSingle();
       return data;
     }
   };
 
-
   const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
-    queryFn: getProfileDate,
+    queryKey: ['profile', user?.id],
+    queryFn: getProfileDate
   });
-// 여기까지는 아마 유저를 등록하는 로직인 것 같음
+  // 여기까지는 아마 유저를 등록하는 로직인 것 같음
 
   const saveComment = async (data: CommentsData) => {
-    const response = await fetch("/api/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+    const response = await fetch('/api/comments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error('Network response was not ok');
     }
     return response.json();
   };
 
-
   const { mutate: addMutation } = useMutation<Comments, unknown, CommentsData>({
     mutationFn: (data: CommentsData) => saveComment(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comment"] });
+      queryClient.invalidateQueries({ queryKey: ['comment'] });
       if (contentRef.current) {
-        contentRef.current.value = "";
-        Notify.success("댓글 작성이 완료되었습니다.");
+        contentRef.current.value = '';
+        Notify.success('댓글 작성이 완료되었습니다.');
       }
-    },
+    }
   });
-
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (user === null) {
-      Notify.failure("로그인 시 댓글 작성 가능합니다.");
+      Notify.failure('로그인 시 댓글 작성 가능합니다.');
       return;
     }
     if (!contentRef.current?.value.trim()) {
-      Notify.failure("댓글 내용을 입력해주세요.");
+      Notify.failure('댓글 내용을 입력해주세요.');
       return;
     }
     if (profile !== undefined) {
       const commentsData: CommentsData = {
         nickname: profile?.data?.nickname as string,
         user_id: user?.user_metadata.sub,
-        content: contentRef.current?.value || "",
-        post_id: params.id as string,
+        content: contentRef.current?.value || '',
+        post_id: params.id as string
       };
       addMutation(commentsData);
     }
   };
 
-
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       onSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
-
 
   return (
     <div className="bg-[#F5F5F5] pt-[20px] pb-[100px] px-[15px] lg:px-0 ">
@@ -108,5 +102,3 @@ export default function Comment() {
     </div>
   );
 }
-5:53
-//GetC
