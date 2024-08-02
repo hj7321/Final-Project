@@ -38,7 +38,7 @@ export async function GET() {
 //       .update({ content: info.content })
 //       .eq('id', info.id);
 //     return NextResponse.json(data);
-//   } catch (error) {
+//   } catch ( error) {
 //     return NextResponse.json({ error: '수정에 실패했습니다.' });
 //   }
 // }

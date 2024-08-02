@@ -13,7 +13,7 @@ export default function Footer() {
               href="https://nbcamp.spartacodingclub.kr/?next=%2Fmypage%2Fattendance&utm_source=google&utm_medium=pmax&utm_campaign=nbc&utm_content=backend_java&utm_term=&gad_source=1&gclid=CjwKCAjwnK60BhA9EiwAmpHZwy_tgCwAdAyZE5paMiXUQk4lgk0SKd09K-WeExCd4X_IoTlqpmQ9ghoC-88QAvD_BwE"
               target="_blank"
             >
-              <Image src="/footer_nbcamp.svg" alt="내배캠 아이콘" width={32.5} height={30} className="content-center " />
+              <Image src="/footer_nbcamp.svg" alt="내배캠 아이콘" width={32.5} height={30} className="content-center" />
             </Link>
             <p className="text-grey-900 font-bold text-[16px]">내일배움캠프 팔색조(A08)</p>
             <Link href="https://github.com/hj7321/Final-Project" target="_blank">

@@ -2421,7 +2421,10 @@ longest-streak@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/longest-streak/-/longest-streak-3.1.0.tgz#62fa67cd958742a1574af9f39866364102d90cd4"
   integrity sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2a6d0cefdcfe9b3f8731ba880188db3e7e95bec7
 loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
@@ -3359,6 +3362,7 @@ react-markdown@~9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-9.0.1.tgz#c05ddbff67fd3b3f839f8c648e6fb35d022397d1"
   integrity sha512-186Gw/vF1uRkydbsOIkcGXw7aHq0sZOCRFFjGrr7b9+nVZg4UfA4enXCaxm4fUzecU38sWfrNDitGhshuU7rdg==
+<<<<<<< HEAD
   dependencies:
     "@types/hast" "^3.0.0"
     devlop "^1.0.0"
@@ -3375,6 +3379,8 @@ react-quill@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-quill/-/react-quill-2.0.0.tgz#67a0100f58f96a246af240c9fa6841b363b3e017"
   integrity sha512-4qQtv1FtCfLgoD3PXAur5RyxuUbPXQGOHgTlFie3jtxp43mXDtzCKaOgQ3mLyZfi1PUlyjycfivKelFhy13QUg==
+=======
+>>>>>>> 2a6d0cefdcfe9b3f8731ba880188db3e7e95bec7
   dependencies:
     "@types/quill" "^1.3.10"
     lodash "^4.17.4"

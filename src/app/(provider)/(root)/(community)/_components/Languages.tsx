@@ -11,44 +11,44 @@ export default function Languages() {
       {/* 약간 클래스네임들이 지저분해지는 거 같긴 한디 */}
       <ul className="flex flex-col gap-[24px]">
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
+          {/* <img src={favicon} className={iconSt} /> */}
           <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>JavaScript</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>Java</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>Python</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>C/C++/C#</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>TypeScript</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>React</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>Android/iOS</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>Next.js</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
         <li className={langSt}>
-          <img src={favicon} className={iconSt} />
-          <p>Git/GitHub</p>
+          {/* <img src={favicon} className={iconSt} /> */}
+          <p>HTML/CSS</p>
         </li>
       </ul>
     </div>
