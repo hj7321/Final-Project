@@ -23,7 +23,7 @@ interface PortfolioData {
   id: string;
   user_id: string;
   title: string;
-  description: string;
+  content: string;
   portfolio_img: string;
   lang_category: string[];
   start_date: string;

@@ -5,7 +5,7 @@ interface PortfolioModalProps {
     id: string;
     user_id: string;
     title: string;
-    description: string;
+    content: string;
     portfolio_img: string;
     lang_category: string[] | string; // 기술 스택
     start_date: string;
@@ -47,7 +47,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
             </div>
             <div className='mt-[30px]'>
               <h2 className='text-xl'>프로젝트 설명</h2>
-              <p className='mt-[20px] px-2 font-thin line-clamp-4 w-[400px]'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit, sed omnis. Voluptate, unde magni accusamus beatae corrupti, temporibus necessitatibus omnis non, ab deleniti accusantium obcaecati ut repellat consectetur. Possimus, ratione?</p>
+              <p className='mt-[20px] px-2 font-thin line-clamp-4 w-[400px]'>{portfolio.content}</p>
             </div>
             <div className='mt-[30px]'>
               <h2 className='text-xl'>참여 기간</h2>
