@@ -51,7 +51,7 @@ export default function Home() {
   return (
     <main className='snap-y scroll-smooth'>
       {/* 메인베너 */}
-      <section className="w-full h-[calc(100vh-75px)] bg-cover bg-center bg-[url('/mainBanner.svg')] snap-start mb-64"></section>
+      <section className="w-full h-[calc(100vh-75px)] bg-cover bg-center bg-[url('/mainBanner.svg')] mb-64"></section>
 
       {/* <div className="w-full h-64 flex items-center mx-auto snap-end">섹션나누기</div> */}
 
