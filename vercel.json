@@ -1,6 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" },
     { "source": "/mypage/:id", "destination": "/mypage/[id]" },
     { "source": "/proDetail/:id", "destination": "/proDetail/[id]" },
     { "source": "/insight/:id", "destination": "/insight/[id]" },
