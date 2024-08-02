@@ -19,11 +19,9 @@ export default function Header() {
   const { isLogin, logout, userId, userData, initializeAuthState, isLoading } = useAuthStore();
 
   const supabase = createClient();
-  console.log('헤더');
 
   useEffect(() => {
     const handleGetSession = async () => {
-      console.log('함수 호출');
       const {
         data: { session }
       } = await supabase.auth.getSession();
@@ -75,14 +73,14 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 relative z-100 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] border border-grey-100">
+    <header className="sticky top-0 z-50 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] border border-grey-100">
       <div className="flex items-center gap-[32px]">
         <Link href="/">
           <div className="w-40 h-16 flex items-center justify-center">
             {number === 0 ? (
-              <Image src="/engLogo.svg" alt="영어로고" width={120} height={40} />
+              <Image src="/logo_eng.svg" alt="영어 로고" width={165} height={55} />
             ) : (
-              <Image src="/korLogo.svg" alt="한국어로고" width={120} height={40} />
+              <Image src="/logo_kor.svg" alt="한국어 로고" width={165} height={55} />
             )}
           </div>
         </Link>
@@ -99,12 +97,11 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* 검색창 */}
       <div className="w-[340px] h-[40px] flex justify-between bg-grey-50 rounded-[20px] px-[16px] py-[8px]">
         <input
           type="text"
           placeholder="도움이 필요한 언어, 주제를 찾아보세요."
-          className="bg-grey-50 outline-none w-[238px] h-[24px] placeholder-grey-200 placeholder:text-[13px] text-black text-[15px]"
+          className="bg-grey-50 outline-none w-[250px] h-[24px] placeholder-grey-200 placeholder:text-[15px] text-black text-[15px]"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -114,20 +111,12 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 로그인 및 회원가입 */}
       {/* <HeaderButton /> */}
       {isLogin ? (
         <div className="flex items-center gap-[24px]">
           <div className="flex gap-[12px]">
-            <Image src="/alarmIcon.svg" alt="알림 아이콘" width={24} height={24} />
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M9.25 20.5C9.25 20.5 10.097 21.5 12 21.5C13.903 21.5 14.75 20.5 14.75 20.5M5.68328 12.6334L3.72361 16.5528C3.39116 17.2177 3.87465 18 4.61803 18H19.382C20.1253 18 20.6088 17.2177 20.2764 16.5528L18.3167 12.6334C18.1084 12.2169 18 11.7575 18 11.2918V9C18 5.68629 15.3137 3 12 3V3C8.68629 3 6 5.68629 6 9V11.2918C6 11.7575 5.89156 12.2169 5.68328 12.6334Z"
-                stroke="black"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
+            <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
           </div>
           <div className="flex items-center gap-[24px]">
             <Link href={`/mypage/${userId}`}>
