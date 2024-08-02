@@ -8,10 +8,16 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
+import useAuthStore from '@/zustand/authStore';
 
 
 export default function CreateCard() {
   const route = useRouter()
+  const { isPro } = useAuthStore()
+  if (!isPro) {
+    alert('전문가 회원으로 전환 후 사용하세요 !')
+    route.back()
+  }
   const {
     title,
     setTitle,
