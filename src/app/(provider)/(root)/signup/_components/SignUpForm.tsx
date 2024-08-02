@@ -163,94 +163,102 @@ export default function SignUpForm() {
   };
 
   return (
-    <section>
+    <section className="flex flex-col text-center items-center bg-grey-50">
       {showModal !== null && <Modal onClose={handleCloseModal} modalNum={showModal} />}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           if (!throttling) handleUserDataSubmit(e);
         }}
-        className="flex flex-col gap-[10px] items-center py-[64px]"
+        className="w-[528px] min-h-[1012px] rounded-[24px] flex flex-col items-center py-[64px] bg-white"
       >
-        <h2 className="font-bold text-[24px] mb-[48px]">회원가입</h2>
-        {inputs.map((input, idx) => (
-          <div key={input.id} className={clsx(idx % 3 === 2 && 'mb-[48px]', 'flex flex-col items-center relative')}>
-            <div
-              className={clsx(
-                'w-[400px] border rounded-[8px] px-[16px]',
-                // "focus: h-[70px] border-primary-500 pt-[6px]",
-                idx === selectedIdx && 'h-[70px] border-primary-500 pt-[6px]',
-                idx !== selectedIdx && inputValues[idx].length > 0 && 'h-[70px] border-grey-300 pt-[6px]',
-                idx !== selectedIdx && inputValues[idx].length === 0 && 'h-[56px] border-grey-100 py-[16px]',
-                idx !== selectedIdx && inputMsgs[idx] !== '' && 'h-[70px] border-error pt-[6px]'
-              )}
-            >
-              <label
+        <h2 className="font-bold text-[24px] mb-[32px]">회원가입</h2>
+        <div className="flex flex-col gap-[10px]">
+          {inputs.map((input, idx) => (
+            <div key={input.id} className={clsx(idx % 3 === 2 && 'mb-[32px]', 'flex flex-col items-center relative')}>
+              <div
                 className={clsx(
-                  'self-start text-[12px]',
-                  idx === selectedIdx && inputValues[idx].length > 0 && 'flex text-primary-500',
-                  idx !== selectedIdx && inputValues[idx].length > 0 && 'flex text-grey-300',
-                  idx !== selectedIdx && inputValues[idx].length === 0 && 'hidden'
+                  'w-[400px] border rounded-[8px] px-[16px]',
+                  idx === selectedIdx
+                    ? 'h-[70px] border-primary-500 pt-[6px]'
+                    : inputValues[idx].length === 0
+                    ? 'h-[56px] border-grey-100 py-[16px]'
+                    : inputMsgs[idx].length === 0
+                    ? 'h-[70px] border-grey-500 pt-[6px]'
+                    : 'h-[70px] border-error pt-[6px]'
                 )}
-                htmlFor={input.id}
               >
-                {input.label}
-              </label>
-              <div className="flex">
-                <input
+                <label
                   className={clsx(
-                    (idx === selectedIdx || inputValues[idx]!.length > 0) &&
-                      'w-[312px] outline-none border-none p-0 mt-[5px]',
-                    'placeholder-grey-300'
+                    'self-start text-[12px]',
+                    idx === selectedIdx
+                      ? 'flex text-primary-500'
+                      : inputValues[idx].length > 0
+                      ? 'flex text-grey-300'
+                      : 'hidden'
                   )}
-                  type={showPassword[idx - 1] ? 'text' : input.type}
-                  id={input.id}
-                  name={input.id}
-                  placeholder={idx === selectedIdx ? '' : input.add ? `${input.label} ${input.add}` : input.label}
-                  ref={(el) => {
-                    inputRefs.current[idx] = el;
-                  }}
-                  onFocus={() => setSelectedIdx(idx)}
-                  onBlur={() => setSelectedIdx(null)}
-                  value={inputValues[idx] || ''}
-                  onChange={(e) => handleInputChange(idx, e)}
-                />
+                  htmlFor={input.id}
+                >
+                  {input.label}
+                </label>
+                <div className="flex">
+                  <input
+                    className={clsx(
+                      (idx === selectedIdx || inputValues[idx]!.length > 0) &&
+                        'w-[312px] outline-none border-none p-0 mt-[5px]',
+                      'placeholder-grey-300'
+                    )}
+                    type={showPassword[idx - 1] ? 'text' : input.type}
+                    id={input.id}
+                    name={input.id}
+                    placeholder={idx === selectedIdx ? '' : input.add ? `${input.label} ${input.add}` : input.label}
+                    ref={(el) => {
+                      inputRefs.current[idx] = el;
+                    }}
+                    onFocus={() => setSelectedIdx(idx)}
+                    onBlur={() => setSelectedIdx(null)}
+                    value={inputValues[idx] || ''}
+                    onChange={(e) => handleInputChange(idx, e)}
+                  />
 
-                {input.icon && (
-                  <button type="button" className="flex items-center" onClick={() => handleTogglePassword(idx - 1)}>
-                    <Image
-                      src="/closedEye.svg"
-                      alt="비밀번호 숨기기"
-                      width={24}
-                      height={24}
-                      className={clsx(
-                        'absolute right-[16px] cursor-pointer',
-                        showPassword[idx - 1] ? 'hidden' : 'block'
-                      )}
-                    />
-                    <Image
-                      src="/openedEye.svg"
-                      alt="비밀번호 보기"
-                      width={24}
-                      height={24}
-                      className={clsx(
-                        'absolute right-[16px] cursor-pointer',
-                        showPassword[idx - 1] ? 'block' : 'hidden'
-                      )}
-                    />
-                  </button>
-                )}
+                  {input.icon && (
+                    <button type="button" className="flex items-center" onClick={() => handleTogglePassword(idx - 1)}>
+                      <Image
+                        src="/eye_closed.svg"
+                        alt="비밀번호 숨기기"
+                        width={24}
+                        height={24}
+                        className={clsx(
+                          'absolute right-[16px] cursor-pointer',
+                          showPassword[idx - 1] ? 'hidden' : 'block'
+                        )}
+                      />
+                      <Image
+                        src="/eye_opened.svg"
+                        alt="비밀번호 보기"
+                        width={24}
+                        height={24}
+                        className={clsx(
+                          'absolute right-[16px] cursor-pointer',
+                          showPassword[idx - 1] ? 'block' : 'hidden'
+                        )}
+                      />
+                    </button>
+                  )}
+                </div>
               </div>
+              <p
+                className={
+                  inputMsgs[idx].length > 0 ? 'block self-start text-[13.5px] my-[3px] ml-[3px] text-error' : 'hidden'
+                }
+              >
+                {inputMsgs[idx]}
+              </p>
             </div>
-            <p className="self-start text-[14px] mt-[3px] ml-[3px] text-error">{inputMsgs[idx]}</p>
-          </div>
-        ))}
+          ))}
+        </div>
 
-        {/* <div className="h-[240px] w-[400px] border text-left mb-[48px]">
-        <p>관심 언어</p>
-      </div> */}
-
-        <div className="h-[240px] w-[400px] mb-[48px] bg-grey-50 rounded-[8px] px-[16px] py-[24px] flex flex-col gap-[24px] text-left">
+        <div className="h-[240px] w-[400px] mb-[32px] bg-grey-50 rounded-[8px] px-[16px] py-[24px] flex flex-col gap-[24px] text-left">
           <div className="font-bold flex gap-[8px] items-center">
             <input
               className="custom-checkbox"
@@ -290,7 +298,7 @@ export default function SignUpForm() {
           type="submit"
           className={clsx(
             throttling && 'hover: cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
-            'h-[56px] w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white font-bold'
+            'h-[56px] w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
           )}
         >
           회원가입
