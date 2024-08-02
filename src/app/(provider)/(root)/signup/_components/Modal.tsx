@@ -11,7 +11,7 @@ const modalTitle = ['서비스 이용약관', '개인정보 수집 및 이용 �
 
 export default function Modal({ onClose, modalNum }: ModalProp) {
   return (
-    <section className="fixed inset-0 flex justify-center items-center bg-grey-300 bg-opacity-50 z-50">
+    <section className="fixed inset-0 flex justify-center items-center text-left bg-grey-300 bg-opacity-50 z-50">
       <div className="w-[664px] h-[646px] relative bg-white rounded-[16px] p-[32px] flex flex-col items-center">
         <button onClick={onClose} className="absolute top-[-1px] right-[10px] text-[25px]">
           &times;

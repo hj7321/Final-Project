@@ -7,6 +7,8 @@ import type { Portfolio } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DetailModal from './DetailPortfolio';
 import AddPortfolio from './AddPortFolio';
+import Image from 'next/image';
+import { CodeCategories } from '@/components/dumy';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -109,24 +111,29 @@ export default function Portfolio() {
   return (
     <div className="flex flex-col items-center justify-center  w-full ">
       <div className=" self-start flex text-2xl font-bold mb-4"> 포트폴리오</div>
-      <button onClick={openEddmodal} className="mt-4 self-end bg-black text-white rounded p-3 px-6">
-        포트폴리오 등록하기
-      </button>
 
       {data?.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
-          <div className="w-24 h-24 bg-gray-200 mx-auto mb-4"></div>
+          <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />
           <div className="text-lg font-semibold mb-2">아직 등록된 포트폴리오가 없어요!</div>
           <div className="text-sm text-gray-600 mb-4">
             전문가로 활동하기 위해서는 포트폴리오를 등록해야 해요 / 포트폴리오를 등록하면 매칭률이 높아져요
           </div>
-          <button onClick={openEddmodal} className="mt-4 bg-black text-white rounded p-3 px-6">
-            포트폴리오 등록하기
+          <button onClick={openEddmodal} className="mt-4 bg-primary-500 text-white rounded p-3 px-6">
+            포트폴리오 등록 +
           </button>
         </div>
       ) : (
         <>
           <div className="space-y-4 self-start w-full">
+            <div className="flex justify-end">
+              <button
+                onClick={openEddmodal}
+                className="mt-4 self-end bg-primary-500 text-white rounded p-2 px-6 text-xl font-normal"
+              >
+                + 포트폴리오 등록
+              </button>
+            </div>
             {data?.map((post) => (
               <div key={post.id} className="bg-white p-4 rounded-2xl">
                 <div className="flex mr-20">
@@ -140,8 +147,23 @@ export default function Portfolio() {
                     onClick={() => openDetailModal(post.id)}
                   />
                   <div className="ml-8 flex-1">
-                    <p className="text-base text-gray-500 ">{post.lang_category} </p>
-                    <p className="font-bold text-[20px] mb-2">{post.title}</p>
+                    <div className="flex items-center mb-2">
+                      <Image
+                        src={
+                          CodeCategories.find((category) => category.name === post.lang_category)?.image ||
+                          '/defaultProfileimg.svg'
+                        }
+                        alt="d"
+                        width={12}
+                        height={12}
+                        className="w-5 h-5"
+                      />
+                      <p className="text-sm font-extralight text-gray-500 ml-2">{post.lang_category}</p>
+                    </div>
+                    <p className="font-bold text-[25px] mb-1">{post.title}</p>
+                    <p className="text-sm text-gray-500">
+                      {post.start_date} ~ {post.end_date}
+                    </p>
                     <p
                       className="text-[16px] mb-2"
                       style={{
@@ -151,9 +173,7 @@ export default function Portfolio() {
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
                       }}
-                    >
-                      {post.content}
-                    </p>
+                    ></p>
                     <button
                       onClick={() => handleOpenModal(post.id)}
                       className="mt-4 p-2 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"

@@ -1,22 +1,25 @@
 'use client';
-
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { useSession } from '@/hooks/useSession'; // 사용자 세션 커스텀 훅을
 import { useChatRoom } from '@/hooks/useChatRoom'; // 채팅 방 관리 커스텀 훅
 import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴포넌트
-import MDEditor from '@uiw/react-md-editor'
-import '@uiw/react-md-editor/markdown-editor.css'
+import MDEditor from '@uiw/react-md-editor';
+import '@uiw/react-md-editor/markdown-editor.css';
+import PortfolioModal from './_components/PortfolioModal';
+import Cookies from 'js-cookie';
 
 interface PostData {
   post_img: string[];
   content: string;
 }
+
 interface UserData {
   id: string; // 유저 ID 추가
   nickname: string;
   profile_img: string;
 }
+
 interface PortfolioData {
   id: string;
   user_id: string;
@@ -27,15 +30,18 @@ interface PortfolioData {
   start_date: string;
   end_date: string;
 }
+
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
   const [activeTab, setActiveTab] = useState('service');
+  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); // 선택된 포트폴리오
   const { id: paramId } = useParams();
-  const id = paramId as string; //추가 : id를 문자열로 변환
+  const id = paramId as string; // 추가: id를 문자열로 변환
+  const router = useRouter();
 
-  const { currentUserId } = useSession(); //추가 : 현재 사용자 ID를 가져옴
+  const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
   useEffect(() => {
@@ -56,18 +62,33 @@ export default function ProDetail() {
     };
     fetchData();
   }, [id]);
-  //추가//
+
+  // 추가 //
   const handleInquiry = () => {
     // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) {
       // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
-      return;
+      alert("로그인 후 이용해주세요.")
+      const presentPage = window.location.href;
+      const pagePathname = new URL(presentPage).pathname;
+      Cookies.set('returnPage', pagePathname);
+      router.push('/login');
     }
     toggleChat(); // 채팅 창 열림/닫힘 상태를 토글
   };
 
-  //여기까지 //
+  const handlePortfolioClick = (portfolio: PortfolioData) => {
+    // 포트폴리오 카드 클릭 시 모달 열림
+    setSelectedPortfolio(portfolio);
+  };
+
+  const handlePortfolioModalClose = () => {
+    // 포트폴리오 모달 닫기
+    setSelectedPortfolio(null);
+  };
+
+  // 여기까지 //
 
   if (!post || !user) {
     return <p>로딩중</p>;
@@ -221,10 +242,8 @@ export default function ProDetail() {
         <div>
           <div id="section1" className="p-2 my-2">
             <h1 className="text-2xl my-3">서비스 정보</h1>
-            <div data-color-mode='light'>
-              <MDEditor.Markdown
-                source={post.content}
-              />
+            <div data-color-mode="light">
+              <MDEditor.Markdown source={post.content} />
               {/* <p>{post.content}</p> */}
             </div>
           </div>
@@ -238,7 +257,11 @@ export default function ProDetail() {
                 </div>
               ) : (
                 portfolio.map((item) => (
-                  <div key={item.id} className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2">
+                  <div
+                    key={item.id}
+                    className="flex flex-col border-2 p-4 rounded-xl w-[280px] mx-3 my-2 cursor-pointer"
+                    onClick={() => handlePortfolioClick(item)} // 포트폴리오 카드 클릭 시 모달 열림
+                  >
                     <div className="w-[3/4] h-[140px]">
                       <img
                         src={item.portfolio_img}
@@ -263,7 +286,7 @@ export default function ProDetail() {
             </div>
           </div>
           <div id="section3" className="p-2 my-4">
-            <h1 className='text-2xl'>리뷰</h1>
+            <h1 className="text-2xl">리뷰</h1>
             <div className="mt-4 flex flex-col justify-center items-center">
               <div className="mx-3 border border-slate-400 w-full p-4 rounded-xl mb-3">
                 <div>
@@ -287,6 +310,11 @@ export default function ProDetail() {
       </div>
       {/* 채팅모달 */}
       {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}
+
+      {/* 포트폴리오 모달 */}
+      {selectedPortfolio && (
+        <PortfolioModal portfolio={selectedPortfolio} onClose={handlePortfolioModalClose} user={user} />
+      )}
     </div>
   );
 }
