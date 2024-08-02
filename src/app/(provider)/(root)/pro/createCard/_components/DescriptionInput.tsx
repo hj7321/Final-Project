@@ -1,15 +1,15 @@
-'use client'
-import MDEditor, { commands } from '@uiw/react-md-editor'
-import '@uiw/react-md-editor/markdown-editor.css'
+'use client';
+import MDEditor, { commands } from '@uiw/react-md-editor';
+import '@uiw/react-md-editor/markdown-editor.css';
 
 interface DescriptionInputProps {
-  description : string
-  setDescription : (description : string) => void
+  description: string;
+  setDescription: (description: any) => void;
 }
 
-export default function DescriptionInput({description, setDescription} : DescriptionInputProps) {
+export default function DescriptionInput({ description, setDescription }: DescriptionInputProps) {
   return (
-    <div className="border-2 border-slate-400 mb-[20px] rounded-md" data-color-mode='light'>
+    <div className="border-2 border-slate-400 mb-[20px] rounded-md" data-color-mode="light">
       {/* <textarea
         name="text"
         id="text"
@@ -17,9 +17,7 @@ export default function DescriptionInput({description, setDescription} : Descrip
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       ></textarea> */}
-      <MDEditor height={700} value={description} onChange={setDescription} className="py-5"
-        commands={[]}
-      />
+      <MDEditor height={700} value={description} onChange={setDescription} className="py-5" commands={[]} />
     </div>
-  )
+  );
 }
