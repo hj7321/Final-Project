@@ -244,7 +244,6 @@ export default function ProDetail() {
             <h1 className="text-2xl my-3">서비스 정보</h1>
             <div data-color-mode="light">
               <MDEditor.Markdown source={post.content} />
-              {/* <p>{post.content}</p> */}
             </div>
           </div>
 

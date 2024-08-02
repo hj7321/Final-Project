@@ -1,7 +1,7 @@
 'use client';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
-
+import '../../../../../../css/mdStyle.css';
 interface DescriptionInputProps {
   description : string
   setDescription : (description : any) => void
