@@ -23,9 +23,16 @@ export default function ProMainPage() {
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
-  const { userId, isPro, } = useAuthStore()
+  const { userId, isPro, initializeAuthState } = useAuthStore();
 
-  const fetchData = useCallback( async (page: number, languages: string[] = []) => {
+  useEffect(() => {
+    const initialize = async () => {
+      await initializeAuthState();
+    };
+    initialize();
+  }, [initializeAuthState]);
+
+  const fetchData = useCallback(async (page: number, languages: string[] = []) => {
     try {
       const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
       const url = `/api/proMain?page=${page}${langQuery}`;
@@ -46,7 +53,7 @@ export default function ProMainPage() {
     } catch (error) {
       console.error(error);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     fetchData(page, selectedLanguages);
@@ -97,7 +104,7 @@ export default function ProMainPage() {
     <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
       <div className="flex flex-row justify-end mt-[20px]">
         {!isPro === true ? (
-          <div className='mt-5'></div>
+          <div className="mt-5"></div>
         ) : (
           <button
             className="bg-primary-500 hover:bg-primary-600 px-5 py-3 mt-5 flex flex-row justify-center items-center rounded-full"
@@ -144,7 +151,7 @@ export default function ProMainPage() {
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id}>
-              <div className="w-[300px] h-[300px] rounded-lg m-[30px]">
+              <div className="w-[300px] h-[300px] rounded-lg m-[30px] hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <img className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} />
                 )}
