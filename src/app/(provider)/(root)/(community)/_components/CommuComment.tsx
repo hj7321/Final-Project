@@ -2,10 +2,10 @@
 
 import useAuthStore from '@/zustand/authStore';
 import favicon from '../../../../../../public/vercel.svg';
-import { CommunityComments } from '@/types/type';
-import ReactQuill from 'react-quill';
+// import { CommunityComments } from '@/types/type';
+// import ReactQuill from 'react-quill';
 import { FormEvent, useState } from 'react';
-import { comment } from 'postcss';
+// import { comment } from 'postcss';
 import { useParams, useRouter } from 'next/navigation';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';

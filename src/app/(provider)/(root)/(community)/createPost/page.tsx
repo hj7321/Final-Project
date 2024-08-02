@@ -29,7 +29,6 @@ const CreatePost = () => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-  const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -135,7 +134,7 @@ const CreatePost = () => {
 
   return (
     <div className="flex m-auto max-w-[80%] justify-center">
-      <h1 className="flex text-2xl font-bold mb-4">포트폴리오 등록하기</h1>
+      <h1 className="flex text-2xl font-bold mb-4">게시글 등록하기</h1>
       <div className="mt-10 space-y-4">
         <div className="relative rounded-md">
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold text-black pointer-events-none">
