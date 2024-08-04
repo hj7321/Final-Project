@@ -8,6 +8,7 @@ import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
+import Image from 'next/image';
 
 interface PostData {
   post_img: string[];
@@ -114,7 +115,7 @@ export default function ProDetail() {
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
           <div className="h-[150px] w-[150px] border-2 rounded-full mx-auto mt-5">
-            <img src={user.profile_img} alt="user_profile" className="object-cover h-full w-full rounded-full" />
+            <Image src={user.profile_img} alt="user_profile" className="object-cover h-full w-full rounded-full" width={150} height={150}  />
           </div>
           <div className="mx-auto text-2xl mt-4">
             <p>{user.nickname}</p>
@@ -193,7 +194,7 @@ export default function ProDetail() {
           </div>
         </div>
         <div className="h-[514px] w-[810px] border-2 rounded-xl">
-          <img src={post.post_img[0]} alt="post_image" className="w-full h-full object-cover rounded-xl" />
+          <Image src={post.post_img[0]} alt="post_image" className="w-full h-full object-cover rounded-xl" height={514} width={810} />
         </div>
       </div>
       <div className="mt-8">
