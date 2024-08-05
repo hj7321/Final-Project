@@ -24,7 +24,7 @@ export default function ProMainPage() {
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
-  const { userId, isPro, initializeAuthState } = useAuthStore();
+  const { isPro, initializeAuthState } = useAuthStore();
 
   useEffect(() => {
     const initialize = async () => {
