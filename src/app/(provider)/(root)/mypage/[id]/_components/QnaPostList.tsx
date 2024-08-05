@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { CommunityPosts } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
 import useAuthStore from '@/zustand/authStore';
+import Image from 'next/image';
 
 export default function QnaPostList() {
   const { id } = useParams();
@@ -28,6 +29,16 @@ export default function QnaPostList() {
 
   if (error) {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
+  }
+
+  if (data?.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full bg-white border rounded-md p-6 text-center h-96">
+        <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
+        <div className="text-lg font-semibold mb-2">등록된 QnA 게시물이 없어요</div>
+        <div className="text-sm text-gray-600 mb-4">궁금한 질문을 남기고 소통해보세요</div>
+      </div>
+    );
   }
 
   return (
