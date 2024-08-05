@@ -100,7 +100,10 @@ export default function ProMainPage() {
   const handleNavigation = () => {
     route.push('/pro/createCard');
   };
-
+  const getCategoryImage = (categoryName: string) => {
+    const category = CodeCategories.find(cat => cat.name === categoryName);
+    return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
+  };
   return (
     <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
       <div className="flex flex-row justify-end mt-[20px]">
@@ -159,8 +162,17 @@ export default function ProMainPage() {
                 <div className="flex flex-col p-2 h-[140px] justify-between">
                   <div>
                     <div className="flex flex-row">
-                      <p className="text-sm mb-2 mr-3">{post.lang_category[0]}</p>
-                      <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p>
+                      <p className="text-sm mb-2 mr-3 flex">
+                        <Image
+                          src={getCategoryImage(post.lang_category[0])}
+                          alt={post.lang_category[0]}
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                        {post.lang_category[0]}
+                      </p>
+                      {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
                     <hr />
                     <p className="text-lg mt-2 line-clamp-2">{post.title}</p>
