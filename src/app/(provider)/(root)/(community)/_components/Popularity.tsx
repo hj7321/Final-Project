@@ -1,6 +1,9 @@
 import { CommunityPosts } from '@/types/type';
+import { createClient } from '@/utils/supabase/client';
+import useAuthStore from '@/zustand/authStore';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const btnSt = 'w-[32px] h-[32px] bg-[#585858] text-white text-[16pt] flex items-center justify-center rounded-[4px]';
 // 페이지네이션 적용 후에, 조건부 서식 걸리도록 bg 다시 제어해야 함 선택되지 않은 버튼은 #D2D2D2 으로 처리
@@ -17,18 +20,35 @@ interface Post {
 }
 
 export default function Popularity() {
+  const { userId } = useAuthStore();
+  const pathname = usePathname().split('/')[1];
+
+  console.log(pathname);
+
   const getPosts = async (): Promise<CommunityPosts[]> => {
-    const response = await fetch('/api/communityRead');
+    const response = await fetch('/api/communityReadPopularity');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    return data;
+
+    const filteredData = data.filter((post) => post.post_category.toLowerCase() === pathname);
+    return filteredData;
   };
 
   const { data, isLoading, error } = useQuery<CommunityPosts[]>({
     queryKey: ['post'],
     queryFn: getPosts
+  });
+
+  const getUserData = async () => {
+    const supabase = createClient();
+    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
+    return data;
+  };
+  const { data: Users } = useQuery({
+    queryKey: [userId],
+    queryFn: getUserData
   });
 
   // if (isLoading) return <div>Loading...</div>;
@@ -46,7 +66,7 @@ export default function Popularity() {
                   <p className="font-medium text-[16px] w-[995px] h-[45px] overflow-hidden text-ellipsis line-clamp-2">
                     {post.content}
                   </p>
-                  <p className="font-medium text-[16px]">닉네임123</p>
+                  <p className="font-medium text-[16px]">{Users?.data?.nickname}</p>
                 </div>
               </Link>
             </div>
