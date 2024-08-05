@@ -2,11 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import favicon from '../../../../../../public/vercel.svg';
 import { CommunityPosts } from '@/types/type';
 import { useParams } from 'next/navigation';
+import useAuthStore from '@/zustand/authStore';
+import { createClient } from '@/utils/supabase/client';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
 
 export default function CommuPost() {
+  const { userId } = useAuthStore();
   const { id } = useParams();
 
   const getPost = async (): Promise<CommunityPosts> => {
@@ -33,18 +36,34 @@ export default function CommuPost() {
     enabled: !!id
   });
 
+  const getUserData = async (userId: string) => {
+    const supabase = createClient();
+    const { data } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
+    return data;
+  };
+
+  const userIdFromPost = data?.user_id;
+
+  const { data: userData } = useQuery({
+    queryKey: [userIdFromPost],
+    queryFn: () => getUserData(userIdFromPost!),
+    enabled: !!userIdFromPost
+  });
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-6 py-6">
         <h1 className="text-2xl font-bold">{data?.title}</h1>
         <ul className="flex gap-[24px]">
-          <li className={langSt}>언어 위치</li>
-          <li className={langSt}>언어 위치</li>
+          {data?.lang_category?.map((lang, index) => (
+            <li key={index} className={langSt}>
+              {lang}
+            </li>
+          ))}
         </ul>
-        <p className=" text-base font-bold">작성자</p>
-        <div className=" text-base font-bold flex gap-[24px]">
-          <p>{data?.created_at}</p>
-          <div className="flex">조회수/북마크</div>
+        {userIdFromPost === userData?.id && <p className="text-base font-bold">{userData?.nickname}</p>}
+        <div className="text-base font-bold flex gap-[24px]">
+          <p>{data?.created_at.split('T')[0]}</p>
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />
@@ -52,7 +71,3 @@ export default function CommuPost() {
     </div>
   );
 }
-
-// 닉네임 연결하는 법 묻기
-// 언어별 카테고리 다시 정리하기
-// 왜 언디파인이 뜨는 건지 물어보기 (아마 자료에 있을 건데 기억이 슬슬)

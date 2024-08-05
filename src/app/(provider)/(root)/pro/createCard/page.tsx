@@ -27,7 +27,8 @@ export default function CreateCard() {
     handleLanguageSelect,
     handleSubmit,
     price,
-    setPrice
+    setPrice,
+    disableBtn
   } = useCreateCard()
 
   const handleNavigation = () => {
@@ -56,7 +57,7 @@ export default function CreateCard() {
       <LanguageSelect language={language} handleLanguageSelect={handleLanguageSelect}/>
       <ImageUpload images={images} handleImageChange={handleImageChange} handleImageDelete={handleImageDelete}/>
       <DescriptionInput description={description} setDescription={setDescription}/>
-      <SubmitButton handleFormSubmit={handleFormSubmit}/>
+      <SubmitButton handleFormSubmit={handleFormSubmit} disableBtn={disableBtn}/>
     </div>
   );
 }
