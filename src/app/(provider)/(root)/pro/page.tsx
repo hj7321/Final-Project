@@ -5,6 +5,7 @@ import useAuthStore from '@/zustand/authStore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Posts {
   id: string;
@@ -136,7 +137,7 @@ export default function ProMainPage() {
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
-              <img className="w-[80px] h-[80px] rounded-full mb-[10px] mx-auto" src={lang.image} />
+              <Image className="w-[80px] h-[80px] rounded-full mb-[10px] mx-auto" src={lang.image} width={80} height={80} alt={lang.name}/>
               <p
                 className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
               >
@@ -153,7 +154,7 @@ export default function ProMainPage() {
             <Link href={`pro/proDetail/${post.id}`} key={post.id}>
               <div className="w-[300px] h-[300px] rounded-lg m-[30px] hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
-                  <img className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} />
+                  <Image className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} width={300} height={160} alt={post.title}/>
                 )}
                 <div className="flex flex-col p-2 h-[140px] justify-between">
                   <div>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 interface PortfolioModalProps {
@@ -35,7 +36,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
         <div className='mt-[40px] mx-auto p-4 flex flex-row justify-between'>
           <div>
             <div className='flex flex-row items-center'>
-              <img src={user.profile_img} alt="프로필이미지" className='w-[64px] h-[64px] bg-gray-700 rounded-full mr-4' />
+              <Image src={user.profile_img} alt="프로필이미지" className='w-[64px] h-[64px] bg-gray-700 rounded-full mr-4' width={64} height={64} />
               <p className='font-semibold text-xl'>{user.nickname}</p>
             </div>
             <div className='mt-[40px]'>
@@ -55,7 +56,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
             </div>
           </div>
           <div>
-            <img src={portfolio.portfolio_img} alt="포스트이미지" className='w-[630px] h-[630px] rounded-xl'/>
+            <img src={portfolio.portfolio_img} alt="포스트이미지" className='w-[630px] h-[630px] rounded-xl' width={630} height={630}/>
           </div>
         </div>
       </div>

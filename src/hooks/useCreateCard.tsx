@@ -11,6 +11,7 @@ export default function useCreateCard() {
   const [images, setImages] = useState<File[]>([]);
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | "">("")
+  const [disableBtn, setDisableBtn] = useState(false)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -48,10 +49,15 @@ const handleSubmit = async (): Promise<number | null> => {
     alert('언어는 1개 이상 선택해야 합니다');
     return null;
   }
+  if(images.length < 1) {
+    alert('이미지 사진은 최소 1개 이상 등록해야 합니다')
+    return null;
+  }
   if (!description.trim()) {
     alert('내용을 입력해주세요');
     return null;
   }
+  setDisableBtn(true)
   try {
     const formData = new FormData();
     formData.append('title', title);
@@ -85,6 +91,8 @@ const handleSubmit = async (): Promise<number | null> => {
   } catch (error) {
     alert(error);
     return null;
+  } finally {
+    setDisableBtn(false)
   }
 };
   return {
@@ -101,6 +109,7 @@ const handleSubmit = async (): Promise<number | null> => {
     handleLanguageSelect,
     handleSubmit,
     price,
-    setPrice
+    setPrice,
+    disableBtn
   }
 }
