@@ -46,7 +46,11 @@ export default function AllMypage() {
 
   const getUserData = async () => {
     const supabase = createClient();
+    if (!id) {
+      throw new Error('Invalid UUID: id is null or undefined');
+    }
     const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
+
     return data;
   };
   const {
@@ -55,7 +59,8 @@ export default function AllMypage() {
     error
   } = useQuery({
     queryKey: ['Users'],
-    queryFn: getUserData
+    queryFn: getUserData,
+    enabled: !!id
   });
 
   const changeUserType = async (currentIsPro: any) => {
