@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { postDumy } from './DumyData';
 
 export default function AccountList() {
@@ -7,30 +8,11 @@ export default function AccountList() {
         <div className="mb-10">
           <h2 className="text-2xl font-bold">거래내역</h2>
         </div>
-        <div className="space-y-4">
-          {postDumy.slice(0, 4).map((post) => (
-            <div key={post.id} className="bg-white p-4  rounded-2xl">
-              <div className="flex mr-20">
-                <img src={post.image} className="w-[180px] h-[180px]  rounded-lg" />
-                <div className="ml-8 flex-1">
-                  <p className="font-bold text-[20px] mb-2">{post.title}</p>
-                  <p
-                    className="text-[16px] mb-2"
-                    style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
-                    {post.content}
-                  </p>
-                  <p className="text-gray-500 text-[14px] mb-2">{post.date}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+
+        <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
+          <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
+          <div className="text-lg font-semibold mb-2">아직 거래내역이 없어요</div>
+          <div className="text-sm text-gray-600 mb-4">전문가 의뢰를 통해 원하는 결과물을 받아보세요 </div>
         </div>
       </section>
     </div>
