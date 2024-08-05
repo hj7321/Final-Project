@@ -14,6 +14,7 @@ import ReceiveReview from './ReceiveReview';
 import SendReview from './SendReview';
 import ChatList from '../../../chat/_components/ChatList';
 import Image from 'next/image';
+import CancleAccount from './CancleAccount';
 
 export default function AllMypage() {
   const { id } = useParams();
@@ -41,6 +42,8 @@ export default function AllMypage() {
         return <SendReview />;
       case 'MyChatList':
         return <ChatList />;
+      case 'CancleAccount':
+        return <CancleAccount />;
     }
   };
 
@@ -193,6 +196,12 @@ export default function AllMypage() {
             ) : (
               ''
             )}
+            <li
+              className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
+              onClick={() => setActiveComponent('CancleAccount')}
+            >
+              회원탈퇴
+            </li>
           </ul>
         </aside>
         <main className="flex-1 p-8">

@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",
     "next": "14.2.5",
+    "notiflix": "^3.2.7",
     "react": "^18",
     "react-dom": "^18",
     "react-quill": "^2.0.0",

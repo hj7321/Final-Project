@@ -4,6 +4,7 @@ import { Users } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import { Notify } from 'notiflix';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 
 export default function EditProfile() {
@@ -95,7 +96,8 @@ export default function EditProfile() {
       queryClient.setQueryData(['Users'], context?.previousUserData);
     },
     onSuccess: () => {
-      alert('프로필이 성공적으로 수정되었습니다.');
+      Notify.success('프로필이 성공적으로 수정되었습니다.');
+      // alert('프로필이 성공적으로 수정되었습니다.');
       window.location.reload();
     },
     onSettled: () => {
