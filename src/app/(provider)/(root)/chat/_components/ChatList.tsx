@@ -215,8 +215,9 @@ const ChatList = () => {
                     </span>
                   )}
                 </div>
+                <p className="text-gray-500 font-normal text-xs mt-1">{truncateMessage(room.latest_message, 40)}</p>
               </div>
-              <p className="text-xs font-normal text-gray-400 mt-2 self-center">{new Date(room.latest_message_time).toLocaleDateString()}</p>
+         
             </div>
             <p className="text-xs font-normal text-gray-400 mt-2 self-center">
               {new Date(room.latest_message_time).toLocaleDateString()}
