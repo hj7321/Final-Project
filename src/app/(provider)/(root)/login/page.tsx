@@ -73,7 +73,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
-        redirectTo: 'http://localhost:3000/api/login/callback'
+        redirectTo: 'https://final-project-flame-nu.vercel.app/api/login/callback'
       }
     });
     if (error) console.error('카카오 로그인 에러: ', error);
@@ -85,7 +85,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:3000/api/login/callback',
+        redirectTo: 'https://final-project-flame-nu.vercel.app/api/login/callback',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
@@ -100,7 +100,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: 'http://localhost:3000/api/login/callback'
+        redirectTo: 'https://final-project-flame-nu.vercel.app/api/login/callback'
       }
     });
     if (error) console.error('깃허브 로그인 에러: ', error);
