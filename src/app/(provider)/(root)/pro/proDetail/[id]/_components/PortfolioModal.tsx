@@ -30,7 +30,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
       <div className="bg-white p-8 rounded-xl w-[1200px] h-[780px] relative">
         <div onClick={() => onClose()} className='cursor-pointer absolute top-4 right-4'>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4L20 20M20 4L4 20" stroke="#0E0F11" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 4L20 20M20 4L4 20" stroke="#0E0F11" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
         <div className='mt-[40px] mx-auto p-4 flex flex-row justify-between'>

@@ -24,14 +24,9 @@ export default function ProMainPage() {
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
-  const { userId, isPro, initializeAuthState } = useAuthStore();
+  const { isPro } = useAuthStore();
 
-  useEffect(() => {
-    const initialize = async () => {
-      await initializeAuthState();
-    };
-    initialize();
-  }, [initializeAuthState]);
+
 
   const fetchData = useCallback(async (page: number, languages: string[] = []) => {
     try {
@@ -100,10 +95,13 @@ export default function ProMainPage() {
   const handleNavigation = () => {
     route.push('/pro/createCard');
   };
-
+  const getCategoryImage = (categoryName: string) => {
+    const category = CodeCategories.find((cat) => cat.name === categoryName);
+    return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
+  };
   return (
-    <div className="max-w-[1440px] mx-auto flex-col justify-center items-center">
-      <div className="flex flex-row justify-end mt-[20px]">
+    <div className="mx-auto flex-col justify-center items-center">
+      <div className="flex flex-row justify-end mt-[20px] w-[85%]">
         {!isPro === true ? (
           <div className="mt-5"></div>
         ) : (
@@ -129,7 +127,32 @@ export default function ProMainPage() {
         )}
       </div>
       {/* 언어별 카테고리 영역 */}
-      <div className="my-[50px] mx-auto ">
+      <div className="mt-[30px] mx-auto overflow-hidden">
+        <ul className="flex flex-row justify-start items-center max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
+          {CodeCategories.map((lang) => (
+            <li
+              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[80px] sm:w-[100px] md:w-[120px] lg:w-auto"
+              key={lang.id}
+              onClick={() => handleLanguageFilter(lang.name)}
+            >
+              <Image
+                className="xl:w-[80px] xl:h-[80px] w-[40px] h-[40px] rounded-full mb-[10px] mx-auto"
+                src={lang.image}
+                width={80}
+                height={80}
+                alt={lang.name}
+              />
+              <p
+                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
+              >
+                {lang.name}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* <div className="my-[50px] mx-auto ">
         <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
           {CodeCategories.map((lang) => (
             <li
@@ -146,26 +169,42 @@ export default function ProMainPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
+
+
       {/* 의뢰 서비스 리스트 */}
-      <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap my-[70px] justify-start">
+      <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] ml-[22px] lg:justify-start">
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <Link href={`pro/proDetail/${post.id}`} key={post.id}>
-              <div className="w-[300px] h-[300px] rounded-lg m-[30px] hover:scale-110 transition-transform duration-200">
+            <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1">
+              <div className="lg:w-[300px] lg:h-[300px] w-[140px] h-[220px] rounded-lg xl:m-[30px] m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
-                  <Image className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} width={300} height={160} alt={post.title}/>
+                  <Image
+                    className="w-full xl:h-[160px] h-[130px] rounded-lg object-cover"
+                    src={post.post_img[0]}
+                    width={300}
+                    height={160}
+                    alt={post.title}
+                  />
                 )}
-                <div className="flex flex-col p-2 h-[140px] justify-between">
+                <div className="flex flex-col p-2 h-[140px]">
                   <div>
                     <div className="flex flex-row">
-                      <p className="text-sm mb-2 mr-3">{post.lang_category[0]}</p>
-                      <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p>
+                      <p className="text-sm lg:mb-2 lg:mr-3 flex">
+                        <Image
+                          src={getCategoryImage(post.lang_category[0])}
+                          alt={post.lang_category[0]}
+                          width={20}
+                          height={20}
+                          className="mr-2 w-[16px] h-[16px] lg:w-[20px] lg:h-[20px]"
+                        />
+                        <span className='text-[10px] lg:text-sm'>{post.lang_category[0]}</span>
+                      </p>
+                      {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
-                    <hr />
-                    <p className="text-lg mt-2 line-clamp-2">{post.title}</p>
+                    <p className="text-[10px] lg:text-sm lg:mt-2 line-clamp-2">{post.title}</p>
                   </div>
-                  <p className="text-xl">{post.price}원</p>
+                  <p className="lg:text-xl text-[12px] mt-1 lg:mt-2 font">{post.price}원</p>
                 </div>
               </div>
             </Link>

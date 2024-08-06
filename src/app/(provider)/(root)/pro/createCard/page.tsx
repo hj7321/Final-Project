@@ -8,11 +8,19 @@ import DescriptionInput from './_components/DescriptionInput';
 import SubmitButton from './_components/SubmitButton';
 import PriceInput from './_components/PriceInput';
 import { useRouter } from 'next/navigation';
+import useAuthStore from '@/zustand/authStore';
+import { useEffect } from 'react';
 
 
 
 export default function CreateCard() {
   const route = useRouter()
+  const { isPro } = useAuthStore()
+  if(!isPro) {
+    alert('다른 방법을 시도해주세요')
+    route.push('/pro')
+  }
+
   const {
     title,
     setTitle,
