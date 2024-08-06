@@ -14,6 +14,10 @@ const inputs = [
   { label: '비밀번호', type: 'password', id: 'pw', icon: true }
 ];
 
+const webBtnStyle =
+  'h-[56px] w-[400px] rounded-[12px] text-black font-bold flex justify-center items-center gap-[32px]';
+const mobileBtnStyle = 'w-[64px] h-[64px] rounded-full flex justify-center items-center';
+
 export default function LoginPage() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -77,7 +81,6 @@ export default function LoginPage() {
       }
     });
     if (error) console.error('카카오 로그인 에러: ', error);
-    if (data?.url) window.location.href = data.url; // OAuth 인증 페이지로 리디렉션(명시적으로 지정, 이 코드 없어도 됨(추후 삭제?))
   };
 
   const handleGoogleLogin = async () => {
@@ -105,9 +108,6 @@ export default function LoginPage() {
     });
     if (error) console.error('깃허브 로그인 에러: ', error);
   };
-
-  const buttonStyle =
-    'h-[56px] w-[400px] rounded-[12px] text-black font-bold flex justify-center items-center gap-[32px]';
 
   return (
     <section className="flex flex-col text-center items-center bg-grey-50">
@@ -161,14 +161,14 @@ export default function LoginPage() {
                   {input.icon && (
                     <button type="button" className="flex items-center" onClick={handleTogglePassword}>
                       <Image
-                        src="/eye_closed.svg"
+                        src="/eye_closed_grey.svg"
                         alt="비밀번호 숨기기"
                         width={24}
                         height={24}
                         className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'hidden' : 'block')}
                       />
                       <Image
-                        src="/eye_opened.svg"
+                        src="/eye_opened_grey.svg"
                         alt="비밀번호 보기"
                         width={24}
                         height={24}
@@ -189,30 +189,41 @@ export default function LoginPage() {
         </form>
 
         <div className="w-[400px] text-[#afafaf] flex justify-center mb-[32px]">
-          <Link href="#" className="mx-[40px] hover:underline">
-            아이디 찾기
-          </Link>
-          <Link href="#" className="mx-[40px] hover:underline">
-            비밀번호 찾기
+          <Link href="/login/sendLink" className="mx-[40px] hover:underline">
+            비밀번호 재설정하기
           </Link>
         </div>
 
         <div className="flex flex-col mb-[32px]">
           <p className="text-[#afafaf] text-[12px] mb-[24px]">──────────── 다른 방법으로 로그인 ────────────</p>
-          <div className="flex flex-col items-center gap-[16px]">
-            <button onClick={handleKakaoLogin} className={clsx(buttonStyle, 'bg-[#fee500] hover:bg-[#EED600]')}>
-              <Image src="/icon_kakao.svg" alt="카카오" width={26} height={27} />
-              카카오로 로그인하기
-            </button>
-            <button onClick={handleGoogleLogin} className={clsx(buttonStyle, 'bg-[#F8F9FD] hover:bg-[#E2E5F3]')}>
-              <Image src="/icon_google.svg" alt="구글" width={26} height={27} />
-              Google로 로그인하기
-            </button>
-            <button onClick={handleGitHubLogin} className={clsx(buttonStyle, 'bg-[#ECEDF0] hover:bg-[#D9DEE3]')}>
-              <Image src="/icon_github.svg" alt="깃허브" width={26} height={27} />
-              GitHub로 로그인하기
-            </button>
-          </div>
+          <>
+            <div className="flex justify-center gap-[16px] md:hidden">
+              <button onClick={handleKakaoLogin} className={clsx(mobileBtnStyle, 'bg-[#fee500] hover:bg-[#EED600]')}>
+                <Image src="/icon_kakao.svg" alt="카카오" width={26} height={26} />
+              </button>
+              <button onClick={handleGoogleLogin} className={clsx(mobileBtnStyle, 'bg-[#F8F9FD] hover:bg-[#E2E5F3]')}>
+                <Image src="/icon_google.svg" alt="구글" width={26} height={26} />
+              </button>
+              <button onClick={handleGitHubLogin} className={clsx(mobileBtnStyle, 'bg-[#ECEDF0] hover:bg-[#D9DEE3]')}>
+                <Image src="/icon_github.svg" alt="깃허브" width={26} height={26} />
+              </button>
+            </div>
+
+            <div className="hidden md:flex md:flex-col md:items-center md:gap-[16px]">
+              <button onClick={handleKakaoLogin} className={clsx(webBtnStyle, 'bg-[#fee500] hover:bg-[#EED600]')}>
+                <Image src="/icon_kakao.svg" alt="카카오" width={26} height={27} />
+                카카오로 로그인하기
+              </button>
+              <button onClick={handleGoogleLogin} className={clsx(webBtnStyle, 'bg-[#F8F9FD] hover:bg-[#E2E5F3]')}>
+                <Image src="/icon_google.svg" alt="구글" width={26} height={27} />
+                Google로 로그인하기
+              </button>
+              <button onClick={handleGitHubLogin} className={clsx(webBtnStyle, 'bg-[#ECEDF0] hover:bg-[#D9DEE3]')}>
+                <Image src="/icon_github.svg" alt="깃허브" width={26} height={27} />
+                GitHub로 로그인하기
+              </button>
+            </div>
+          </>
         </div>
 
         <div className="flex justify-center gap-[24px] text-[12px]">
