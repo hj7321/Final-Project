@@ -224,7 +224,7 @@ export default function SignUpForm() {
                   {input.icon && (
                     <button type="button" className="flex items-center" onClick={() => handleTogglePassword(idx - 1)}>
                       <Image
-                        src="/eye_closed.svg"
+                        src="/eye_closed_grey.svg"
                         alt="비밀번호 숨기기"
                         width={24}
                         height={24}
@@ -234,7 +234,7 @@ export default function SignUpForm() {
                         )}
                       />
                       <Image
-                        src="/eye_opened.svg"
+                        src="/eye_opened_grey.svg"
                         alt="비밀번호 보기"
                         width={24}
                         height={24}
@@ -297,7 +297,7 @@ export default function SignUpForm() {
         <button
           type="submit"
           className={clsx(
-            throttling && 'hover: cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
+            throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
             'h-[56px] w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
           )}
         >
