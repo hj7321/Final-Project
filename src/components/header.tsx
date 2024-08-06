@@ -85,7 +85,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] border border-grey-100 hidden">
+    <header className="sticky top-0 z-50 bg-white h-[72px] flex items-center justify-between px-[120px] py-[16px] border border-grey-100">
       <div className="flex items-center gap-[32px]">
         <Link href="/">
           <div className="w-40 h-16 flex items-center justify-center">
