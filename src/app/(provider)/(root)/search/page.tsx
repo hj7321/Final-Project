@@ -113,14 +113,11 @@ function SearchContent() {
                     ))}
                 </div>
                 <h2 className="text-lg font-medium mb-2">{highlightIfMatch(result.title, query)}</h2>
-                <p className="text-md text-grey-500 mb-2">{highlightIfMatch(result.content, query)}</p>
+                <p className="text-md text-grey-500 mb-2 max-h-12 truncate">{highlightIfMatch(result.content, query)}</p>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-400">{userMap[result.user_id] || result.user_id}</p>
                 </div>
                 <div className="flex mt-4">
-                  <div className="flex items-center">
-                    <span className="ml-1 text-gray-500">조회수</span>
-                  </div>
                   <div className="flex items-center">
                     <span className="ml-1 text-gray-500">댓글수</span>
                   </div>

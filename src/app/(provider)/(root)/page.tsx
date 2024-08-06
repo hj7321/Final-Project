@@ -51,16 +51,25 @@ export default function Home() {
   return (
     <main className="snap-y scroll-smooth">
       {/* 메인베너 */}
-      <section className="w-full h-[calc(100vh-75px)] bg-cover bg-center bg-[url('/mainBanner.svg')] mb-64"></section>
+      <section className="w-full h-[calc(100vh-75px)] mb-64 md:mb-64">
+        <div className="block md:hidden w-full h-auto bg-cover bg-center">
+          <img src="/mobileMainBanner.svg" alt="모바일 메인베너" className="w-full h-full object-cover" />
+        </div>
+        <div className="hidden md:block w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/mainBanner.svg')" }}></div>
+      </section>
 
       {/* 언어별 카테고리 및 커뮤니티 섹션 */}
-      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start mb-64">
+      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start mb-16 md:mb-64">
         <div className="bg-white py-4 flex-shrink-0">
-          <div className="container mx-auto px-4 h-full px-16">
+          <div className="container mx-auto px-4 md:px-16 h-full">
             <h2 className="text-xl font-bold mb-4">언어별 카테고리</h2>
-            <div className="flex justify-between h-full items-center">
-              {CodeCategories.map((category) => (
-                <Link href={`/search?query=${category.name}`} key={category.id} className="flex flex-col items-center mx-2">
+            <div className="flex flex-wrap justify-center md:justify-between h-full items-center">
+              {CodeCategories.slice(0, 10).map((category) => (
+                <Link
+                  href={`/search?query=${category.name}`}
+                  key={category.id}
+                  className="flex flex-col items-center w-1/5 mb-4 md:w-auto"
+                >
                   <Image
                     src={category.image}
                     alt={category.name}
@@ -68,13 +77,13 @@ export default function Home() {
                     height={64}
                     className="w-12 h-12 rounded-full"
                   />
-                  <span className="mt-2 text-black text-normal">{category.name}</span>
+                  <span className="mt-2 text-black text-normal text-sm md:text-base">{category.name}</span>
                 </Link>
               ))}
             </div>
           </div>
         </div>
-        <div className="container mx-auto px-4 flex-grow px-16">
+        <div className="container mx-auto px-4 md:px-16 flex-grow">
           <h2 className="text-xl font-bold mb-4 mt-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
             <div className="bg-white p-4 border border-gray-100 rounded-xl">
@@ -124,16 +133,16 @@ export default function Home() {
 
       {/* 전문가 섹션 */}
       <section className="container mx-auto py-4 min-h-[calc(100vh-75px)] flex items-center snap-start">
-        <div className="w-full px-16">
+        <div className="w-full px-4 md:px-16">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">전문가 의뢰</h2>
             <Link href="/pro" className="text-grey-400 text-sm">
               {`더보기 >`}
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="flex overflow-x-auto md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
             {expertPosts.slice(0, 8).map((expert) => (
-              <div key={expert.id} className="bg-white py-4 px-2 flex flex-col items-start">
+              <div key={expert.id} className="bg-white py-4 px-2 flex-shrink-0 w-64 md:w-auto flex flex-col items-start">
                 <Link href={`/pro/proDetail/${expert.id}`}>
                   <img
                     src={expert.post_img[0]}
@@ -150,8 +159,8 @@ export default function Home() {
                     />
                     <span className="text-gray-400 font-extralight text-xs">{expert.lang_category[0]}</span>
                   </div>
-                  <h3 className="font-bold text-center text-sm">{expert.title}</h3>
-                  <h3 className="text-center text-sm mt-1">{expert.price}원</h3>
+                  <h3 className="font-bold text-sm">{expert.title}</h3>
+                  <h3 className="text-sm mt-1">{expert.price}원</h3>
                 </Link>
               </div>
             ))}
