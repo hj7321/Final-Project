@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { Portfolio } from '@/types/type';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { Notify } from 'notiflix';
 
 interface EditPortfolioProps {
   clickModal: () => void;
@@ -101,7 +102,8 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
       });
 
       if (response.ok) {
-        alert('저장 완료');
+        Notify.success('포트폴리오 등록이 완료되었습니다.');
+
         clickModal();
         window.location.reload();
       } else {

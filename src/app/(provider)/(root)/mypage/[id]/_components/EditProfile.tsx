@@ -4,6 +4,7 @@ import { Users } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import { Notify } from 'notiflix';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 
 export default function EditProfile() {
@@ -95,7 +96,8 @@ export default function EditProfile() {
       queryClient.setQueryData(['Users'], context?.previousUserData);
     },
     onSuccess: () => {
-      alert('프로필이 성공적으로 수정되었습니다.');
+      Notify.success('프로필이 성공적으로 수정되었습니다.');
+      // alert('프로필이 성공적으로 수정되었습니다.');
       window.location.reload();
     },
     onSettled: () => {
@@ -165,8 +167,8 @@ export default function EditProfile() {
           </label>
         </div>
         <div className="mb-6 w-full">
-          <div className="relative border border-gray-500 rounded-md">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black pointer-events-none">
+          <div className="relative border border-gray-300 rounded-md">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
               닉네임
             </span>
             <input
@@ -186,8 +188,8 @@ export default function EditProfile() {
           </div>
         </div>
         <div className="mb-6">
-          <div className="relative border border-gray-500 rounded-md">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black pointer-events-none">
+          <div className="relative border border-gray-300 rounded-md">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
               이름
             </span>
             <input
@@ -203,8 +205,8 @@ export default function EditProfile() {
           </div>
         </div>
         <div className="mb-20">
-          <div className="relative border  border-gray-500 rounded-md">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black pointer-events-none">
+          <div className="relative border  border-gray-300 rounded-md">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
               생일
             </span>
             <input
@@ -213,7 +215,7 @@ export default function EditProfile() {
               value={birth}
               onChange={(e) => setBirth(e.target.value)}
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
-            />{' '}
+            />
           </div>
         </div>
         <div className="flex mx-0 justify-between">
