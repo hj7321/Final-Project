@@ -101,7 +101,7 @@ export default function ProMainPage() {
     route.push('/pro/createCard');
   };
   const getCategoryImage = (categoryName: string) => {
-    const category = CodeCategories.find(cat => cat.name === categoryName);
+    const category = CodeCategories.find((cat) => cat.name === categoryName);
     return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
   };
   return (
@@ -132,7 +132,32 @@ export default function ProMainPage() {
         )}
       </div>
       {/* 언어별 카테고리 영역 */}
-      <div className="my-[50px] mx-auto ">
+      <div className="my-[50px] mx-auto overflow-hidden">
+        <ul className="flex flex-row justify-start items-center mt-[50px] max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
+          {CodeCategories.map((lang) => (
+            <li
+              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[80px] sm:w-[100px] md:w-[120px] lg:w-auto"
+              key={lang.id}
+              onClick={() => handleLanguageFilter(lang.name)}
+            >
+              <Image
+                className="xl:w-[80px] xl:h-[80px] w-[40px] h-[40px] rounded-full mb-[10px] mx-auto"
+                src={lang.image}
+                width={80}
+                height={80}
+                alt={lang.name}
+              />
+              <p
+                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
+              >
+                {lang.name}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* <div className="my-[50px] mx-auto ">
         <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
           {CodeCategories.map((lang) => (
             <li
@@ -149,15 +174,21 @@ export default function ProMainPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
       {/* 의뢰 서비스 리스트 */}
-      <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap my-[70px] justify-start">
+      <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap my-[70px] justify-start grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <Link href={`pro/proDetail/${post.id}`} key={post.id}>
+            <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1">
               <div className="w-[300px] h-[300px] rounded-lg m-[30px] hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
-                  <Image className="w-full h-[160px] rounded-lg object-cover" src={post.post_img[0]} width={300} height={160} alt={post.title}/>
+                  <Image
+                    className="w-full h-[160px] rounded-lg object-cover"
+                    src={post.post_img[0]}
+                    width={300}
+                    height={160}
+                    alt={post.title}
+                  />
                 )}
                 <div className="flex flex-col p-2 h-[140px] justify-between">
                   <div>
