@@ -34,7 +34,7 @@ export const validateForms = (form: string, idx: number): string => {
 
       if (form.length < 1 || form.length > 10) return '닉네임은 1자 이상 10자 이하여야 합니다.';
 
-      const validCharactersRegex1 = /^[\p{L}\p{N}]+$/u;
+      const validCharactersRegex1 = /^[\p{L}\p{N}\s]+$/u;
       if (!validCharactersRegex1.test(form)) return '닉네임은 알파벳 대소문자, 한글, 숫자만 포함할 수 있습니다.';
 
       const startsOrEndsWithSpaceRegex1 = /^\s|\s$/;
