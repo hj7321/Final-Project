@@ -110,7 +110,7 @@ export default function Portfolio() {
 
   return (
     <div className="flex flex-col items-center justify-center  w-full ">
-      <div className=" self-start flex text-2xl font-bold mb-4"> 포트폴리오</div>
+      <div className=" self-start hidden md:flex text-2xl font-bold mb-4"> 포트폴리오</div>
 
       {data?.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
@@ -174,18 +174,35 @@ export default function Portfolio() {
                         textOverflow: 'ellipsis'
                       }}
                     ></p>
-                    <button
-                      onClick={() => handleOpenModal(post.id)}
-                      className="mt-4 p-2 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
-                    >
-                      포트폴리오 수정
-                    </button>
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      className="mt-4 p-2 ml-5 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
-                    >
-                      포트폴리오 삭제
-                    </button>
+                    <div className="flex items-center space-x-4">
+                      <button
+                        onClick={() => handleOpenModal(post.id)}
+                        className="mt-4 p-1 md:p-2 w-40 md:w-64 text-base md:text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
+                      >
+                        포트폴리오 수정
+                      </button>
+
+                      {/* <button
+                        onClick={() => handleDelete(post.id)}
+                        className="md:hidden mt-4 p-1 ml-5 w-20 text-base border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
+                      > */}
+                      <Image
+                        alt="쓰레기통"
+                        src="/trashcan.svg"
+                        width={8}
+                        height={8}
+                        onClick={() => handleDelete(post.id)}
+                        className="md:hidden mt-4 p-1 ml-5 w-8 cursor-pointer "
+                      />
+                      {/* </button> */}
+
+                      <button
+                        onClick={() => handleDelete(post.id)}
+                        className="hidden md:grid mt-4 p-2 ml-5 w-64 text-xl border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
+                      >
+                        포트폴리오 삭제
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -65,7 +65,6 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
       Notify.success('포트폴리오 등록이 완료되었습니다.');
 
       clickModal();
-      location.reload();
     }
   });
 
