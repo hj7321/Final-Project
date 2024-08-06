@@ -29,7 +29,8 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
     error
   } = useQuery({
     queryKey: ['Users'],
-    queryFn: getUserData
+    queryFn: getUserData,
+    enabled: !!userId 
   });
 
   const getsPortfolio = async () => {
