@@ -60,7 +60,7 @@ export default function Home() {
             <h2 className="text-xl font-bold mb-4">언어별 카테고리</h2>
             <div className="flex justify-between h-full items-center">
               {CodeCategories.map((category) => (
-                <Link href={`/search?query=${category.name}`} key={category.id} className="flex flex-col items-center mx-2">
+                <div key={category.id} className="flex flex-col items-center mx-2">
                   <Image
                     src={category.image}
                     alt={category.name}
@@ -69,7 +69,7 @@ export default function Home() {
                     className="w-12 h-12 rounded-full"
                   />
                   <span className="mt-2 text-black text-normal">{category.name}</span>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
