@@ -61,6 +61,7 @@ export default function Header() {
   const handleSearch = () => {
     if (searchInput.trim()) {
       router.push(`/search?query=${searchInput}`);
+      setSearchInput('');
     }
   };
 
