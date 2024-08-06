@@ -8,6 +8,7 @@ import { FormEvent, useState } from 'react';
 // import { comment } from 'postcss';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -20,7 +21,10 @@ export default function CommuComment() {
 
   const handleCheckLogin = () => {
     if (!isLogin) {
-      alert('로그인 후 이용해 주세요');
+      alert('로그인 후 이용해주세요.');
+      const presentPage = window.location.href;
+      const pagePathname = new URL(presentPage).pathname;
+      Cookies.set('returnPage', pagePathname);
       router.push('/login');
     }
   };

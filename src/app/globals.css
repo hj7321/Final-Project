@@ -31,6 +31,103 @@ body {
   font-weight: normal;
 }
 
+/* 폰트 종류 스타일 정의 */
+.H1-M {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 48px;
+}
+
+.H1-L {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 48px;
+}
+
+.H2-M {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.H2-L {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.H3-M {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.H3-L {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.Body-M {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.Body-L {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.Caption1-M {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.Caption1-L {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.Caption2-M {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.Caption2-L {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.Caption3-M {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+.Caption3-L {
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+.Caption4-M {
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 12px;
+}
+
+.Caption4-L {
+  font-weight: 700;
+  font-size: 8px;
+  line-height: 12px;
+}
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
