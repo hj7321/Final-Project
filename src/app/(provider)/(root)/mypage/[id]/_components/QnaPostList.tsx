@@ -49,12 +49,14 @@ export default function QnaPostList() {
           <div key={post.id} className="bg-white p-4 rounded-2xl">
             <div className="flex flex-col md:flex-row">
               {post.post_img && post.post_img.length > 0 && (
-                <img src={post.post_img[0]} className="w-72 h-40 rounded-lg " />
+                <img src={post.post_img[0]} className="w-72 h-40 ml-6 mb-3 md:ml-0 md:mb-0 rounded-lg " />
               )}
               <div className="flex flex-col">
-                <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
-                  <h3 className="font-bold text-[20px] ml-8 mb-8">{post.title}</h3>
-                </Link>
+                {post.post_category && (
+                  <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
+                    <h3 className="font-bold text-[20px] ml-8 mb-8">{post.title}</h3>
+                  </Link>
+                )}
                 <p
                   className=" text-[16px] ml-8 mb-6 mr-5"
                   style={{

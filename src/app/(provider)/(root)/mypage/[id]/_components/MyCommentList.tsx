@@ -86,12 +86,10 @@ export default function MyCommentList() {
     };
   });
 
-  console.log('commentWithPosts', commentWithPosts);
-
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
       <div className="mb-10">
-        <h2 className="text-2xl font-bold">내가 쓴 댓글</h2>
+        <h2 className="hidden md:flex text-2xl font-bold">내가 쓴 댓글</h2>
       </div>
       <div className="space-y-4">
         {commentWithPosts.map((comment) => (
@@ -101,10 +99,10 @@ export default function MyCommentList() {
           >
             <div>
               <Link href={`/${comment.postCategory}/${comment.postId}`}>
-                <p className="text-lg font-semibold mb-2">{comment.postTitle}</p>
+                <p className="text-lg font-semibold mt-2 mb-2 ml-8">{comment.postTitle}</p>
               </Link>
-              <p
-                className="text-[16px] ml-8 mb-4 mt-3 mr-5"
+              <div
+                className="text-[16px] ml-8 mb-4 mt-3 mr-10"
                 style={{
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
@@ -114,7 +112,7 @@ export default function MyCommentList() {
                 }}
               >
                 {comment.contents}
-              </p>
+              </div>
               <p className="ml-8 mb-3">
                 <span className="text-gray-500 text-[14px] mr-10">{comment.created_at.slice(0, 10)}</span>
               </p>

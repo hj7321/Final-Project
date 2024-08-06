@@ -118,7 +118,7 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
               <div className="flex justify-start">
                 <button
                   onClick={editHandle}
-                  className="bg-white text-primary-500 border text-lg  border-primary-500 px-20 py-2 rounded-md shadow-sm hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  className="bg-white text-primary-500 border text-lg  border-primary-500 px-4 md:px-20 py-2 rounded-md shadow-sm hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 >
                   포트폴리오 편집
                 </button>

@@ -44,7 +44,7 @@ export default function MyPostList() {
             className={`mx-2  ${isClicked('RequestPostList')}`}
             onClick={() => setActivePostList('RequestPostList')}
           >
-            request
+            Request
           </button>
         </span>
       </div>
