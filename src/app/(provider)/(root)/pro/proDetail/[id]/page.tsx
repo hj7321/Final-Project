@@ -70,7 +70,7 @@ export default function ProDetail() {
     if (!currentUserId || !user?.id || !id) {
       // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
-      alert("로그인 후 이용해주세요.")
+      alert('로그인 후 이용해주세요.');
       const presentPage = window.location.href;
       const pagePathname = new URL(presentPage).pathname;
       Cookies.set('returnPage', pagePathname);
@@ -112,10 +112,25 @@ export default function ProDetail() {
 
   return (
     <div className="max-w-[1280px] mx-auto p-4">
+      <div>
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="16.25" y="16.25" width="31.5" height="31.5" rx="15.75" stroke="#9FA8B2" stroke-width="0.5" />
+          <path
+            d="M36 31.75C36.1381 31.75 36.25 31.8619 36.25 32C36.25 32.1381 36.1381 32.25 36 32.25V31.75ZM27.8232 32.1768C27.7256 32.0791 27.7256 31.9209 27.8232 31.8232L29.4142 30.2322C29.5118 30.1346 29.6701 30.1346 29.7678 30.2322C29.8654 30.3299 29.8654 30.4882 29.7678 30.5858L28.3536 32L29.7678 33.4142C29.8654 33.5118 29.8654 33.6701 29.7678 33.7678C29.6701 33.8654 29.5118 33.8654 29.4142 33.7678L27.8232 32.1768ZM36 32.25H28V31.75H36V32.25Z"
+            fill="#828F9B"
+          />
+        </svg>
+      </div>
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
           <div className="h-[150px] w-[150px] border-2 rounded-full mx-auto mt-5">
-            <Image src={user.profile_img} alt="user_profile" className="object-cover h-full w-full rounded-full" width={150} height={150}  />
+            <Image
+              src={user.profile_img}
+              alt="user_profile"
+              className="object-cover h-full w-full rounded-full"
+              width={150}
+              height={150}
+            />
           </div>
           <div className="mx-auto text-2xl mt-4">
             <p>{user.nickname}</p>
@@ -194,7 +209,13 @@ export default function ProDetail() {
           </div>
         </div>
         <div className="h-[514px] w-[810px] border-2 rounded-xl">
-          <Image src={post.post_img[0]} alt="post_image" className="w-full h-full object-cover rounded-xl" height={514} width={810} />
+          <Image
+            src={post.post_img[0]}
+            alt="post_image"
+            className="w-full h-full object-cover rounded-xl"
+            height={514}
+            width={810}
+          />
         </div>
       </div>
       <div className="mt-8">

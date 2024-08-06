@@ -46,10 +46,10 @@ export async function GET(request: Request) {
       const timeDifferenceMinutes = timeDifferenceMs / (1000 * 60); // 1000밀리초 * 60초
 
       // 1분 이상 차이가 나는지 확인
-      const isMoreThanTwoMinutes: boolean = timeDifferenceMinutes >= 1;
+      const isMoreThanOneMinute: boolean = timeDifferenceMinutes >= 1;
 
       // Users 테이블에 현재 로그인한 사용자의 생성 시간이 현재 시간으로부터 1분이 지난 경우, 이전에 있던 페이지로 리디렉션
-      if (isMoreThanTwoMinutes) return NextResponse.redirect(`${origin}${movePage}`);
+      if (isMoreThanOneMinute) return NextResponse.redirect(`${origin}${movePage}`);
       // Users 테이블에 현재 로그인한 사용자의 생성 시간이 현재 시간으로부터 1분이 지나지 않은 경우, 신규 유저로 판단하고 SignUpComplete 페이지로 리디렉션
       else return NextResponse.redirect(`${origin}/signup/signUpComplete`);
     }

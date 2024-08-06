@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
+import { Notify } from 'notiflix';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -61,9 +62,9 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
       if (contentRef.current) {
         contentRef.current.value = '';
       }
-      alert('포트폴리오 등록이 완료되었습니다.');
+      Notify.success('포트폴리오 등록이 완료되었습니다.');
+
       clickModal();
-      location.reload();
     }
   });
 

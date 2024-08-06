@@ -14,6 +14,7 @@ import ReceiveReview from './ReceiveReview';
 import SendReview from './SendReview';
 import ChatList from '../../../chat/_components/ChatList';
 import Image from 'next/image';
+import CancleAccount from './CancleAccount';
 
 export default function AllMypage() {
   const { id } = useParams();
@@ -41,6 +42,8 @@ export default function AllMypage() {
         return <SendReview />;
       case 'MyChatList':
         return <ChatList />;
+      case 'CancleAccount':
+        return <CancleAccount />;
     }
   };
 
@@ -106,36 +109,43 @@ export default function AllMypage() {
 
   return (
     <div className="flex flex-col max-w-[80%] m-auto bg-white">
-      <div className="flex flex-1">
-        <aside className="w-64 p-4">
+      <div className="flex flex-1 flex-col md:flex-row">
+        <div className="w-full md:w-64 p-4">
           <div>
-            <div className="flex flex-col items-center mb-6 p-4 rounded-full">
-              <div className="w-[180px] h-[180px]  rounded-full mb-4">
-                <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className="w-72 h-40 rounded-[50%]" />
+            <div className="flex md:flex-col items-center mb-6 p-4 rounded-full">
+              <div className="flex flex-col">
+                <div className="w-20 h-20 md:w-[180px] md:h-[180px] rounded-full md:mb-2">
+                  <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className=" rounded-[50%]" />
+                </div>
+                <div className="text-center text-xl font-bold text-grey-900 md:font-bold mb-4">
+                  {Users?.data?.nickname}
+                </div>
               </div>
-              <div className="text-black font-bold mb-4">{Users?.data?.nickname}</div>
-
-              <button
-                className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
-                onClick={() => setActiveComponent('EditProfile')}
-              >
-                <Image src="/pencil.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" /> 프로필
-                수정하기
-              </button>
-
-              <button
-                className="mb-2 px-2 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white flex items-center justify-center"
-                onClick={() => mutation.mutate(Users?.data?.is_pro)}
-              >
-                <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />{' '}
-                {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}
-              </button>
+              <div className="flex flex-col ml-10 md:ml-0 items-center">
+                <button
+                  className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
+                  onClick={() => setActiveComponent('EditProfile')}
+                >
+                  <Image src="/pencil.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />
+                  프로필 수정하기
+                </button>
+                <button
+                  className="mb-2 md:mb-0 px-2 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white flex items-center justify-center"
+                  onClick={() => mutation.mutate(Users?.data?.is_pro)}
+                >
+                  <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />
+                  {Users?.data?.is_pro ? '일반 회원으로 전환' : '전문가로 전환'}
+                </button>
+              </div>
             </div>
           </div>
 
-          <ul className="space-y-4 mt-[64px]">
-            <li className="text-[20px] font-bold">나의 활동</li>
-            <div className="border-t border-gray-300 my-10"></div>
+          <ul
+            className="flex flex-nowrap w-full overflow-x-auto gap-8  whitespace-nowrap md:gap-0 md:space-y-4 md:flex-col mt-[64px] scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <li className="hidden md:flex text-[20px] font-bold">나의 활동</li>
+            <div className="hidden md:flex border-t border-gray-300 my-10"></div>
 
             <li
               className={activeComponent === 'BookMark' ? activeStyle : liStyle}
@@ -193,9 +203,15 @@ export default function AllMypage() {
             ) : (
               ''
             )}
+            <li
+              className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
+              onClick={() => setActiveComponent('CancleAccount')}
+            >
+              회원탈퇴
+            </li>
           </ul>
-        </aside>
-        <main className="flex-1 p-8">
+        </div>
+        <main className="md:flex-1 p-8">
           <h1 className="flex text-2xl font-bold mt-[40px] w-full">{renderComponent()}</h1>
         </main>
       </div>
