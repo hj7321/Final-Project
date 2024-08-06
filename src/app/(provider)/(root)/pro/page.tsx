@@ -173,7 +173,7 @@ export default function ProMainPage() {
 
 
       {/* 의뢰 서비스 리스트 */}
-      <div className="max-w-[1440px] mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] lg:justify-start">
+      <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] ml-[22px] lg:justify-start">
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1">
@@ -202,7 +202,6 @@ export default function ProMainPage() {
                       </p>
                       {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
-                    <div className='hidden lg:bg-gray-200 lg:h-[1px]'></div>
                     <p className="text-[10px] lg:text-sm lg:mt-2 line-clamp-2">{post.title}</p>
                   </div>
                   <p className="lg:text-xl text-[12px] mt-1 lg:mt-2 font">{post.price}원</p>
