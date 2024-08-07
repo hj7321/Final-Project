@@ -44,7 +44,7 @@ function SearchContent() {
 
   const getCategoryImage = (category: string) => {
     const categoryData = CodeCategories.find((cat) => cat.name === category);
-    return categoryData ? categoryData.image : 'https://via.placeholder.com/150?text=No+Image';
+    return categoryData ? categoryData.image : ':/defaultProfileimg.svg';
   };
 
   const getDetailPageLink = (category: string, postCategory: string, id: string) => {
