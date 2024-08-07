@@ -172,9 +172,9 @@ const ChatList = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-xl font-semibold mb-4">나의 문의내역</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="container mx-auto p-2 md:p-2">
+      <h1 className="text-xl font-semibold mb-4 hidden md:block">나의 문의내역</h1>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 md:gap-6">
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
@@ -184,17 +184,17 @@ const ChatList = () => {
           >
             <div>
               <div className="flex items-center justify-center mt-2 mb-2">
-                <div className="flex items-center mr-auto">
+                <div className="flex items-center">
                   <Image
                     src={getCategoryImage(room.post_lang_category[0])}
                     alt={room.post_lang_category[0]}
                     width={10}
                     height={10}
-                    className="w-6 h-6"
+                    className="w-6 h-6 hidden md:block"
                   />
-                  <div className="text-xs font-normal ml-1">{room.post_lang_category[0]}</div>
+                  <div className="text-xs font-normal ml-1 truncate hidden md:block">{room.post_lang_category[0]}</div>
                 </div>
-                <h3 className="text-xs font-bold items-center ml-6">{room.post_title}</h3>
+                <h3 className="text-xs font-bold items-center max-w-20 ml-2 truncate">{room.post_title}</h3>
               </div>
               <div className="flex items-center justify-center mt-2 mb-2">
                 <Image
@@ -217,7 +217,6 @@ const ChatList = () => {
                 </div>
                 <p className="text-gray-500 font-normal text-xs mt-1">{truncateMessage(room.latest_message, 40)}</p>
               </div>
-         
             </div>
             <p className="text-xs font-normal text-gray-400 mt-2 self-center">
               {new Date(room.latest_message_time).toLocaleDateString()}

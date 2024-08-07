@@ -44,7 +44,7 @@ function SearchContent() {
 
   const getCategoryImage = (category: string) => {
     const categoryData = CodeCategories.find((cat) => cat.name === category);
-    return categoryData ? categoryData.image : 'https://via.placeholder.com/150?text=No+Image';
+    return categoryData ? categoryData.image : ':/defaultProfileimg.svg';
   };
 
   const getDetailPageLink = (category: string, postCategory: string, id: string) => {
@@ -64,12 +64,12 @@ function SearchContent() {
         {query}
         <p className="text-grey-300 ml-1">{`의 검색 결과`}</p>
       </h1>
-      <div className="flex space-x-4 mb-12">
+      <div className="flex space-x-4 mb-12 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => handleFilter(tab)}
-            className={`px-4 py-2 ${
+            className={`whitespace-nowrap px-4 py-2 ${
               selectedTab === tab ? 'border-b-2 border-primary-500 text-primary-500' : 'text-black'
             }`}
           >
@@ -94,33 +94,29 @@ function SearchContent() {
             <Link key={result.id} href={getDetailPageLink(result.category, (result as any).post_category, result.id)}>
               <div className="px-8 py-4 bg-white rounded-xl border border-grey-100 cursor-pointer">
                 <div className="flex space-x-2 mb-3">
-                  {result.lang_category &&
-                    result.lang_category.map((lang, index) => (
-                      <div key={index} className="flex">
-                        <Image src={getCategoryImage(lang)} alt={lang} width={24} height={24} className="rounded" />
-                        <div>
-                          <span
-                            className={`rounded px-2 py-1 text-sm ${
-                              lang.toLowerCase().includes(query.toLowerCase())
-                                ? 'text-primary-400'
-                                : 'bg-white text-gray-500'
-                            }`}
-                          >
-                            {lang}
-                          </span>
-                        </div>
+                  {result.lang_category && (
+                    <div className="flex">
+                      <Image src={getCategoryImage(result.lang_category[0])} alt={result.lang_category[0]} width={24} height={24} className="rounded" />
+                      <div>
+                        <span
+                          className={`rounded px-2 py-1 text-sm ${
+                            result.lang_category[0].toLowerCase().includes(query.toLowerCase())
+                              ? 'text-primary-400'
+                              : 'bg-white text-grey-500'
+                          }`}
+                        >
+                          {result.lang_category[0]}
+                        </span>
                       </div>
-                    ))}
+                    </div>
+                  )}
                 </div>
                 <h2 className="text-lg font-medium mb-2">{highlightIfMatch(result.title, query)}</h2>
-                <p className="text-md text-grey-500 mb-2">{highlightIfMatch(result.content, query)}</p>
+                <p className="text-md text-grey-500 mb-2 max-h-12 truncate">{highlightIfMatch(result.content, query)}</p>
                 <div className="flex justify-between items-center">
-                  <p className="text-gray-400">{userMap[result.user_id] || result.user_id}</p>
+                  <p className="text-gray-400">{userMap[result.user_id] || "알수없음"}</p>
                 </div>
                 <div className="flex mt-4">
-                  <div className="flex items-center">
-                    <span className="ml-1 text-gray-500">조회수</span>
-                  </div>
                   <div className="flex items-center">
                     <span className="ml-1 text-gray-500">댓글수</span>
                   </div>
