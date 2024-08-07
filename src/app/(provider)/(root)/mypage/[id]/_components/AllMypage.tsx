@@ -109,28 +109,28 @@ export default function AllMypage() {
 
   return (
     <div className="flex flex-col max-w-[80%] m-auto bg-white">
-      <div className="flex flex-1 flex-col md:flex-row">
-        <div className="w-full md:w-64 p-4">
+      <div className="flex flex-1 flex-col  md:flex-row">
+        <div className="w-full md:w-64 ">
           <div>
-            <div className="flex md:flex-col items-center mb-6 p-4 rounded-full">
+            <div className="flex md:flex-col items-center mb-6 mt-8 md:mt-0 rounded-full">
               <div className="flex flex-col">
-                <div className="w-20 h-20 md:w-[180px] md:h-[180px] rounded-full md:mb-2">
+                <div className="w-16 h-16 md:w-[180px] md:h-[180px] rounded-full md:mb-2">
                   <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className=" rounded-[50%]" />
                 </div>
-                <div className="text-center text-xl font-bold text-grey-900 md:font-bold mb-4">
+                <div className="text-center text-lg font-bold text-grey-900 md:font-bold mb-4">
                   {Users?.data?.nickname}
                 </div>
               </div>
               <div className="flex flex-col ml-10 md:ml-0 items-center">
                 <button
-                  className="mb-2 px-2 w-[244px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
+                  className="mb-2   w-[225px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                   onClick={() => setActiveComponent('EditProfile')}
                 >
                   <Image src="/pencil.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />
                   프로필 수정하기
                 </button>
                 <button
-                  className="mb-2 md:mb-0 px-2 w-[244px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white flex items-center justify-center"
+                  className="mb-2 md:mb-0  w-[225px] h-[36px] text-primary-500 border border-primary-500 rounded-md bg-white flex items-center justify-center"
                   onClick={() => mutation.mutate(Users?.data?.is_pro)}
                 >
                   <Image src="/change.svg" alt="변경로고" width={20} height={12} className="mr-2 fill-white" />
