@@ -102,7 +102,7 @@ function SearchContent() {
                           className={`rounded px-2 py-1 text-sm ${
                             result.lang_category[0].toLowerCase().includes(query.toLowerCase())
                               ? 'text-primary-400'
-                              : 'bg-white text-gray-500'
+                              : 'bg-white text-grey-500'
                           }`}
                         >
                           {result.lang_category[0]}
