@@ -50,6 +50,8 @@ export default function CommuCommentList() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    getComments();
   };
 
   const {
@@ -81,6 +83,8 @@ export default function CommuCommentList() {
   const handleDelete = (commentId: string, commentUserId: string) => {
     if (userId === commentUserId) {
       deleteMutation.mutate(commentId);
+
+      getComments();
     } else {
       console.error('삭제 권한이 없습니다.');
     }
@@ -94,6 +98,8 @@ export default function CommuCommentList() {
   const handleSaveClick = (id: string) => {
     if (!editContent.trim()) {
       console.error('내용을 입력해주세요.');
+
+      getComments();
       return;
     }
     updateMutation.mutate({ id, content: editContent });
