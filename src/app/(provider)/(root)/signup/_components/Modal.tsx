@@ -2,14 +2,14 @@ import Marketing from './Marketing';
 import PersonalInfo from './PersonalInfo';
 import TermsOfService from './TermsOfService';
 
-interface ModalProp {
+interface ModalProps {
   onClose: () => void;
   modalNum: number;
 }
 
 const modalTitle = ['서비스 이용약관', '개인정보 수집 및 이용 동의', '마케팅 수신 동의'];
 
-export default function Modal({ onClose, modalNum }: ModalProp) {
+export default function Modal({ onClose, modalNum }: ModalProps) {
   return (
     <section className="fixed inset-0 flex justify-center items-center text-left bg-grey-300 bg-opacity-50 z-50">
       <div className="w-[328px] h-[360px] sm:w-[664px] sm:h-[646px] relative bg-white rounded-[16px] p-[32px] flex flex-col items-center">
