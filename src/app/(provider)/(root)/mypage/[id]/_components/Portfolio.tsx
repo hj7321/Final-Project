@@ -202,7 +202,7 @@ export default function Portfolio() {
                         ? post.portfolio_img[0]
                         : 'https://via.placeholder.com/150?text=No+Image'
                     }
-                    className="w-72 h-40 rounded-lg cursor-pointer lg:hover:scale-110"
+                    className="md:w-72 md:h-40 w-[64px] h-[64px] rounded-lg cursor-pointer lg:hover:scale-110"
                     onClick={() => handleDetailNavigation(post.id)}
                   />
                   <div className="ml-8 flex-1">

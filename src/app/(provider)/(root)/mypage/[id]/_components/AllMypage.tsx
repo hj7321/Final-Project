@@ -121,7 +121,7 @@ export default function AllMypage() {
                   {Users?.data?.nickname}
                 </div>
               </div>
-              <div className="flex flex-col ml-10 md:ml-0  items-center">
+              <div className="flex flex-col ml-10 md:ml-0 items-center">
                 <button
                   className="mb-2   w-[225px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                   onClick={() => setActiveComponent('EditProfile')}
