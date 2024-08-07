@@ -110,8 +110,9 @@ export default function Header() {
     <>
       <header
         className={clsx(
-          'sticky top-0 z-40 flex h-[56px] md:h-[72px] px-[16px] md:px-[120px] py-[16px] border border-grey-100',
-          isAuthPage && 'hidden md:flex'
+          'sticky top-0 z-40 flex h-[56px] md:h-[72px] px-[16px] md:px-[120px] py-[16px] border border-grey-100 bg-white',
+          isAuthPage && 'hidden md:flex',
+          open && 'bg-grey-900 bg-opacity-50'
         )}
       >
         <div className="w-full flex justify-between items-center md:hidden">
