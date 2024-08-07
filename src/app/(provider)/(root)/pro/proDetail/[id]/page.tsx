@@ -9,7 +9,7 @@ import '@uiw/react-md-editor/markdown-editor.css';
 import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
-
+import defaultProfileImg from  '../../../../../../../public/defaultProfileimg.svg'
 interface PostData {
   post_img: string[];
   content: string;
@@ -129,7 +129,7 @@ export default function ProDetail() {
             <div className="flex flex-row md:flex-col">
               <div className="md:h-[150px] md:w-[150px] w-[64px] h-[64px] border-2 rounded-full md:mx-auto mx-2 mt-5">
                 <Image
-                  src={user.profile_img}
+                  src={user.profile_img? user.profile_img : defaultProfileImg}
                   alt="user_profile"
                   className="object-cover h-full w-full rounded-full"
                   width={150}
