@@ -42,7 +42,7 @@ export default function Languages() {
   }, [selectedLanguages]);
 
   return (
-    <div className="w-[170px] h-[575px] px-6 py-8 flex flex-col items-start gap-6 border border-black rounded-[24px] mt-1">
+    <div className="w-[170px] h-[575px] px-6 py-8 flex flex-col items-start gap-6 border border-black rounded-[24px] mt-1 hidden sm:flex">
       <p className="font-bold text-[20px]">언어 선택</p>
 
       <div className="flex flex-col gap-[24px]">

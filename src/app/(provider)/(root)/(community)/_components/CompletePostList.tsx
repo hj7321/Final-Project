@@ -17,7 +17,7 @@ export default function CompletePostList() {
   return (
     <div className="flex gap-[32px] mt-[30px]">
       <Languages />
-      <div className="w-[995px] h-[840px] gap-12 flex flex-col items-start">
+      <div className="w-[995px] gap-12 flex flex-col items-start sm:w-full">
         <Link href="/createPost" className="px-4 py-2 bg-black rounded-md text-white text-base ml-auto">
           질문 작성하기
         </Link>
