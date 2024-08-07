@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditPortfolio from './EditPortfolio';
 import { useParams } from 'next/navigation';
 import type { Portfolio } from '@/types/type';
@@ -9,6 +9,9 @@ import DetailModal from './DetailPortfolio';
 import AddPortfolio from './AddPortFolio';
 import Image from 'next/image';
 import { CodeCategories } from '@/components/dumy';
+import { Confirm, Notify } from 'notiflix';
+import MobileDetailPortfolio from './MobileDetailPortfolio';
+import MobileAddPortfolio from './MobileAddPortfolio';
 
 interface EditProfileProps {
   clickModal: () => void;
@@ -34,6 +37,8 @@ export default function Portfolio() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [eddModal, setEddModal] = useState(false);
   const [detailModal, setDetailModal] = useState(false);
+  const [showTestComponent, setShowTestComponent] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
 
@@ -54,7 +59,6 @@ export default function Portfolio() {
 
   const handleOpenModal = (portfolioId: string) => {
     setSelectedPortfolioId(portfolioId);
-
     setEditModalOpen(true);
   };
 
@@ -63,7 +67,13 @@ export default function Portfolio() {
   };
 
   const openEddmodal = () => {
-    setEddModal(true);
+    const isMdScreen = window.innerWidth >= 768;
+
+    if (isMdScreen) {
+      setEddModal(true);
+    } else {
+      setShowAddModal(true);
+    }
   };
 
   const closeEddmodal = () => {
@@ -72,7 +82,6 @@ export default function Portfolio() {
 
   const openDetailModal = (portfolioId: string) => {
     setSelectedPortfolioId(portfolioId);
-
     setDetailModal(true);
   };
 
@@ -98,15 +107,65 @@ export default function Portfolio() {
   });
 
   const handleDelete = (id: string) => {
-    const confirmed = confirm('정말로 삭제하시겠습니까?');
-    if (confirmed) {
-      try {
-        deleteMutation(id);
-      } catch (error) {
-        console.error('삭제에 실패했습니다.', error);
-      }
+    Confirm.show(
+      '댓글 삭제',
+      '정말로 삭제하시겠습니까?',
+      '예',
+      '아니오',
+      () => {
+        Notify.failure('삭제되었습니다.');
+        try {
+          deleteMutation(id);
+        } catch (error) {
+          console.error('삭제에 실패했습니다.', error);
+        }
+      },
+      () => {
+        Notify.failure('삭제가 되지 않았습니다.');
+      },
+      {}
+    );
+  };
+
+  const handleDetailNavigation = (portfolioId: string) => {
+    setSelectedPortfolioId(portfolioId);
+    const isMdScreen = window.innerWidth >= 768;
+    if (isMdScreen) {
+      openDetailModal(portfolioId);
+    } else {
+      setShowTestComponent(true);
     }
   };
+
+  const handleBack = () => {
+    setShowTestComponent(false);
+  };
+
+  const handleClose = () => {
+    setShowAddModal(false);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && detailModal) {
+        setShowTestComponent(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [detailModal]);
+
+  if (showTestComponent) {
+    return <MobileDetailPortfolio portfolioId={selectedPortfolioId} onBack={handleBack} />;
+  }
+
+  if (showAddModal) {
+    return <MobileAddPortfolio onBack={handleClose} />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center  w-full ">
@@ -144,7 +203,7 @@ export default function Portfolio() {
                         : 'https://via.placeholder.com/150?text=No+Image'
                     }
                     className="w-72 h-40 rounded-lg cursor-pointer lg:hover:scale-110"
-                    onClick={() => openDetailModal(post.id)}
+                    onClick={() => handleDetailNavigation(post.id)}
                   />
                   <div className="ml-8 flex-1">
                     <div className="flex items-center mb-2">
@@ -182,10 +241,6 @@ export default function Portfolio() {
                         포트폴리오 수정
                       </button>
 
-                      {/* <button
-                        onClick={() => handleDelete(post.id)}
-                        className="md:hidden mt-4 p-1 ml-5 w-20 text-base border border-primary-500 text-primary-500 hover:bg-primary-50  rounded"
-                      > */}
                       <Image
                         alt="쓰레기통"
                         src="/trashcan.svg"
@@ -194,7 +249,6 @@ export default function Portfolio() {
                         onClick={() => handleDelete(post.id)}
                         className="md:hidden mt-4 p-1 ml-5 w-8 cursor-pointer "
                       />
-                      {/* </button> */}
 
                       <button
                         onClick={() => handleDelete(post.id)}
