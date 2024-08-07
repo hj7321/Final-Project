@@ -211,8 +211,8 @@ export default function AllMypage() {
             </li>
           </ul>
         </div>
-        <main className="md:flex-1 md:p-8">
-          <h1 className="flex text-2xl font-bold mt-[40px] w-full">{renderComponent()}</h1>
+        <main className="md:flex-1 p-8">
+          <h1 className="flex text-2xl font-bold md:mt-[40px] w-full">{renderComponent()}</h1>
         </main>
       </div>
     </div>
