@@ -28,8 +28,26 @@
   display: none;
 }
 
-
 /* .w-md-editor-preview {
   display: none;
 } */
 
+@media (max-width : 768px) {
+  .w-md-editor-preview {
+    display: none;
+  }
+  .w-md-editor-toolbar {
+    display: none;
+  }
+} 
+
+.md-editor .editor {
+  font-size: 16px; /* 원하는 폰트 크기로 조절 */
+}
+
+.md-editor .preview {
+  font-size: 16px; /* 프리뷰 모드의 폰트 크기 조절 */
+}
+.w-md-editor-text-pre {
+  font-size: 36px;
+}
