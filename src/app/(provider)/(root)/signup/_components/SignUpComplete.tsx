@@ -11,9 +11,8 @@ const webBtnStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] text-[16px
 const mobileBtnStyle = 'w-[140px] h-[37px] border rounded-[8px] py-[8px] px-[16px] text-[14px]';
 
 export default function SignUpComplete() {
-  const { isLogin, userId, userData } = useAuthStore();
+  const { isLogin, userId } = useAuthStore();
   const router = useRouter();
-  const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false);
 
   const handleChangePro = async (isPro: boolean): Promise<void> => {
     if (isLogin && isPro) {
@@ -29,10 +28,6 @@ export default function SignUpComplete() {
     Cookies.remove('returnPage');
     router.replace(redirectPage!);
   };
-
-  useEffect(() => {
-    setIsSmallScreen(window.innerWidth < 640);
-  }, []);
 
   return (
     <section className="flex h-[600px] bg-grey-50">
@@ -52,38 +47,32 @@ export default function SignUpComplete() {
           <h2 className="text-grey-900 text-[18px] md:text-[24px] font-bold">전문가로 활동하시겠어요?</h2>
         </div>
         <div className="flex flex-col gap-[8px]">
-          <div className="flex gap-[16px] justify-center">
-            {isSmallScreen ? (
-              <>
-                <button
-                  className={clsx(mobileBtnStyle, 'bg-primary-500 text-white')}
-                  onClick={() => handleChangePro(true)}
-                >
-                  전문가로 활동
-                </button>
-                <button
-                  className={clsx(mobileBtnStyle, 'bg-white text-primary-500 border border-primary-500')}
-                  onClick={() => handleChangePro(false)}
-                >
-                  일반회원으로 활동
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  className={clsx(webBtnStyle, 'bg-primary-500 text-white')}
-                  onClick={() => handleChangePro(true)}
-                >
-                  전문가로 활동할래요
-                </button>
-                <button
-                  className={clsx(webBtnStyle, 'bg-white text-primary-500 border border-primary-500')}
-                  onClick={() => handleChangePro(false)}
-                >
-                  일반회원으로 활동할래요
-                </button>
-              </>
-            )}
+          <div className="flex">
+            <div className="flex md:hidden gap-[16px] justify-center">
+              <button
+                className={clsx(mobileBtnStyle, 'bg-primary-500 text-white')}
+                onClick={() => handleChangePro(true)}
+              >
+                전문가로 활동
+              </button>
+              <button
+                className={clsx(mobileBtnStyle, 'bg-white text-primary-500 border border-primary-500')}
+                onClick={() => handleChangePro(false)}
+              >
+                일반회원으로 활동
+              </button>
+            </div>
+            <div className="hidden md:flex gap-[16px] justify-center">
+              <button className={clsx(webBtnStyle, 'bg-primary-500 text-white')} onClick={() => handleChangePro(true)}>
+                전문가로 활동할래요
+              </button>
+              <button
+                className={clsx(webBtnStyle, 'bg-white text-primary-500 border border-primary-500')}
+                onClick={() => handleChangePro(false)}
+              >
+                일반회원으로 활동할래요
+              </button>
+            </div>
           </div>
           <h2 className="text-primary-400 text-[10px] md:text-[14px]">
             * 전문가 활동 시, 포트폴리오를 등록하면 매칭율이 높아져요!
