@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
+import defaultProfileImg from  '../../../../../../../../public/defaultProfileimg.svg'
 
 interface PortfolioModalProps {
   portfolio: {
@@ -36,7 +37,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
         <div className='mt-[40px] mx-auto p-4 flex flex-row justify-between'>
           <div>
             <div className='flex flex-row items-center'>
-              <Image src={user.profile_img} alt="프로필이미지" className='w-[64px] h-[64px] bg-gray-700 rounded-full mr-4' width={64} height={64} />
+              <Image src={user.profile_img? user.profile_img : defaultProfileImg} alt="프로필이미지" className='w-[64px] h-[64px] bg-gray-700 rounded-full mr-4' width={64} height={64} />
               <p className='font-semibold text-xl'>{user.nickname}</p>
             </div>
             <div className='mt-[40px]'>
