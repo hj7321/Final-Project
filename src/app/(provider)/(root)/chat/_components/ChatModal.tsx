@@ -136,10 +136,10 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-5 rounded-xl w-1/3 max-w-xl h-5/6">
-        <button onClick={onClose} className="text-black float-right"><Image src="/closeBtnX.svg" alt="닫기버튼" width={20} height={20} /></button>
-        <div className="flex items-center mb-6">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-0 md:p-0">
+      <div className="bg-white md:p-5 md:rounded-xl w-full md:w-1/3 max-w-xl h-full md:h-5/6">
+        <button onClick={onClose} className="text-black float-right mr-2 md:mr-0"><Image src="/closeBtnX.svg" alt="닫기버튼" width={20} height={20} /></button>
+        <div className="flex items-center mb-6 ml-1 md:ml-0">
           {otherUser && (
             <>
               <img src={otherUser.profile_img || '/defaultProfileimg.svg'} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
@@ -151,7 +151,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
             </>
           )}
         </div>
-        <div className="flex flex-col h-5/6 justify-between border border-gray-300 rounded-xl bg-gray-100 overflow-hidden">
+        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-gray-300 md:rounded-xl bg-gray-100 overflow-hidden">
           <div className="overflow-y-scroll mb-4 p-4">
             {messages.map((message) => (
               <div
@@ -175,7 +175,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
             />
             <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
               <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
-              보내기
+              <div className='hidden md:block'>보내기</div>
             </button>
           </form>
         </div>

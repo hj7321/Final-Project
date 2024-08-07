@@ -65,7 +65,8 @@ export const validateForms = (form: string, idx: number): string => {
       const year = parseInt(form.substring(0, 4), 10);
       const month = parseInt(form.substring(4, 6), 10);
       const day = parseInt(form.substring(6, 8), 10);
-      if (year < 1900 || year > currentYear - 15) return '연도(YYYY)를 정확히 입력해주세요.';
+      if (year < 1900) return '연도(YYYY)를 정확히 입력해주세요.';
+      if (year > currentYear - 14) return '만 14세 이상만 가입이 가능합니다.';
       if (month < 1 || month > 12) return '월(MM)을 정확히 입력해주세요.';
 
       const daysInMonth = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

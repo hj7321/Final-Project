@@ -21,7 +21,7 @@ const mobileBtnStyle = 'w-[64px] h-[64px] rounded-full flex justify-center items
 export default function LoginPage() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [inputValues, setInputValue] = useState<string[]>(Array(inputs.length).fill(''));
+  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function LoginPage() {
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
-    setInputValue(newValues);
+    setInputValues(newValues);
   };
 
   const handleTogglePassword = (): void => {

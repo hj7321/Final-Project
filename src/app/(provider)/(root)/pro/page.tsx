@@ -101,16 +101,16 @@ export default function ProMainPage() {
   };
   return (
     <div className="mx-auto flex-col justify-center items-center">
-      <div className="flex flex-row justify-end mt-[20px] w-[85%]">
+      <div className="flex flex-row justify-end mt-[15px] md:w-[85%] w-full">
         {!isPro === true ? (
-          <div className="mt-5"></div>
+          <div className=""></div>
         ) : (
           <button
-            className="bg-primary-500 hover:bg-primary-600 px-5 py-3 mt-5 flex flex-row justify-center items-center rounded-full"
+            className="bg-primary-500 hover:bg-primary-600 md:px-5 md:py-3 md:mt-3 md:mr-[0px] px-3 py-2 mt-1 mr-4 flex flex-row justify-center items-center rounded-full"
             onClick={handleNavigation}
           >
-            <div className="">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className='md:w-[24px] md:h-[24px] w-[16px] h-[16px]'>
+              <svg width="full" height="full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12.2536 6.47487L9.77877 8.94975L5.17441 13.5541C4.95175 13.7768 4.81748 14.0727 4.79653 14.3869L4.5743 17.7204C4.52198 18.5052 5.1731 19.1563 5.95789 19.104L9.29139 18.8817C9.60559 18.8608 9.9015 18.7265 10.1242 18.5039L14.7285 13.8995L17.2034 11.4246M12.2536 6.47487L13.8093 4.91924C14.317 4.41156 15.1401 4.41156 15.6478 4.91924L18.759 8.03051C19.2667 8.53819 19.2667 9.3613 18.759 9.86899L17.2034 11.4246M12.2536 6.47487L17.2034 11.4246"
                   stroke="white"
@@ -122,28 +122,28 @@ export default function ProMainPage() {
                 />
               </svg>
             </div>
-            <div className="text-white mx-[2px] mt-[2.5px]">등록하기</div>
+            <div className="text-white mx-[2px] md:text-base text-[12px]">등록하기</div>
           </button>
         )}
       </div>
       {/* 언어별 카테고리 영역 */}
-      <div className="mt-[30px] mx-auto overflow-hidden">
+      <div className="md:mt-[30px] mt-[20px] mx-auto overflow-hidden">
         <ul className="flex flex-row justify-start items-center max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
           {CodeCategories.map((lang) => (
             <li
-              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[80px] sm:w-[100px] md:w-[120px] lg:w-auto"
+              className="md:mx-[20px] mx-[13px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[50px] sm:w-[100px] md:w-[120px] lg:w-auto"
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
               <Image
-                className="xl:w-[80px] xl:h-[80px] w-[40px] h-[40px] rounded-full mb-[10px] mx-auto"
+                className="xl:w-[80px] xl:h-[80px] w-[30px] h-[30px] rounded-full mb-[10px] mx-auto"
                 src={lang.image}
                 width={80}
                 height={80}
                 alt={lang.name}
               />
               <p
-                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
+                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'} md:text-base text-[12px]`}
               >
                 {lang.name}
               </p>
@@ -173,10 +173,10 @@ export default function ProMainPage() {
 
 
       {/* 의뢰 서비스 리스트 */}
-      <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] ml-[22px] lg:justify-start">
+      <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center lg:justify-start">
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
-            <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1">
+            <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1 mx-auto">
               <div className="lg:w-[300px] lg:h-[300px] w-[140px] h-[220px] rounded-lg xl:m-[30px] m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <Image
@@ -213,6 +213,7 @@ export default function ProMainPage() {
           <p>Loading...</p>
         )}
       </div>
+      
     </div>
   );
 }

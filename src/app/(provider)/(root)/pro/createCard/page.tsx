@@ -52,9 +52,9 @@ export default function CreateCard() {
   };
 
   return (
-    <div className="max-w-[1240px] mx-auto my-6">
-      <div className="mb-5 cursor-pointer group max-w-[65px] max-h-[65px]" onClick={handleNavigation}>
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div className="md:max-w-[1240px] w-full p-2 mx-auto md:my-6 my-2">
+      <div className="md:mb-5 mb-3 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]" onClick={handleNavigation}>
+        <svg width="full" height="full" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect
             x="0.5"
             y="0.5"
@@ -71,7 +71,7 @@ export default function CreateCard() {
           />
         </svg>
       </div>
-      <h1 className="mb-[20px] text-2xl">전문가 의뢰 등록하기</h1>
+      <h1 className="md:mb-[20px] mb-[10px] md:text-2xl text-base">전문가 의뢰 등록하기</h1>
       <TitleInput title={title} setTitle={setTitle} />
       <PriceInput price={price} setPrice={setPrice} />
       <LanguageSelect language={language} handleLanguageSelect={handleLanguageSelect} />
