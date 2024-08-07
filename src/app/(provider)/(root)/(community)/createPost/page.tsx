@@ -134,7 +134,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="flex m-auto max-w-[80%] justify-center">
+    <div className="flex flex-col m-auto mt-10 max-w-[80%] justify-center">
       <h1 className="flex text-2xl font-bold mb-4">게시글 등록하기</h1>
       <div className="mt-10 space-y-4">
         <div className="relative rounded-md">

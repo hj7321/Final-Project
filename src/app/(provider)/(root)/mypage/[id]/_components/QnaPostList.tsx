@@ -43,10 +43,10 @@ export default function QnaPostList() {
   }
 
   return (
-    <section className="container mx-auto px-4 py-8 min-h-screen">
+    <section className="container mx-auto py-8 min-h-screen">
       <div className="space-y-4 ">
         {data?.slice(0, 10).map((post) => (
-          <div key={post.id} className="bg-white p-4 rounded-2xl">
+          <div key={post.id} className="bg-white rounded-2xl">
             <div className="flex flex-col md:flex-row">
               {post.post_img && post.post_img.length > 0 && (
                 <img src={post.post_img[0]} className="w-72 h-40 ml-6 mb-3 md:ml-0 md:mb-0 rounded-lg " />
