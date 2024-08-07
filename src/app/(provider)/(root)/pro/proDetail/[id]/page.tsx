@@ -123,8 +123,8 @@ export default function ProDetail() {
           </svg>
         </button>
       </div>
-      <div className="flex md:flex-row flex-col-reverse justify-between">
-        <div className="md:h-[514px] md:w-[390px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col">
+      <div className="flex md:flex-row flex-col-reverse justify-between items-center">
+        <div className="md:h-[514px] md:w-[390px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
             <div className="flex flex-row md:flex-col">
               <div className="md:h-[150px] md:w-[150px] w-[64px] h-[64px] border-2 rounded-full md:mx-auto mx-2 mt-5">
