@@ -51,9 +51,9 @@ export default function Home() {
   return (
     <main className="snap-y scroll-smooth">
       {/* 메인베너 */}
-      <section className="w-full h-[calc(100vh-75px)] mb-64 md:mb-64">
+      <section className="w-full md:h-[calc(100vh-75px)] mb-16 md:mb-64">
         <div className="block md:hidden w-full h-auto bg-cover bg-center">
-          <img src="/mobileMainBanner.svg" alt="모바일 메인베너" className="w-full h-full object-cover" />
+          <img src="/mobileMainBanner.svg" alt="모바일 메인베너" className="w-full h-auto object-cover" />
         </div>
         <div className="hidden md:block w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/mainBanner.svg')" }}></div>
       </section>
