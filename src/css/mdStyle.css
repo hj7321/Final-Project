@@ -28,8 +28,15 @@
   display: none;
 }
 
-
 /* .w-md-editor-preview {
   display: none;
 } */
 
+@media (max-width : 768px) {
+  .w-md-editor-preview {
+    display: none;
+  }
+  .w-md-editor-toolbar {
+    display: none;
+  }
+} 

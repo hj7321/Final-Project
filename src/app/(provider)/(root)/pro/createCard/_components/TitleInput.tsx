@@ -8,7 +8,7 @@ export default function TitleInput({ title, setTitle}: TitleInputProps) {
     <div className="mb-[20px]">
       <input
         type="text"
-        className="w-full border-2 p-4 rounded-md border-slate-400"
+        className="w-full border-2 md:p-4 p-3 rounded-md border-slate-400 md:text-base text-sm"
         placeholder="제목을 입력해주세요."
         value={title}
         onChange={(e) => setTitle(e.target.value)}

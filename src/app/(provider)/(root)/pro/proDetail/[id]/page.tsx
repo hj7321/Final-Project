@@ -113,6 +113,7 @@ export default function ProDetail() {
   return (
     <div className="max-w-[1280px] mx-auto p-4">
       <div>
+        <button onClick={() => router.push('/pro')}>
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="16.25" y="16.25" width="31.5" height="31.5" rx="15.75" stroke="#9FA8B2" stroke-width="0.5" />
           <path
@@ -120,6 +121,7 @@ export default function ProDetail() {
             fill="#828F9B"
           />
         </svg>
+        </button>
       </div>
       <div className="flex flex-row justify-between">
         <div className="h-[514px] w-[390px] border-2 rounded-xl flex flex-col">
