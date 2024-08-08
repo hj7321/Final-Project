@@ -131,7 +131,7 @@ export default function ProMainPage() {
         <ul className="flex flex-row justify-start items-center max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
           {CodeCategories.map((lang) => (
             <li
-              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[50px] sm:w-[100px] md:w-[120px] lg:w-auto"
+              className="md:mx-[10px] mx-[5px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[80px] sm:w-[100px] md:w-[120px] lg:w-auto"
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
@@ -158,10 +158,10 @@ export default function ProMainPage() {
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1 mx-auto">
-              <div className="lg:w-[300px] lg:h-[300px] w-[140px] h-[220px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
+              <div className="lg:w-[300px] lg:h-[300px] w-[160px] h-[220px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <Image
-                    className="md:w-[280px] w-[125px] xl:h-[160px] h-[130px] rounded-lg object-cover mt-2 mx-auto"
+                    className="md:w-[280px] w-[140px] xl:h-[160px] h-[130px] rounded-lg object-cover mt-2 mx-auto"
                     src={post.post_img[0]}
                     width={300}
                     height={160}
