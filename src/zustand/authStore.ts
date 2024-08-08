@@ -1,6 +1,7 @@
 import { Users } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import { UserMetadata } from '@supabase/supabase-js';
+// import { useQuery } from '@tanstack/react-query';
 import { create, StoreApi, UseBoundStore } from 'zustand';
 
 // 전역 상태
@@ -48,6 +49,14 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
     if (session) {
       console.log('동작함');
       const { data } = await supabase.from('Users').select('is_pro').eq('id', session.user.id);
+      // userId에 맞는 데이터 가져오기
+      // const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
+      // const { data: userData } = useQuery({
+      //   queryKey: [session.user.id],
+      //   queryFn: async () => {
+      //     const data = await supabase.from('Users').select('*').eq('id', session.user.id!).maybeSingle();
+      //   }
+      // });
 
       set({
         isLoading: false,
