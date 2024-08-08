@@ -202,7 +202,7 @@ export default function Portfolio() {
                         ? post.portfolio_img[0]
                         : 'https://via.placeholder.com/150?text=No+Image'
                     }
-                    className="md:w-72 md:h-40 w-[64px] h-[64px] rounded-lg cursor-pointer lg:hover:scale-110"
+                    className="md:w-72 md:h-40 w-[64px] h-[64px] rounded-lg cursor-pointer transition-transform duration-200 md:hover:scale-110 delay-100"
                     onClick={() => handleDetailNavigation(post.id)}
                   />
                   <div className="ml-8 flex-1">
@@ -215,7 +215,7 @@ export default function Portfolio() {
                         alt="d"
                         width={12}
                         height={12}
-                        className="w-5 h-5"
+                        className="w-5 h-5 "
                       />
                       <p className="text-sm font-extralight text-gray-500 ml-2">{post.lang_category}</p>
                     </div>
