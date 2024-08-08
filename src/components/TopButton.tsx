@@ -28,7 +28,7 @@ export default function TopButton() {
     <button
       className={clsx(
         isVisible ? 'flex' : 'hidden',
-        'fixed bottom-[20px] right-[20px] w-[60px] h-[60px] bg-primary-500 hover:bg-primary-700 text-white rounded-full justify-center items-center font-bold text-[30px]'
+        'fixed bottom-[20px] right-[20px] w-[45px] h-[45px] md:w-[60px] md:h-[60px] bg-primary-500 hover:bg-primary-700 text-white rounded-full justify-center items-center font-bold text-[30px]'
       )}
       onClick={scrollToTop}
     >
