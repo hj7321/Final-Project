@@ -192,16 +192,16 @@ const categories = ['Q&A', '인사이트', '전문가 의뢰'];
 
 
 export const CodeCategories = [
-  { id: 1, name: 'HTML/CSS', image: '/htmlCss_light.svg', darkImage: '/htmlCss_dark.svg'},
-  { id: 2, name: 'JavaScript', image: '/javascript_light.svg', darkImage: '/javascript_dark.svg' },
-  { id: 3, name: 'Java', image: '/java_light.svg', darkImage: '/java_dark.svg' },
-  { id: 4, name: 'Python', image: '/python_light.svg', darkImage: '/python_dark.svg' },
-  { id: 5, name: 'C/C++/C#', image: '/c_light.svg', darkImage: '/c_dark.svg' },
-  { id: 6, name: 'TypeScript', image: '/typescript_light.svg', darkImage: '/typescript_dark.svg' },
-  { id: 7, name: 'React', image: '/react_light.svg', darkImage: '/react_dark.svg' },
-  { id: 8, name: 'Android/IOS', image: '/androidIos_light.svg', darkImage: '/androidIos_dark.svg' },
-  { id: 9, name: 'Next.JS', image: '/next_light.svg', darkImage: '/next_dark.svg' },
-  { id: 10, name: 'Git/Github', image: '/git_light.svg', darkImage: '/git_dark.svg' }
+  { id: 1, name: 'HTML/CSS', image: '/htmlCss_light.svg', darkImage: '/htmlCss_dark.svg', categoryImage : '/category_HTMLCSS.svg'},
+  { id: 2, name: 'JavaScript', image: '/javascript_light.svg', darkImage: '/javascript_dark.svg', categoryImage : '/category_Javascript.svg' },
+  { id: 3, name: 'Java', image: '/java_light.svg', darkImage: '/java_dark.svg', categoryImage : '/category_Java.svg' },
+  { id: 4, name: 'Python', image: '/python_light.svg', darkImage: '/python_dark.svg', categoryImage : '/category_Python.svg' },
+  { id: 5, name: 'C/C++/C#', image: '/c_light.svg', darkImage: '/c_dark.svg', categoryImage : '/category_C.svg' },
+  { id: 6, name: 'TypeScript', image: '/typescript_light.svg', darkImage: '/typescript_dark.svg', categoryImage : '/category_Typescript.svg' },
+  { id: 7, name: 'React', image: '/react_light.svg', darkImage: '/react_dark.svg', categoryImage : '/category_React.svg' },
+  { id: 8, name: 'Android/IOS', image: '/androidIos_light.svg', darkImage: '/androidIos_dark.svg', categoryImage : '/category_mobile.svg' },
+  { id: 9, name: 'Next.JS', image: '/next_light.svg', darkImage: '/next_dark.svg', categoryImage : '/category_Next.svg' },
+  { id: 10, name: 'Git/Github', image: '/git_light.svg', darkImage: '/git_dark.svg', categoryImage : '/category_Git.svg' }
 ];
 
 const titles = [

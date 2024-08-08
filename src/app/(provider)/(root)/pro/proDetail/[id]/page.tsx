@@ -9,6 +9,7 @@ import '@uiw/react-md-editor/markdown-editor.css';
 import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
+import defaultProfileImg from '../../../../../../../public/defaultProfileimg.svg';
 
 interface PostData {
   post_img: string[];
@@ -41,7 +42,6 @@ export default function ProDetail() {
   const { id: paramId } = useParams();
   const id = paramId as string; // 추가: id를 문자열로 변환
   const router = useRouter();
-
   const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
   const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
@@ -53,7 +53,6 @@ export default function ProDetail() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log('fetch', data);
         setPost(data.postData);
         setUser(data.userData);
         setPortfolio(data.portfolioData);
@@ -112,10 +111,10 @@ export default function ProDetail() {
 
   return (
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
-      <div className='w-[60px] h-[60px] md:w-[120px] md:h-[120px]'>
+      <div className="w-[60px] h-[60px] md:w-[120px] md:h-[120px]">
         <button onClick={() => router.push('/pro')}>
-          <svg width="full" height="full" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="16.25" y="16.25" width="31.5" height="31.5" rx="15.75" stroke="#9FA8B2" stroke-width="0.5" />
+          <svg width="100%" height="100%" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="16.25" y="16.25" width="31.5" height="31.5" rx="15.75" stroke="#9FA8B2" strokeWidth="0.5" />
             <path
               d="M36 31.75C36.1381 31.75 36.25 31.8619 36.25 32C36.25 32.1381 36.1381 32.25 36 32.25V31.75ZM27.8232 32.1768C27.7256 32.0791 27.7256 31.9209 27.8232 31.8232L29.4142 30.2322C29.5118 30.1346 29.6701 30.1346 29.7678 30.2322C29.8654 30.3299 29.8654 30.4882 29.7678 30.5858L28.3536 32L29.7678 33.4142C29.8654 33.5118 29.8654 33.6701 29.7678 33.7678C29.6701 33.8654 29.5118 33.8654 29.4142 33.7678L27.8232 32.1768ZM36 32.25H28V31.75H36V32.25Z"
               fill="#828F9B"
@@ -123,27 +122,28 @@ export default function ProDetail() {
           </svg>
         </button>
       </div>
-      <div className="flex md:flex-row flex-col-reverse justify-between">
-        <div className="md:h-[514px] md:w-[390px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col">
+      <div className="flex md:flex-row flex-col-reverse justify-between items-center">
+        <div className="md:h-[514px] md:w-[390px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
             <div className="flex flex-row md:flex-col">
               <div className="md:h-[150px] md:w-[150px] w-[64px] h-[64px] border-2 rounded-full md:mx-auto mx-2 mt-5">
                 <Image
-                  src={user.profile_img}
+                  src={user.profile_img ? user.profile_img : defaultProfileImg}
                   alt="user_profile"
                   className="object-cover h-full w-full rounded-full"
                   width={150}
                   height={150}
+                  priority
                 />
               </div>
               <div className="md:mx-auto mx-2 mt-4 flex-col md:justify-center justify-start md:text-center text-start">
-                <p className="md:text-2xl text-lg md:pl-[0px] pl-1 md:mb-[0px]">{user.nickname}</p>
+                <p className="md:text-2xl text-base md:pl-[0px] pl-1 md:mb-[0px]">{user.nickname}</p>
                 <div className="mx-auto flex flex-col md:items-center item-start justify-center font-thin md:mt-5">
-                  <div className="flex flex-row ">
+                  <div className="flex flex-row mt-1 md:mt-[0px]">
                     <div className="md:w-[25px] md:h-[24px] w-[21px] h-[21px]">
                       <svg
-                        width="full"
-                        height="full"
+                        width="100%"
+                        height="100%"
                         viewBox="0 0 25 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -152,13 +152,13 @@ export default function ProDetail() {
                         <path d="M12.5 6V12L16.5 13.5" stroke="#687582" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
-                    <p className="md:text-base text-sm">연락 가능 시간 : AM 9 - PM 6</p>
+                    <p className="md:text-base text-xs text-grey-500">연락 가능 시간 : AM 9 - PM 6</p>
                   </div>
                   <div className="flex flex-row">
                     <div className="md:w-[25px] md:h-[24px] w-[21px] h-[20px]">
                       <svg
-                        width="full"
-                        height="full"
+                        width="100%"
+                        height="100%"
                         viewBox="0 0 25 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -181,19 +181,17 @@ export default function ProDetail() {
                         />
                       </svg>
                     </div>
-                    <p className="md:text-base text-sm">평균 응답 시간 : 30분</p>
+                    <p className="md:text-base text-xs text-grey-500">평균 응답 시간 : 30분</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="mx-auto md:mt-5 my-3">
-              <p className="md:w-[30ch] w-full md:min-h-[50px] md:line-clamp-3 md:text-base text-sm line-clamp-2">
-                유저에 대한 한 줄 소개글이 들어감. 유저 테이블에 필요할듯 유저에 대한 한 줄 소개글이 들어감. 유저
-                테이블에 필요할듯 유저에 대한 한 줄 소개글이 들어감. 유저 테이블에 필요할듯 유저에 대한 한 줄 소개글이
-                들어감. 유저 테이블에 필요할듯
+              <p className="md:w-[30ch] w-full md:min-h-[50px] md:line-clamp-3 md:text-base text-xs text-grey-500 line-clamp-2">
+                프로젝트에 대한 요구사항을 함께 논의하고, 최적의 솔루션을 제공하겠습니다. 언제든지 문의해 주세요!
               </p>
             </div>
-            <div className="mx-auto md:w-[85%] w-full md:mt-5 flex flex-row justify-between items-center md:flex-col">
+            <div className="mx-auto md:w-[85%] w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
               <button
                 className="md:w-full md:h-full w-[160px] h-[36px] bg-primary-500 hover:bg-primary-600 py-2  rounded-xl flex flex-row justify-center items-center"
                 onClick={handleInquiry}
@@ -209,22 +207,28 @@ export default function ProDetail() {
                     />
                   </svg>
                 </span>
-                <span className="text-white">문의하기</span>
+                <span className="text-white md:text-base text-sm">문의하기</span>
               </button>
               <button className="md:w-full md:h-full w-[160px] h-[36px] hover:bg-primary-50 border-primary-500 border py-2 rounded-xl md:mt-2 flex flex-row justify-center items-center">
                 <span>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
-                      d="M4 8.5C3.72386 8.5 3.5 8.72386 3.5 9C3.5 9.27614 3.72386 9.5 4 9.5L4 8.5ZM20.3536 9.35355C20.5488 9.15829 20.5488 8.84171 20.3536 8.64645L17.1716 5.46447C16.9763 5.26921 16.6597 5.26921 16.4645 5.46447C16.2692 5.65973 16.2692 5.97631 16.4645 6.17157L19.2929 9L16.4645 11.8284C16.2692 12.0237 16.2692 12.3403 16.4645 12.5355C16.6597 12.7308 16.9763 12.7308 17.1716 12.5355L20.3536 9.35355ZM4 9.5L20 9.5L20 8.5L4 8.5L4 9.5Z"
-                      fill="#253CE5"
+                      d="M8.32031 14.4888V15.7877C8.32031 15.9271 8.43335 16.0402 8.57278 16.0402H18.3448"
+                      stroke="#253CE5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
+                    <circle cx="9.42245" cy="17.9488" r="1.22323" stroke="#253CE5" />
+                    <circle cx="17.2389" cy="17.9488" r="1.22323" stroke="#253CE5" />
                     <path
-                      d="M20 14.5C20.2761 14.5 20.5 14.7239 20.5 15C20.5 15.2761 20.2761 15.5 20 15.5L20 14.5ZM3.64645 15.3536C3.45119 15.1583 3.45119 14.8417 3.64645 14.6464L6.82843 11.4645C7.02369 11.2692 7.34027 11.2692 7.53553 11.4645C7.7308 11.6597 7.7308 11.9763 7.53553 12.1716L4.70711 15L7.53553 17.8284C7.7308 18.0237 7.7308 18.3403 7.53553 18.5355C7.34027 18.7308 7.02369 18.7308 6.82843 18.5355L3.64645 15.3536ZM20 15.5L4 15.5L4 14.5L20 14.5L20 15.5Z"
-                      fill="#253CE5"
+                      d="M4 5H5.94401C6.06306 5 6.16593 5.08316 6.19087 5.19957L6.88789 8.45232M6.88789 8.45232L8.17673 14.4669C8.20168 14.5833 8.30455 14.6665 8.4236 14.6665H18.3753C18.493 14.6665 18.5951 14.5851 18.6214 14.4704L19.9292 8.76117C19.9655 8.60307 19.8453 8.45232 19.6832 8.45232H6.88789Z"
+                      stroke="#253CE5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                   </svg>
                 </span>
-                <span className="text-primary-500">구매하기</span>
+                <span className="text-primary-500 md:text-base text-sm">구매하기</span>
               </button>
             </div>
           </div>
@@ -236,6 +240,7 @@ export default function ProDetail() {
             className="w-full h-full object-cover rounded-xl"
             height={514}
             width={810}
+            priority
           />
         </div>
       </div>
@@ -244,7 +249,7 @@ export default function ProDetail() {
           <ul className="w-[85%] md:w-auto flex justify-between md:space-x-4">
             <li
               id="service"
-              className={`md:text-lg text-base ${
+              className={`md:text-base text-sm ${
                 activeTab === 'service' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
               }`}
               onClick={(e) => {
@@ -256,7 +261,7 @@ export default function ProDetail() {
             </li>
             <li
               id="portfolio"
-              className={`md:text-lg text-base ${
+              className={`md:text-base text-sm ${
                 activeTab === 'portfolio'
                   ? 'text-primary-500 border-b-2 border-primary-500 font-bold '
                   : 'text-gray-500'
@@ -270,7 +275,7 @@ export default function ProDetail() {
             </li>
             <li
               id="reviews"
-              className={`md:text-lg text-base ${
+              className={`md:text-base text-sm ${
                 activeTab === 'reviews' ? 'text-primary-500 border-b-2 border-primary-500 font-bold ' : 'text-gray-500'
               }`}
               onClick={(e) => {
@@ -284,14 +289,14 @@ export default function ProDetail() {
         </div>
         <div>
           <div id="section1" className="p-2 md:my-2">
-            <h1 className="md:text-2xl text-xl mb-3 ">서비스 정보</h1>
-            <div data-color-mode="light" className="text-xs">
-              <MDEditor.Markdown source={post.content} style={{fontSize:'12px'}}/>
+            <h1 className="md:text-2xl text-base mb-3 ">서비스 정보</h1>
+            <div data-color-mode="light">
+              <MDEditor.Markdown source={post.content} style={{ fontSize:'14px' }} />
             </div>
           </div>
 
           <div id="section2" className="p-2 my-4">
-            <h1 className="md:text-2xl text-xl my-3">포트폴리오</h1>
+            <h1 className="md:text-2xl text-base my-3">포트폴리오</h1>
             <div className="mt-4 flex flex-row md:justify-start justify-center flex-wrap">
               {portfolio.length === 0 ? (
                 <div>
@@ -311,14 +316,14 @@ export default function ProDetail() {
                         className="md:w-full md:h-full w-[64px] h-[64px] rounded-xl object-cover"
                       />
                     </div>
-                    <div className='ml-3'>
-                      <div className="flex flex-row justify-start items-center md:mt-3 text-xs">
+                    <div className="ml-3">
+                      <div className="flex flex-row justify-start items-center md:mt-3 text-xs text-grey-600">
                         <p>{item.lang_category}</p>
                       </div>
                       <div className="md:my-2 my-1">
                         <p className="font-bold md:text-lg text-sm line-clamp-1">{item.title}</p>
                       </div>
-                      <div className="md:text-xs text-[10px]">
+                      <div className="md:text-xs text-[10px] text-grey-600">
                         <p>
                           {item.start_date} ~ {item.end_date}
                         </p>
@@ -331,49 +336,52 @@ export default function ProDetail() {
           </div>
 
           <div id="section3" className="p-2 my-4">
-            <h1 className="text-2xl">리뷰</h1>
+            <h1 className="md:text-2xl text-base">리뷰</h1>
             <div className="mt-4 flex flex-col justify-center items-center">
-              <div className="mx-3 border border-slate-400 w-full md:p-4 p-3 rounded-xl mb-3">
-                <div className='flex flex-row'>
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
+
+              <div className="mx-3 border border-slate-400 w-full flex flex-col justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+                <div className="flex flex-row">
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
                 </div>
                 <div className="line-clamp-1 md:my-2 my-1">
-                  <p className="md:text-xl font-medium text-sm line-clamp-1">리뷰 내용 입니다 !</p>
+                  <p className="md:text-xl text-xs line-clamp-1">리뷰 내용 입니다 !</p>
                 </div>
                 <div className="flex flex-row text-grey-400">
                   <div>
-                    <p className='md:text-base text-xs'>작성자 : 코듀</p>
+                    <p className="md:text-base text-[10px]">작성자 : 코듀</p>
                   </div>
-                  <div className="mx-2 md:text-base text-xs ">
+                  <div className="mx-2 md:text-base text-[10px] ">
                     <p>작성일 : 2024.08.01</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mx-3 border border-slate-400 w-full md:p-4 p-3 rounded-xl mb-3">
-                <div className='flex flex-row'>
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
-                  <Image src='/star.svg' alt='star' width={20} height={20} />
+
+              <div className="mx-3 border border-slate-400 w-full h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+                <div className="flex flex-row">
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
+                  <Image src="/star.svg" alt="star" width={16} height={16} priority />
                 </div>
                 <div className="line-clamp-1 md:my-2 my-1">
-                  <p className="md:text-xl font-medium text-sm line-clamp-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident aliquam error itaque sunt, nobis numquam illo soluta qui dolore harum dicta quod dolorem, labore veniam autem id eum. Facilis, odit?</p>
+                  <p className="md:text-xl text-xs line-clamp-2">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste maiores inventore voluptas non, officia est consectetur iusto dignissimos! Eligendi quisquam est numquam, libero ad saepe! Neque quae doloribus suscipit architecto.</p>
                 </div>
                 <div className="flex flex-row text-grey-400">
                   <div>
-                    <p className='md:text-base text-xs'>작성자 : 코듀</p>
+                    <p className="md:text-base text-[10px]">작성자 : 코듀</p>
                   </div>
-                  <div className="mx-2 md:text-base text-xs ">
+                  <div className="mx-2 md:text-base text-[10px] ">
                     <p>작성일 : 2024.08.01</p>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
