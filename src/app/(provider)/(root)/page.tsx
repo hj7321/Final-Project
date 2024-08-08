@@ -67,21 +67,21 @@ export default function Home() {
         <div className="bg-white py-4 flex-shrink-0">
           <div className="container mx-auto px-4 md:px-16 h-full">
             <h2 className="text-xl font-bold mb-4">언어별 카테고리</h2>
-            <div className="flex flex-wrap justify-center md:justify-between h-full items-center">
+            <div className="flex md:justify-between items-center gap-6 md:gap-4 overflow-x-auto">
               {CodeCategories.slice(0, 10).map((category) => (
                 <Link
                   href={`/search?query=${category.name}`}
                   key={category.id}
-                  className="flex flex-col items-center w-1/5 mb-4 md:w-auto"
+                  className="flex flex-col items-center mb-4 md:w-auto items-start"
                 >
                   <Image
-                    src={category.image}
+                    src={category.categoryImage}
                     alt={category.name}
                     width={64}
                     height={64}
-                    className="w-12 h-12 rounded-full"
+                    className="min-w-16 min-h-16 md:w-20 md:h-20"
                   />
-                  <span className="mt-2 text-black text-normal text-sm md:text-base">{category.name}</span>
+                  <span className="mt-2 text-black text-xs md:text-sm">{category.name}</span>
                 </Link>
               ))}
             </div>
