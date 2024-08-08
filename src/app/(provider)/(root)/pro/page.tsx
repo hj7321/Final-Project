@@ -25,16 +25,16 @@ export default function ProMainPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
   const { isPro } = useAuthStore();
-
-
+  const [hasMore, setHasMore] = useState(true)
 
   const fetchData = useCallback(async (page: number, languages: string[] = []) => {
+    setLoading(true);
     try {
       const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
       const url = `/api/proMain?page=${page}${langQuery}`;
       const response = await fetch(url);
       const data = await response.json();
-
+  
       if (data && Array.isArray(data)) {
         if (page === 0) {
           setPosts(data);
@@ -43,14 +43,19 @@ export default function ProMainPage() {
           setPosts((prevPosts) => [...prevPosts, ...data]);
           setFilteredPosts((prevPosts) => [...prevPosts, ...data]);
         }
+        setHasMore(data.length === 10); 
       } else {
-        console.error('data fetch error');
+        console.error('Data fetch error');
+        setHasMore(false);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching data:', error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
     }
   }, []);
-
+  
   useEffect(() => {
     fetchData(page, selectedLanguages);
   }, [page, selectedLanguages]);
@@ -81,7 +86,7 @@ export default function ProMainPage() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading]);
+  }, [loading, setHasMore]);
 
   const handleLanguageFilter = (lang: string) => {
     const newSelectedLanguages = selectedLanguages.includes(lang)
