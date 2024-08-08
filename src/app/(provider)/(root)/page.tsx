@@ -47,6 +47,10 @@ export default function Home() {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
     return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
   };
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
 
   return (
     <main className="snap-y scroll-smooth">
@@ -140,14 +144,16 @@ export default function Home() {
               {`더보기 >`}
             </Link>
           </div>
-          <div className="flex overflow-x-auto md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="flex overflow-x-auto md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
             {expertPosts.slice(0, 8).map((expert) => (
-              <div key={expert.id} className="bg-white py-4 px-2 flex-shrink-0 w-64 md:w-auto flex flex-col items-start">
+              <div key={expert.id} className="bg-white py-4 px-3 flex-shrink-0 w-64 md:w-auto flex flex-col items-start border border-grey-100 rounded-xl">
                 <Link href={`/pro/proDetail/${expert.id}`}>
                   <img
                     src={expert.post_img[0]}
                     alt={expert.title}
-                    className="w-full h-36 rounded-md object-cover mb-4"
+                    width={20}
+                    height={20}
+                    className="w-screen h-48 rounded-md object-cover mb-4"
                   />
                   <div className="flex items-center mb-2">
                     <Image
@@ -159,8 +165,8 @@ export default function Home() {
                     />
                     <span className="text-gray-400 font-extralight text-xs">{expert.lang_category[0]}</span>
                   </div>
-                  <h3 className="font-bold text-sm">{expert.title}</h3>
-                  <h3 className="text-sm mt-1">{expert.price}원</h3>
+                  <h3 className="font-light text-sm">{truncateText(expert.title , 22)}</h3>
+                  <h3 className="text-md font-bold mt-2">{expert.price}원</h3>
                 </Link>
               </div>
             ))}
