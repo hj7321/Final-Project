@@ -6,6 +6,7 @@ import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
 import DescriptionInput from '../../pro/createCard/_components/DescriptionInput';
+import { CodeCategories } from '@/components/dumy';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -175,29 +176,28 @@ const CreatePost = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">언어 선택 </label>
           <div className="flex flex-wrap gap-2">
-            {[
-              'HTML/CSS',
-              'JavaScript',
-              'Java',
-              'Python',
-              'C/C++/C#',
-              'TypeScript',
-              'React',
-              'Android/iOS',
-              'Next.js',
-              'Git/GitHub'
-            ].map((language) => (
-              <div key={language} className="flex items-center">
+            {CodeCategories.map((lang, index) => (
+              <div className="flex justify-start items-center mx-5 my-3 w-[100px]" key={index}>
                 <input
                   type="checkbox"
-                  id={language}
-                  name="language"
-                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                  checked={selectedLanguage.includes(language)}
-                  onChange={() => handleLanguageChange(language)}
+                  name={lang.name}
+                  id={lang.name}
+                  className="hidden"
+                  checked={selectedLanguage.includes(lang.name)}
+                  onChange={() => handleLanguageChange(lang.name)}
                 />
-                <label htmlFor={language} className="ml-2 block text-sm text-gray-900">
-                  {language}
+                <label
+                  htmlFor={lang.name}
+                  className={`cursor-pointer flex items-center ${
+                    selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
+                  }`}
+                >
+                  <img
+                    src={selectedLanguage.includes(lang.name) ? lang.image : lang.darkImage}
+                    alt={lang.name}
+                    className="w-[20px] h-[20px]"
+                  />
+                  <p className="ml-2 text-sm">{lang.name}</p>
                 </label>
               </div>
             ))}
