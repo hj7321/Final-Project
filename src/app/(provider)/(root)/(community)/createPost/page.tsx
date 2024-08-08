@@ -1,7 +1,7 @@
 'use client';
 import { CommunityPosts } from '@/types/type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
@@ -19,10 +19,11 @@ type CommunityPostsData = Omit<CommunityPosts, 'id' | 'created_at'> & {
 
 const CreatePost = () => {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
   const queryClient = useQueryClient();
   const contentRef = useRef<HTMLTextAreaElement>(null);
-  const user = useAuthStore((state) => state.userId) as string | null; // 유저 정보 가져오기
+  const user = useAuthStore((state) => state.userId) as string | null;
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -62,6 +63,7 @@ const CreatePost = () => {
         contentRef.current.value = '';
       }
       alert('게시글 등록이 완료되었습니다.');
+      router.push('/qna');
     }
   });
 
