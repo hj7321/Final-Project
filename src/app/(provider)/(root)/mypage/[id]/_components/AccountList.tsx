@@ -6,7 +6,7 @@ export default function AccountList() {
     <div>
       <section className="container mx-auto px-4 py-8 min-h-screen">
         <div className="mb-10">
-          <h2 className="text-2xl font-bold">거래내역</h2>
+          <h2 className="hidden md:flex text-2xl font-bold">거래내역</h2>
         </div>
 
         <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">

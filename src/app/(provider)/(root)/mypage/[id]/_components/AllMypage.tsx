@@ -114,7 +114,7 @@ export default function AllMypage() {
           <div>
             <div className="flex md:flex-col items-center mb-6 mt-8 md:mt-0 rounded-full">
               <div className="flex flex-col">
-                <div className="w-16 h-16 md:w-[180px] md:h-[180px] rounded-full md:mb-2">
+                <div className="w-16 h-16 md:w-[160px] md:h-[160px] ml-2 md:ml-0 md:mt-10 rounded-full">
                   <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className=" rounded-[50%]" />
                 </div>
                 <div className="text-center text-lg font-bold text-grey-900 md:font-bold mb-4">
@@ -141,7 +141,7 @@ export default function AllMypage() {
           </div>
 
           <ul
-            className="flex flex-nowrap w-full overflow-x-auto gap-8  whitespace-nowrap md:gap-0 md:space-y-4 md:flex-col mt-[64px] scrollbar-hide"
+            className="flex flex-nowrap w-full overflow-x-auto gap-6  whitespace-nowrap md:gap-0 md:space-y-4 md:flex-col mt-[64px] scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <li className="hidden md:flex text-[20px] font-bold">나의 활동</li>
