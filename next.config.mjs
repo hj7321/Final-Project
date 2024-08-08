@@ -5,13 +5,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'ivuhyqkdxiwtufnsgxcv.supabase.co',
+        hostname: 'ivuhyqkdxiwtufnsgxcv.supabase.co'
       },
       {
         protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-    ],
-  },
+        hostname: 'lh3.googleusercontent.com'
+      }
+    ]
+  }
 };
 export default nextConfig;
