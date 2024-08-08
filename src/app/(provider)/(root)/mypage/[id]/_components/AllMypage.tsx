@@ -108,7 +108,7 @@ export default function AllMypage() {
   const activeStyle = 'text-primary-500 cursor-pointer font-bold';
 
   return (
-    <div className="flex flex-col max-w-[80%] m-auto bg-white">
+    <div className="flex flex-col max-w-[90%] md:max-w-[80%] m-auto bg-white">
       <div className="flex flex-1 flex-col  md:flex-row">
         <div className="w-full md:w-64 ">
           <div>
@@ -203,15 +203,17 @@ export default function AllMypage() {
             ) : (
               ''
             )}
-            <li
-              className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('CancleAccount')}
-            >
-              회원탈퇴
-            </li>
+            {window.innerWidth >= 768 && (
+              <li
+                className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
+                onClick={() => setActiveComponent('CancleAccount')}
+              >
+                회원탈퇴
+              </li>
+            )}
           </ul>
         </div>
-        <main className="md:flex-1 p-8">
+        <main className="md:flex-1">
           <h1 className="flex text-2xl font-bold md:mt-[40px] w-full">{renderComponent()}</h1>
         </main>
       </div>
