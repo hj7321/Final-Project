@@ -15,8 +15,6 @@ export async function POST(request: Request) {
     return Response.json({ errorMsg: loginError.message });
   } else {
     console.log('로그인 성공');
-    console.log(loginData.user.user_metadata);
-    console.log(loginData.session.user.user_metadata);
     return Response.json({ userData: loginData });
   }
 }

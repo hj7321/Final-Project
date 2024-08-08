@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, Suspense, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { useQuery } from '@tanstack/react-query';
-import Hamburger from './Hamburger';
+import Sidebar from './Sidebar';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 const linkStyle = 'text-grey-700 hover:text-primary-500 hover:font-bold px-[12px] py-[8px]';
@@ -89,23 +89,6 @@ export default function Header() {
     router.push('/signup');
   };
 
-  const handleOpenMenu = () => {
-    setOpen(true);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (open) document.addEventListener('click', handleCloseMenu);
-    else document.removeEventListener('click', handleCloseMenu);
-
-    return () => {
-      document.removeEventListener('click', handleCloseMenu);
-    };
-  }, [open]);
-
   return (
     <>
       <header
@@ -116,9 +99,9 @@ export default function Header() {
         )}
       >
         <div className="w-full flex justify-between items-center md:hidden">
-          <button onClick={handleOpenMenu}>
+          <button onClick={() => setOpen(true)}>
             <Image src="/hamburger.svg" alt="메뉴 아이콘" width={24} height={24} />
-            {open && <Hamburger onClose={handleCloseMenu} />}
+            {open && <Sidebar setOpen={setOpen} />}
           </button>
           <Link href="/">
             <div className="w-40 h-16 flex items-center justify-center">
@@ -207,7 +190,7 @@ export default function Header() {
           )}
         </div>
       </header>
-      {open && <div className="fixed inset-0 bg-grey-900 bg-opacity-50 z-30" onClick={handleCloseMenu}></div>}
+      {open && <div className="fixed inset-0 bg-grey-900 bg-opacity-50 z-30" onClick={() => setOpen(false)}></div>}
     </>
   );
 }
