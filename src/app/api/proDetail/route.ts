@@ -8,10 +8,8 @@ export async function GET(req: Request) {
   if (!id) {
     return NextResponse.json({ error: 'ID is required' }, { status: 400 });
   }
-
   try {
     const supabase = createClient();
-
 
     const { data: postData, error: postError } = await supabase
       .from('Request Posts')

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import useAuthStore from '@/zustand/authStore';
 import Modal from './Modal';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -163,7 +164,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <section className="flex flex-col text-center items-center bg-grey-50">
+    <section className="flex flex-col text-center items-center md:bg-grey-50">
       {showModal !== null && <Modal onClose={handleCloseModal} modalNum={showModal} />}
       <form
         onSubmit={(e) => {
@@ -172,13 +173,19 @@ export default function SignUpForm() {
         }}
         className="w-[528px] min-h-[1012px] rounded-[24px] flex flex-col items-center py-[64px] bg-white"
       >
-        <h2 className="font-bold text-[24px] mb-[32px]">회원가입</h2>
+        <h2 className={clsx('H2-L', 'hidden md:block mb-[32px]')}>회원가입</h2>
+        <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px] mb-[32px]">
+          <Link href="/" className="left-0 absolute">
+            <Image src="/backIcon.svg" alt="뒤로가기" width={21} height={21} />
+          </Link>
+          <h2 className={clsx('H3-L')}>회원가입</h2>
+        </div>
         <div className="flex flex-col gap-[10px]">
           {inputs.map((input, idx) => (
             <div key={input.id} className={clsx(idx % 3 === 2 && 'mb-[32px]', 'flex flex-col items-center relative')}>
               <div
                 className={clsx(
-                  'w-[400px] border rounded-[8px] px-[16px]',
+                  'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
                     ? 'h-[70px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
@@ -206,7 +213,7 @@ export default function SignUpForm() {
                     className={clsx(
                       (idx === selectedIdx || inputValues[idx]!.length > 0) &&
                         'w-[312px] outline-none border-none p-0 mt-[5px]',
-                      'placeholder-grey-300'
+                      'placeholder-grey-300 text-[14px] md:text-[16px]'
                     )}
                     type={showPassword[idx - 1] ? 'text' : input.type}
                     id={input.id}
@@ -229,7 +236,7 @@ export default function SignUpForm() {
                         width={24}
                         height={24}
                         className={clsx(
-                          'absolute right-[16px] cursor-pointer',
+                          'absolute right-[16px] cursor-pointer w-[20px] h-[20px] md:w-[24px] md:h-[24px]',
                           showPassword[idx - 1] ? 'hidden' : 'block'
                         )}
                       />
@@ -239,7 +246,7 @@ export default function SignUpForm() {
                         width={24}
                         height={24}
                         className={clsx(
-                          'absolute right-[16px] cursor-pointer',
+                          'absolute right-[16px] cursor-pointer w-[20px] h-[20px] md:w-[24px] md:h-[24px]',
                           showPassword[idx - 1] ? 'block' : 'hidden'
                         )}
                       />
@@ -249,7 +256,9 @@ export default function SignUpForm() {
               </div>
               <p
                 className={
-                  inputMsgs[idx].length > 0 ? 'block self-start text-[13.5px] my-[3px] ml-[3px] text-error' : 'hidden'
+                  inputMsgs[idx].length > 0
+                    ? 'block self-start text-[11px] md:text-[13.5px] my-[3px] ml-[3px] text-error'
+                    : 'hidden'
                 }
               >
                 {inputMsgs[idx]}
@@ -258,8 +267,8 @@ export default function SignUpForm() {
           ))}
         </div>
 
-        <div className="h-[240px] w-[400px] mb-[32px] bg-grey-50 rounded-[8px] px-[16px] py-[24px] flex flex-col gap-[24px] text-left">
-          <div className="font-bold flex gap-[8px] items-center">
+        <div className="h-[200px] md:h-[240px] w-[328px] md:w-[400px] mb-[32px] bg-grey-50 rounded-[8px] px-[16px] py-[20px] md:py-[24px] flex flex-col gap-[16px] md:gap-[24px] text-left">
+          <div className="font-bold flex gap-[8px] text-[14px] md:text-[16px] items-center">
             <input
               className="custom-checkbox"
               type="checkbox"
@@ -269,7 +278,7 @@ export default function SignUpForm() {
             />
             <label htmlFor="all-agree">전체 동의</label>
           </div>
-          <div className="flex flex-col gap-[16px] text-grey-400">
+          <div className="flex flex-col gap-[16px] text-[12px] md:text-[16px] text-grey-400">
             {checkBoxes.map((checkBox, idx) => (
               <div key={idx} className="flex justify-between gap-[8px] items-center">
                 <div className="flex gap-[8px] items-center">
@@ -284,7 +293,7 @@ export default function SignUpForm() {
                 </div>
                 <button
                   type="button"
-                  className="text-[12px] underline content-center"
+                  className="text-[10px] md:text-[12px] underline content-center"
                   onClick={() => handleOpenModal(idx - 1)}
                 >
                   {checkBox.link && '내용보기'}
@@ -298,7 +307,7 @@ export default function SignUpForm() {
           type="submit"
           className={clsx(
             throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
-            'h-[56px] w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
+            'h-[56px] w-[328px] md:w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
           )}
         >
           회원가입

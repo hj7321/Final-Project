@@ -10,6 +10,7 @@
     "genTypes": "npx supabase gen types typescript --project-id ivuhyqkdxiwtufnsgxcv --schema public > src/types/supabase.ts"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.6",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.4",
     "@tailwindcss/line-clamp": "^0.4.4",
