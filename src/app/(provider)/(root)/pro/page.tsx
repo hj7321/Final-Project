@@ -110,7 +110,7 @@ export default function ProMainPage() {
             onClick={handleNavigation}
           >
             <div className='md:w-[24px] md:h-[24px] w-[16px] h-[16px]'>
-              <svg width="full" height="full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12.2536 6.47487L9.77877 8.94975L5.17441 13.5541C4.95175 13.7768 4.81748 14.0727 4.79653 14.3869L4.5743 17.7204C4.52198 18.5052 5.1731 19.1563 5.95789 19.104L9.29139 18.8817C9.60559 18.8608 9.9015 18.7265 10.1242 18.5039L14.7285 13.8995L17.2034 11.4246M12.2536 6.47487L13.8093 4.91924C14.317 4.41156 15.1401 4.41156 15.6478 4.91924L18.759 8.03051C19.2667 8.53819 19.2667 9.3613 18.759 9.86899L17.2034 11.4246M12.2536 6.47487L17.2034 11.4246"
                   stroke="white"
@@ -131,19 +131,20 @@ export default function ProMainPage() {
         <ul className="flex flex-row justify-start items-center max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
           {CodeCategories.map((lang) => (
             <li
-              className="md:mx-[20px] mx-[13px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[50px] sm:w-[100px] md:w-[120px] lg:w-auto"
+              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer flex-shrink-0 w-[50px] sm:w-[100px] md:w-[120px] lg:w-auto"
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
             >
               <Image
-                className="xl:w-[80px] xl:h-[80px] w-[30px] h-[30px] rounded-full mb-[10px] mx-auto"
-                src={lang.image}
+                className="md:w-[80px] md:h-[80px] w-[54px] h-[54px] mb-[10px] mx-auto"
+                src={lang.categoryImage}
                 width={80}
                 height={80}
+                priority
                 alt={lang.name}
               />
               <p
-                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'} md:text-base text-[12px]`}
+                className={`text-center w-full ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'} md:text-base text-xs`}
               >
                 {lang.name}
               </p>
@@ -152,38 +153,19 @@ export default function ProMainPage() {
         </ul>
       </div>
 
-      {/* <div className="my-[50px] mx-auto ">
-        <ul className="flex flex-row justify-between items-center mt-[50px] max-w-7xl mx-auto">
-          {CodeCategories.map((lang) => (
-            <li
-              className="mx-[20px] flex-col justify-center items-center hover:cursor-pointer"
-              key={lang.id}
-              onClick={() => handleLanguageFilter(lang.name)}
-            >
-              <Image className="w-[80px] h-[80px] rounded-full mb-[10px] mx-auto" src={lang.image} width={80} height={80} alt={lang.name}/>
-              <p
-                className={`text-center ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'}`}
-              >
-                {lang.name}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div> */}
-
-
       {/* 의뢰 서비스 리스트 */}
       <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center lg:justify-start">
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1 mx-auto">
-              <div className="lg:w-[300px] lg:h-[300px] w-[140px] h-[220px] rounded-lg xl:m-[30px] m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
+              <div className="lg:w-[300px] lg:h-[300px] w-[140px] h-[220px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <Image
-                    className="w-full xl:h-[160px] h-[130px] rounded-lg object-cover"
+                    className="md:w-[280px] w-[125px] xl:h-[160px] h-[130px] rounded-lg object-cover mt-2 mx-auto"
                     src={post.post_img[0]}
                     width={300}
                     height={160}
+                    priority
                     alt={post.title}
                   />
                 )}
@@ -196,15 +178,16 @@ export default function ProMainPage() {
                           alt={post.lang_category[0]}
                           width={20}
                           height={20}
+                          priority
                           className="mr-2 w-[16px] h-[16px] lg:w-[20px] lg:h-[20px]"
                         />
-                        <span className='text-[10px] lg:text-sm'>{post.lang_category[0]}</span>
+                        <span className='text-xs text-grey-600 lg:text-sm'>{post.lang_category[0]}</span>
                       </p>
                       {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
-                    <p className="text-[10px] lg:text-sm lg:mt-2 line-clamp-2">{post.title}</p>
+                    <p className="text-xs lg:text-sm mt-2 line-clamp-2">{post.title}</p>
                   </div>
-                  <p className="lg:text-xl text-[12px] mt-1 lg:mt-2 font">{post.price}원</p>
+                  <p className="md:text-xl text-sm mt-1 lg:mt-2 font">{post.price}원</p>
                 </div>
               </div>
             </Link>
