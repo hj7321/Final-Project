@@ -243,7 +243,7 @@ export default function Portfolio() {
 
                       <Image
                         alt="쓰레기통"
-                        src="/trashcan.svg"
+                        src="/trashCan.svg"
                         width={8}
                         height={8}
                         onClick={() => handleDelete(post.id)}
