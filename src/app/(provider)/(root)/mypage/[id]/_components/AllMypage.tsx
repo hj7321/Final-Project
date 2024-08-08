@@ -203,12 +203,14 @@ export default function AllMypage() {
             ) : (
               ''
             )}
-            <li
-              className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('CancleAccount')}
-            >
-              회원탈퇴
-            </li>
+            {window.innerWidth >= 768 && (
+              <li
+                className={activeComponent === 'CancleAccount' ? activeStyle : liStyle}
+                onClick={() => setActiveComponent('CancleAccount')}
+              >
+                회원탈퇴
+              </li>
+            )}
           </ul>
         </div>
         <main className="md:flex-1">
