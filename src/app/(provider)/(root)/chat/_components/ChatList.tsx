@@ -172,15 +172,15 @@ const ChatList = () => {
   }
 
   return (
-    <div className="container mx-auto p-2 md:p-2">
+    <div className="container mx-auto p-0 md:p-2">
       <h1 className="text-xl font-semibold mb-4 hidden md:block">나의 문의내역</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 md:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 md:gap-2">
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
-            className="flex flex-col justify-between py-5 px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
+            className="flex flex-col justify-between w-auto md:max-w-52 h-48 md:h-64 p-2 md:py-5 md:px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
             onClick={() => openChatModal(room.chat_room_id)}
-            style={{ height: '255px', maxWidth: '220px', maxHeight: '255px' }}
+            // style={{ height: 'auto', maxWidth: '220px', maxHeight: '255px' }}
           >
             <div>
               <div className="flex items-center justify-center mt-2 mb-2">
@@ -215,10 +215,10 @@ const ChatList = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-500 font-normal text-xs mt-1">{truncateMessage(room.latest_message, 40)}</p>
+                <p className="text-gray-500 font-normal text-xs mt-1 truncate overflow-hidden">{truncateMessage(room.latest_message, 40)}</p>
               </div>
             </div>
-            <p className="text-xs font-normal text-gray-400 mt-2 self-center">
+            <p className="text-xs font-normal text-gray-400 md:mt-2 self-center">
               {new Date(room.latest_message_time).toLocaleDateString()}
             </p>
           </div>
