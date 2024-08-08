@@ -215,7 +215,9 @@ const ChatList = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-500 font-normal text-xs mt-1 truncate overflow-hidden">{truncateMessage(room.latest_message, 40)}</p>
+                <p className="text-gray-500 font-normal text-xs mt-1 truncate overflow-hidden">
+                  {truncateMessage(room.latest_message, 40)}
+                </p>
               </div>
             </div>
             <p className="text-xs font-normal text-gray-400 md:mt-2 self-center">
