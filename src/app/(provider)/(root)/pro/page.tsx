@@ -158,7 +158,7 @@ export default function ProMainPage() {
         {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1 mx-auto">
-              <div className="lg:w-[300px] lg:h-[300px] w-[160px] h-[220px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
+              <div className="lg:w-[300px] lg:h-[300px] w-[160px] h-[240px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
                 {post.post_img && post.post_img.length > 0 && (
                   <Image
                     className="md:w-[280px] w-[140px] xl:h-[160px] h-[130px] rounded-lg object-cover mt-2 mx-auto"
