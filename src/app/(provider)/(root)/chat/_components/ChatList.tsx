@@ -174,7 +174,7 @@ const ChatList = () => {
   return (
     <div className="container mx-auto p-0 md:p-2">
       <h1 className="text-xl font-semibold mb-4 hidden md:block">나의 문의내역</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 md:gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-2">
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
