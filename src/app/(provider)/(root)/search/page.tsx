@@ -63,6 +63,10 @@ function SearchContent() {
     return text.substring(0, maxLength) + '...';
   };
 
+  const isMobile = () => {
+    return typeof window !== 'undefined' && window.innerWidth < 900;
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-2xl font-md mb-4 text-primary-500 mb-8 flex">
@@ -99,7 +103,7 @@ function SearchContent() {
             <Link key={result.id} href={getDetailPageLink(result.category, (result as any).post_category, result.id)}>
               <div className="flex px-8 py-4 bg-white rounded-xl border border-grey-100 cursor-pointer">
                 {result.post_img && result.post_img.length > 0 && (
-                  <div className="flex-shrink-0 hidden md:block md:w-40 md:h-40 mr-4">
+                  <div className="flex-shrink-0 hidden md:block md:w-44 md:h-44 mr-4 my-auto">
                     <Image
                       src={result.post_img[0]}
                       alt={result.title}
@@ -110,26 +114,26 @@ function SearchContent() {
                   </div>
                 )}
                 <div className="flex flex-col flex-grow">
-                  <div className="flex space-x-2">
-                    {result.lang_category && (
-                      <div className="flex mb-1">
-                        <Image src={getCategoryImage(result.lang_category[0])} alt={result.lang_category[0]} width={24} height={24} className="rounded" />
+                  <div className="flex space-x-2 mb-1">
+                    {result.lang_category && result.lang_category.slice(0, isMobile() ? 1 : result.lang_category.length).map((lang, id) => (
+                      <div key={id} className="flex mb-1">
+                        <Image src={getCategoryImage(lang)} alt={lang} width={24} height={24} className="rounded" />
                         <div>
                           <span
                             className={`rounded px-2 py-1 text-sm ${
-                              result.lang_category[0].toLowerCase().includes(query.toLowerCase())
+                              lang.toLowerCase().includes(query.toLowerCase())
                                 ? 'text-primary-400'
                                 : 'bg-white text-grey-500'
                             }`}
                           >
-                            {result.lang_category[0]}
+                            {lang}
                           </span>
                         </div>
                       </div>
-                    )}
+                    ))}
                   </div>
                   <h2 className="text-lg font-medium mb-2">{highlightIfMatch(result.title, query)}</h2>
-                  <p className="text-md text-grey-500 mb-2">{highlightIfMatch(truncateText(result.content, 180), query)}</p>
+                  <p className="text-md text-grey-500 mb-2">{highlightIfMatch(truncateText(result.content, isMobile() ? 25 : 180), query)}</p>
                   <div className="flex justify-between items-center">
                     <p className="text-gray-400">{userMap[result.user_id] || "알수없음"}</p>
                   </div>
