@@ -6,8 +6,9 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEventHandler, useRef, useState } from 'react';
+import { FormEvent, FormEventHandler, useEffect, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
+import { validateForms } from '../signup/_components/Validate';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -22,15 +23,38 @@ export default function LoginPage() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill(''));
+  const [emailData, setEmailData] = useState<string[]>(['']);
+  const [throttling, setThrottling] = useState<boolean>(false);
 
   const router = useRouter();
 
   const { login, setUserId, setUserData } = useAuthStore();
 
-  const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const fetchEmailData = async () => {
+      const response = await fetch('/api/signup');
+      const result = await response.json();
+      setEmailData(result.emailData);
+    };
+    fetchEmailData();
+  }, []);
+
+  const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
     setInputValues(newValues);
+
+    const alertMessage = validateForms(newValues[1], 1);
+    const newMsgs = [...inputMsgs];
+    if (idx === 0 && !emailData!.includes(newValues[0])) {
+      newMsgs[0] = '존재하지 않는 이메일입니다.';
+    } else if (idx === 0 && emailData!.includes(newValues[0])) {
+      newMsgs[0] = '';
+    } else {
+      newMsgs[1] = alertMessage;
+    }
+    setInputMsgs(newMsgs);
   };
 
   const handleTogglePassword = (): void => {
@@ -38,8 +62,17 @@ export default function LoginPage() {
     setShowPassword(newVisibility);
   };
 
-  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    const areInputValuesNull: string[] = inputValues.filter((value) => value === '');
+
+    if (inputMsgs[0] !== '') {
+      inputRefs.current[0]!.focus();
+      return;
+    } else if (areInputValuesNull.length !== 0) {
+      return alert('회원 정보를 모두 기입해주세요.');
+    }
+
+    setThrottling(true);
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -57,10 +90,15 @@ export default function LoginPage() {
     }).then((res) => res.json());
 
     if (data.errorMsg) {
-      alert(data.errorMsg);
+      setThrottling(false);
+      const newMsgs = [...inputMsgs];
+      newMsgs[1] = '비밀번호를 정확히 입력해주세요.';
+      setInputMsgs(newMsgs);
+      inputRefs.current[1]!.focus();
       return;
     }
     console.log('로그인 성공!');
+    setThrottling(true);
     form.reset();
     login();
     setUserId(data.userData.user.id);
@@ -109,8 +147,8 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="flex flex-col text-center items-center md:bg-grey-50">
-      <div className="flex flex-col justify-center items-center w-[528px] h-[835px] bg-white py-[64px] rounded-[24px]">
+    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[1000px]">
+      <div className="flex flex-col justify-center items-center w-[528px] min-h-[835px] bg-white py-[64px] rounded-[24px]">
         <Image src="/logo_eng.svg" alt="영어 로고" width={180} height={60} className="hidden md:flex mb-[32px]" />
         <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px] mb-[32px]">
           <Link href="/" className="left-0 absolute">
@@ -118,22 +156,30 @@ export default function LoginPage() {
           </Link>
           <Image src="/logo_eng.svg" alt="영어 로고" width={144} height={48} />
         </div>
-        <form onSubmit={handleLogin} className="flex flex-col gap-[10px] items-center">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!throttling) handleLogin(e);
+          }}
+          className="flex flex-col gap-[10px] items-center"
+        >
           {inputs.map((input, idx) => (
             <div key={input.id} className="flex flex-col items-center relative">
               <div
                 className={clsx(
                   'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[70px] border-primary-500 pt-[6px]'
+                    ? 'h-[56px] md:h-[70px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
                     ? 'h-[56px] border-grey-100 py-[16px]'
-                    : 'h-[70px] border-grey-500 pt-[6px]'
+                    : inputMsgs[idx].length === 0
+                    ? 'h-[56px] md:h-[70px] border-grey-500 pt-[6px]'
+                    : 'h-[56px] md:h-[70px] border-error pt-[6px]'
                 )}
               >
                 <label
                   className={clsx(
-                    'self-start text-[12px]',
+                    'self-start text-[10px] md:text-[12px]',
                     idx === selectedIdx
                       ? 'flex text-primary-500'
                       : inputValues[idx].length > 0
@@ -148,13 +194,13 @@ export default function LoginPage() {
                   <input
                     className={clsx(
                       (idx === selectedIdx || inputValues[idx]!.length > 0) &&
-                        'w-[312px] outline-none border-none p-0 mt-[5px]',
-                      'placeholder-grey-300'
+                        'w-[312px] outline-none border-none p-0 mt-[3px] md:mt-[5px]',
+                      'placeholder-grey-300 text-[14px] md:text-[16px]'
                     )}
                     type={showPassword ? 'text' : input.type}
                     id={input.id}
                     name={input.id}
-                    placeholder={input.label}
+                    placeholder={idx === selectedIdx ? '' : input.label}
                     ref={(el) => {
                       inputRefs.current[idx] = el;
                     }}
@@ -170,24 +216,40 @@ export default function LoginPage() {
                         alt="비밀번호 숨기기"
                         width={24}
                         height={24}
-                        className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'hidden' : 'block')}
+                        className={clsx(
+                          'absolute right-[16px] cursor-pointer w-[20px] h-[20px] md:w-[24px] md:h-[24px]',
+                          showPassword ? 'hidden' : 'block'
+                        )}
                       />
                       <Image
                         src="/eye_opened_grey.svg"
                         alt="비밀번호 보기"
                         width={24}
                         height={24}
-                        className={clsx('absolute right-[16px] cursor-pointer', showPassword ? 'block' : 'hidden')}
+                        className={clsx(
+                          'absolute right-[16px] cursor-pointer w-[20px] h-[20px] md:w-[24px] md:h-[24px]',
+                          showPassword ? 'block' : 'hidden'
+                        )}
                       />
                     </button>
                   )}
                 </div>
               </div>
+              <p
+                className={
+                  inputMsgs[idx].length > 0
+                    ? 'block self-start text-[11px] md:text-[13.5px] my-[3px] ml-[3px] text-error'
+                    : 'hidden'
+                }
+              >
+                {inputMsgs[idx]}
+              </p>
             </div>
           ))}
           <button
             type="submit"
             className={clsx(
+              throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
               'Body-M',
               'h-[56px] w-[328px] md:w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white mt-[32px] mb-[16px]'
             )}
@@ -236,7 +298,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className={clsx('Caption2-M', 'flex justify-center gap-[24px]')}>
+        <div className="flex justify-center gap-[24px] text-[12px] md:text-[14px]">
           <p className="text-grey-300">아직 회원이 아니신가요?</p>
           <Link href="/signup" className="font-bold">
             회원가입 하기 {'>'}
