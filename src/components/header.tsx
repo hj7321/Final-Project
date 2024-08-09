@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
@@ -17,15 +17,20 @@ const linkStyle = 'text-grey-700 hover:text-primary-500 hover:font-bold px-[12px
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const [number, setNumber] = useState<number>(0);
-  const [selectedIdx, setSelectedIdx] = useState(() => {
-    const savedIdx = localStorage.getItem('selectedIdx');
-    return savedIdx ? JSON.parse(savedIdx) : null;
-  });
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [session, setSession] = useState<string | null | undefined>(null);
   const router = useRouter();
   const { isLogin, logout, userId, initializeAuthState } = useAuthStore();
+
+  const searchParams = useSearchParams();
+  const currentIndex = searchParams.get('index');
+
+  useEffect(() => {
+    if (currentIndex) setSelectedIdx(+currentIndex);
+    else setSelectedIdx(null);
+  }, [currentIndex]);
 
   const pathname = usePathname();
   const isAuthPage = ['/login', '/login/confirmEmail', '/login/resetPassword', '/login/sendLink', '/signup'].includes(
@@ -97,13 +102,8 @@ export default function Header() {
   };
 
   const handleMovePage = (href: string, idx: number): void => {
-    router.push(href);
-    setSelectedIdx(idx);
+    router.push(`${href}?index=${idx}`);
   };
-
-  useEffect(() => {
-    localStorage.setItem('selectedIdx', JSON.stringify(selectedIdx));
-  }, [selectedIdx]);
 
   return (
     <>
