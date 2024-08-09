@@ -112,16 +112,19 @@ export default function AllMypage() {
       <div className="flex flex-1 flex-col  md:flex-row">
         <div className="w-full md:w-64 ">
           <div>
-            <div className="flex md:flex-col items-center mb-6 mt-8 md:mt-0 rounded-full">
-              <div className="flex flex-col">
+            <div className="flex md:flex-col items-center ml-2 md:mr-8 md:ml-0 mb-6 mt-8 md:mt-0 rounded-full">
+              <div className="flex flex-col ">
                 <div className="w-16 h-16 md:w-[160px] md:h-[160px] ml-2 md:ml-0 md:mt-10 rounded-full">
-                  <img src={Users?.data?.profile_img || '/defaultProfileimg.svg'} className=" rounded-[50%]" />
+                  <img
+                    src={Users?.data?.profile_img || '/defaultProfileimg.svg'}
+                    className=" rounded-[50%] w-16 h-16 md:w-[160px] md:h-[160px] "
+                  />
                 </div>
                 <div className="text-center text-lg font-bold text-grey-900 md:font-bold mb-4">
                   {Users?.data?.nickname}
                 </div>
               </div>
-              <div className="flex flex-col ml-10 md:ml-0 items-center">
+              <div className="flex flex-col ml-5 md:ml-0   items-center">
                 <button
                   className="mb-2   w-[225px] h-[36px] text-white rounded-md bg-primary-500 flex items-center justify-center"
                   onClick={() => setActiveComponent('EditProfile')}
@@ -145,7 +148,7 @@ export default function AllMypage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <li className="hidden md:flex text-[20px] font-bold">나의 활동</li>
-            <div className="hidden md:flex border-t border-gray-300 my-10"></div>
+            <div className="hidden md:flex border-t w-[225px] border-gray-300 my-10"></div>
 
             <li
               className={activeComponent === 'BookMark' ? activeStyle : liStyle}

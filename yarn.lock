@@ -1187,6 +1187,11 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@portone/browser-sdk@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@portone/browser-sdk/-/browser-sdk-0.0.9.tgz#3a893acfa573c46a5c2f0460aff03fbc893989bd"
+  integrity sha512-z1HlHE608qvKAOwDN+iQCxQtQ6lkLU/lp+gv9aE4FPM5yEU1z8ucRUf/Bu5bT00k1/VWGAgidId5Sq4Q/Ez5XA==
+
 "@react-aria/breadcrumbs@3.5.13":
   version "3.5.13"
   resolved "https://registry.yarnpkg.com/@react-aria/breadcrumbs/-/breadcrumbs-3.5.13.tgz#2686f7f460f20d67fe5cdfe185e32e3e78186962"
