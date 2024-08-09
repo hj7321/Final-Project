@@ -342,6 +342,7 @@ export default function ProDetail() {
           <div id="section3" className="p-2 my-4">
             <h1 className="md:text-2xl text-base">리뷰</h1>
             <div className="mt-4 flex flex-col justify-center items-center">
+
               <div className="mx-3 border border-slate-400 w-full flex flex-col justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
                 <div className="flex flex-row">
                   <Image src="/star.svg" alt="star" width={16} height={16} priority />
@@ -363,7 +364,7 @@ export default function ProDetail() {
                 </div>
               </div>
 
-              <div className="mx-3 border border-slate-400 w-full h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+              <div className="mx-3 border border-slate-400 w-full justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
                 <div className="flex flex-row">
                   <Image src="/star.svg" alt="star" width={16} height={16} priority />
                   <Image src="/star.svg" alt="star" width={16} height={16} priority />

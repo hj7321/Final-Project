@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Chat, Users } from '@/types/type';
 import Image from 'next/image';
-
+import MDEditor from '@uiw/react-md-editor';
 const supabase = createClient();
 
 type ChatModalProps = {
