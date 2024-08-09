@@ -24,13 +24,13 @@ export default function Header() {
   const router = useRouter();
   const { isLogin, logout, userId, initializeAuthState } = useAuthStore();
 
-  const searchParams = useSearchParams();
-  const currentIndex = searchParams.get('index');
+  // const searchParams = useSearchParams();
+  // const currentIndex = searchParams.get('index');
 
-  useEffect(() => {
-    if (currentIndex) setSelectedIdx(+currentIndex);
-    else setSelectedIdx(null);
-  }, [currentIndex]);
+  // useEffect(() => {
+  //   if (currentIndex) setSelectedIdx(+currentIndex);
+  //   else setSelectedIdx(null);
+  // }, [currentIndex]);
 
   const pathname = usePathname();
   const isAuthPage = ['/login', '/login/confirmEmail', '/login/resetPassword', '/login/sendLink', '/signup'].includes(
@@ -101,9 +101,9 @@ export default function Header() {
     router.push('/signup');
   };
 
-  const handleMovePage = (href: string, idx: number): void => {
-    router.push(`${href}?index=${idx}`);
-  };
+  // const handleMovePage = (href: string, idx: number): void => {
+  //   router.push(`${href}?index=${idx}`);
+  // };
 
   return (
     <>
@@ -142,24 +142,27 @@ export default function Header() {
               </div>
             </Link>
             <nav className="ml-4 space-x-[12px]">
-              <button
-                onClick={() => handleMovePage('/qna', 0)}
+              <Link
+                href="/qna"
+                // onClick={() => handleMovePage('/qna', 0)}
                 className={clsx(selectedIdx === 0 && 'text-primary-500 font-bold', linkStyle)}
               >
                 Q&A
-              </button>
-              <button
-                onClick={() => handleMovePage('/insight', 1)}
+              </Link>
+              <Link
+                href="/insight"
+                // onClick={() => handleMovePage('/insight', 1)}
                 className={clsx(selectedIdx === 1 && 'text-primary-500 font-bold', linkStyle)}
               >
                 인사이트
-              </button>
-              <button
-                onClick={() => handleMovePage('/pro', 2)}
+              </Link>
+              <Link
+                href="/pro"
+                // onClick={() => handleMovePage('/pro', 2)}
                 className={clsx(selectedIdx === 2 && 'text-primary-500 font-bold', linkStyle)}
               >
                 전문가 의뢰
-              </button>
+              </Link>
             </nav>
           </div>
 
