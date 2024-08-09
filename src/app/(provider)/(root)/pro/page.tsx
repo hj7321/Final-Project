@@ -25,7 +25,7 @@ export default function ProMainPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
   const { isPro } = useAuthStore();
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchData = useCallback(async (page: number, languages: string[] = []) => {
     setLoading(true);
@@ -34,7 +34,7 @@ export default function ProMainPage() {
       const url = `/api/proMain?page=${page}${langQuery}`;
       const response = await fetch(url);
       const data = await response.json();
-  
+
       if (data && Array.isArray(data)) {
         if (page === 0) {
           setPosts(data);
@@ -43,7 +43,7 @@ export default function ProMainPage() {
           setPosts((prevPosts) => [...prevPosts, ...data]);
           setFilteredPosts((prevPosts) => [...prevPosts, ...data]);
         }
-        setHasMore(data.length === 10); 
+        setHasMore(data.length === 10);
       } else {
         console.error('Data fetch error');
         setHasMore(false);
@@ -55,7 +55,7 @@ export default function ProMainPage() {
       setLoading(false);
     }
   }, []);
-  
+
   useEffect(() => {
     fetchData(page, selectedLanguages);
   }, [page, selectedLanguages]);
@@ -114,7 +114,7 @@ export default function ProMainPage() {
             className="md:ml-[85%] bg-primary-500 hover:bg-primary-600 md:px-5 md:py-3 md:mt-3 md:mr-[0px] px-3 py-2 mt-1 mr-4 flex flex-row justify-center items-center rounded-full"
             onClick={handleNavigation}
           >
-            <div className='md:w-[24px] md:h-[24px] w-[16px] h-[16px]'>
+            <div className="md:w-[24px] md:h-[24px] w-[16px] h-[16px]">
               <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12.2536 6.47487L9.77877 8.94975L5.17441 13.5541C4.95175 13.7768 4.81748 14.0727 4.79653 14.3869L4.5743 17.7204C4.52198 18.5052 5.1731 19.1563 5.95789 19.104L9.29139 18.8817C9.60559 18.8608 9.9015 18.7265 10.1242 18.5039L14.7285 13.8995L17.2034 11.4246M12.2536 6.47487L13.8093 4.91924C14.317 4.41156 15.1401 4.41156 15.6478 4.91924L18.759 8.03051C19.2667 8.53819 19.2667 9.3613 18.759 9.86899L17.2034 11.4246M12.2536 6.47487L17.2034 11.4246"
@@ -149,7 +149,9 @@ export default function ProMainPage() {
                 alt={lang.name}
               />
               <p
-                className={`text-center w-full ${selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'} md:text-base text-xs`}
+                className={`text-center w-full ${
+                  selectedLanguages.includes(lang.name) ? 'text-blue-500' : 'text-black-500'
+                } md:text-base text-xs`}
               >
                 {lang.name}
               </p>
@@ -157,8 +159,7 @@ export default function ProMainPage() {
           ))}
         </ul>
       </div>
-      
-      
+
       <div className="md:hidden flex flex-row justify-end mt-[15px] md:w-[85%] w-[330px] mx-auto items-center">
         {!isPro === true ? (
           <div className=""></div>
@@ -167,7 +168,7 @@ export default function ProMainPage() {
             className="w-full bg-primary-500 hover:bg-primary-600 md:px-5 md:py-3 md:mt-3 md:mr-[0px] px-3 py-2 mt-1 flex flex-row justify-center items-center rounded-lg"
             onClick={handleNavigation}
           >
-            <div className='w-[24px] h-[24px]'>
+            <div className="w-[24px] h-[24px]">
               <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12.2536 6.47487L9.77877 8.94975L5.17441 13.5541C4.95175 13.7768 4.81748 14.0727 4.79653 14.3869L4.5743 17.7204C4.52198 18.5052 5.1731 19.1563 5.95789 19.104L9.29139 18.8817C9.60559 18.8608 9.9015 18.7265 10.1242 18.5039L14.7285 13.8995L17.2034 11.4246M12.2536 6.47487L13.8093 4.91924C14.317 4.41156 15.1401 4.41156 15.6478 4.91924L18.759 8.03051C19.2667 8.53819 19.2667 9.3613 18.759 9.86899L17.2034 11.4246M12.2536 6.47487L17.2034 11.4246"
@@ -184,9 +185,6 @@ export default function ProMainPage() {
           </button>
         )}
       </div>
-
-
-
 
       {/* 의뢰 서비스 리스트 */}
       <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[10px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center lg:justify-start">
@@ -216,7 +214,7 @@ export default function ProMainPage() {
                           priority
                           className="mr-2 w-[16px] h-[16px] lg:w-[20px] lg:h-[20px]"
                         />
-                        <span className='text-xs text-grey-600 lg:text-sm'>{post.lang_category[0]}</span>
+                        <span className="text-xs text-grey-600 lg:text-sm">{post.lang_category[0]}</span>
                       </p>
                       {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
@@ -228,10 +226,9 @@ export default function ProMainPage() {
             </Link>
           ))
         ) : (
-          <p>Loading...</p>
+          <p></p>
         )}
       </div>
-      
     </div>
   );
 }

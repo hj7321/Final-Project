@@ -10,6 +10,8 @@ import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import defaultProfileImg from '../../../../../../../public/defaultProfileimg.svg';
+import ProDetailSkeleton from './_components/ProDetailSkeleton';
+
 
 interface PostData {
   post_img: string[];
@@ -91,7 +93,7 @@ export default function ProDetail() {
   // 여기까지 //
 
   if (!post || !user) {
-    return <p>로딩중</p>;
+    return <ProDetailSkeleton />;
   }
 
   const handleTabClick = (tabId: string, sectionId: string) => {
