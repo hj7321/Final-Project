@@ -164,7 +164,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <section className="flex flex-col text-center items-center md:bg-grey-50">
+    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[1200px]">
       {showModal !== null && <Modal onClose={handleCloseModal} modalNum={showModal} />}
       <form
         onSubmit={(e) => {
@@ -187,17 +187,17 @@ export default function SignUpForm() {
                 className={clsx(
                   'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[70px] border-primary-500 pt-[6px]'
+                    ? 'h-[56px] md:h-[70px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
                     ? 'h-[56px] border-grey-100 py-[16px]'
                     : inputMsgs[idx].length === 0
-                    ? 'h-[70px] border-grey-500 pt-[6px]'
-                    : 'h-[70px] border-error pt-[6px]'
+                    ? 'h-[56px] md:h-[70px] border-grey-500 pt-[6px]'
+                    : 'h-[56px] md:h-[70px] border-error pt-[6px]'
                 )}
               >
                 <label
                   className={clsx(
-                    'self-start text-[12px]',
+                    'self-start text-[10px] md:text-[12px]',
                     idx === selectedIdx
                       ? 'flex text-primary-500'
                       : inputValues[idx].length > 0
@@ -212,7 +212,7 @@ export default function SignUpForm() {
                   <input
                     className={clsx(
                       (idx === selectedIdx || inputValues[idx]!.length > 0) &&
-                        'w-[312px] outline-none border-none p-0 mt-[5px]',
+                        'w-[312px] outline-none border-none p-0 mt-[3px] md:mt-[5px]',
                       'placeholder-grey-300 text-[14px] md:text-[16px]'
                     )}
                     type={showPassword[idx - 1] ? 'text' : input.type}

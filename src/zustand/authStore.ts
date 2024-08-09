@@ -61,7 +61,7 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
       set({
         isLoading: false,
         isLogin: !!session,
-        isPro: data && data[0].is_pro,
+        isPro: data && data[0]?.is_pro,
         userId: session?.user?.id || null,
         userData: session?.user?.user_metadata || null
       });

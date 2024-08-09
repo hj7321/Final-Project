@@ -13,7 +13,7 @@
 
 .custom-checkbox:checked::before {
   content: '✔';
-  @apply absolute top-[-5.5px] text-white;
+  @apply absolute top-[-2px] left-[2px] md:top-[-5.5px] md:left-[0px] text-white;
 }
 
 html {
