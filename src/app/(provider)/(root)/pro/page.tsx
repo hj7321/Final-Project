@@ -112,7 +112,7 @@ export default function ProMainPage() {
     <div className="mx-auto flex-col justify-center items-center">
       <div className="hidden md:block flex flex-row justify-end mt-[15px] md:w-auto items-end mx-auto w-full 2xl:w-[85%]">
         {!isPro === true ? (
-          <div className=""></div>
+          <div className="w-full mt-mt-3 h-[48px]"></div>
         ) : (
           <button
             className="md:ml-[85%] bg-primary-500 hover:bg-primary-600 md:px-5 md:py-3 md:mt-3 md:mr-[0px] px-3 py-2 mt-1 mr-4 flex flex-row justify-center items-center rounded-full"
@@ -166,7 +166,7 @@ export default function ProMainPage() {
 
       <div className="md:hidden flex flex-row justify-end mt-[15px] md:w-[85%] w-[330px] mx-auto items-center">
         {!isPro === true ? (
-          <div className=""></div>
+          <></>
         ) : (
           <button
             className="w-full bg-primary-500 hover:bg-primary-600 md:px-5 md:py-3 md:mt-3 md:mr-[0px] px-3 py-2 mt-1 flex flex-row justify-center items-center rounded-lg"
@@ -203,9 +203,9 @@ export default function ProMainPage() {
                     <div className="flex flex-row">
                       <p className="text-sm lg:mb-2 lg:mr-3 flex w-[60px] md:w-[140px] md:h-[28px] bg-grey-50 h-[16px] rounded-md"></p>
                     </div>
-                    <p className="text-xs lg:text-sm mt-2 w-[142px] md:w-[282px] h-[32px] md:h-[40px] bg-grey-50 rounded-md"></p>
+                    <p className="text-xs lg:text-sm mt-2 w-[142px] md:w-[282px] h-[32px] md:h-[36px] bg-grey-50 rounded-lg"></p>
                   </div>
-                  <p className="mt-2 lg:mt-2 w-[80px] md:w-[160px] md:h-[28px] h-[20px] bg-grey-50 rounded-md"></p>
+                  <p className="mt-2 lg:mt-2 w-[80px] md:w-[160px] md:h-[28px] h-[20px] bg-grey-50 rounded-lg"></p>
                 </div>
               </div>
             </div>
