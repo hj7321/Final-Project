@@ -81,7 +81,8 @@ export default function CommuComment() {
           <button type="submit">Submit</button> */}
         </>
         <button className="w-[173px] h-[101px] rounded-lg bg-black text-white font-bold text-base flex items-center justify-center">
-          댓글 등록
+          <span className="hidden sm:block">댓글 등록</span>
+          <span className="block sm:hidden">등록</span>
         </button>
       </form>
     </div>
