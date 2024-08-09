@@ -25,10 +25,12 @@ export default function ProMainPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
   const { isPro } = useAuthStore();
+  const [skeletonLoading, setSkeletonLoading] = useState<boolean>(true)
   const [hasMore, setHasMore] = useState(true);
 
   const fetchData = useCallback(async (page: number, languages: string[] = []) => {
     setLoading(true);
+    setSkeletonLoading(true)
     try {
       const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
       const url = `/api/proMain?page=${page}${langQuery}`;
@@ -53,6 +55,7 @@ export default function ProMainPage() {
       setHasMore(false);
     } finally {
       setLoading(false);
+      setSkeletonLoading(false)
     }
   }, []);
 
@@ -104,6 +107,7 @@ export default function ProMainPage() {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
     return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
   };
+
   return (
     <div className="mx-auto flex-col justify-center items-center">
       <div className="hidden md:block flex flex-row justify-end mt-[15px] md:w-auto items-end mx-auto w-full 2xl:w-[85%]">
@@ -132,7 +136,7 @@ export default function ProMainPage() {
         )}
       </div>
       {/* 언어별 카테고리 영역 */}
-      <div className=" md:mt-[30px] mt-[20px] mx-auto overflow-hidden">
+      <div className=" md:mt-[30px] mt-[30px] mx-auto overflow-hidden">
         <ul className="flex flex-row justify-start items-center max-w-7xl mx-auto lg:justify-between lg:flex-wrap lg:overflow-visible overflow-x-auto scrollbar-hide">
           {CodeCategories.map((lang) => (
             <li
@@ -188,7 +192,25 @@ export default function ProMainPage() {
 
       {/* 의뢰 서비스 리스트 */}
       <div className="lg:max-w-[1440px] md:mx-auto flex flex-row flex-wrap mb-[70px] mt-[10px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center lg:justify-start">
-        {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
+        {skeletonLoading ? (
+          // 스켈레톤 UI를 10개 렌더링
+          Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className="grid grid-cols-1 mx-auto">
+              <div className="lg:w-[300px] lg:h-[300px] w-[160px] h-[240px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
+                <div className="md:w-[280px] bg-grey-50 w-[140px] xl:h-[160px] h-[130px] rounded-lg object-cover mt-2 mx-auto" />
+                <div className="flex flex-col p-2 h-[140px]">
+                  <div>
+                    <div className="flex flex-row">
+                      <p className="text-sm lg:mb-2 lg:mr-3 flex w-[60px] md:w-[140px] md:h-[28px] bg-grey-50 h-[16px] rounded-md"></p>
+                    </div>
+                    <p className="text-xs lg:text-sm mt-2 w-[142px] md:w-[282px] h-[32px] md:h-[40px] bg-grey-50 rounded-md"></p>
+                  </div>
+                  <p className="mt-2 lg:mt-2 w-[80px] md:w-[160px] md:h-[28px] h-[20px] bg-grey-50 rounded-md"></p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
           filteredPosts.map((post) => (
             <Link href={`pro/proDetail/${post.id}`} key={post.id} className="grid grid-cols-1 mx-auto">
               <div className="lg:w-[300px] lg:h-[300px] w-[160px] h-[240px] rounded-lg xl:m-[30px] border border-grey-50 m-[10px] hover:scale-105 md:hover:scale-110 transition-transform duration-200">
@@ -202,7 +224,7 @@ export default function ProMainPage() {
                     alt={post.title}
                   />
                 )}
-                <div className="flex flex-col p-2 h-[140px]">
+                <div className="flex flex-col  p-2 h-[140px]">
                   <div>
                     <div className="flex flex-row">
                       <p className="text-sm lg:mb-2 lg:mr-3 flex">
@@ -216,17 +238,15 @@ export default function ProMainPage() {
                         />
                         <span className="text-xs text-grey-600 lg:text-sm">{post.lang_category[0]}</span>
                       </p>
-                      {/* <p className="text-sm mb-2 mr-3">{post.lang_category[1]}</p> */}
                     </div>
-                    <p className="text-xs lg:text-sm mt-2 line-clamp-2">{post.title}</p>
+                    <p className="text-xs lg:text-sm mt-2 min-h-[32px] md:min-h-[40px] line-clamp-2">{post.title}</p>
+                    
                   </div>
                   <p className="md:text-xl text-sm mt-1 lg:mt-2 font">{post.price}원</p>
                 </div>
               </div>
             </Link>
           ))
-        ) : (
-          <p></p>
         )}
       </div>
     </div>
