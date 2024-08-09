@@ -17,6 +17,7 @@ interface PostData {
   content: string;
   price: number;
   title: string;
+  id: string;
 }
 
 interface UserData {

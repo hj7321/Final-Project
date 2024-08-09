@@ -135,7 +135,7 @@ export default function EditProfile() {
   };
 
   const cancleButton = (): void => {
-    Notify.success('수정이 취소되었습니다.');
+    Notify.failure('수정이 취소되었습니다.');
     window.location.reload();
   };
 

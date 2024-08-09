@@ -1,43 +1,17 @@
+'use client';
+
 import { useSession } from '@/hooks/useSession';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import * as PortOne from '@portone/browser-sdk/v2';
-
-const paymentId = `payment${crypto.randomUUID().slice(0, 8)}`;
-
-function requestPayment(post: PostData | null) {
-  if (!post) {
-    console.error('Post data is not available');
-    return;
-  }
-
-  PortOne.requestPayment({
-    storeId: 'store-ffd570b5-f558-4f58-abc1-12d5db5a33e0',
-    channelKey: 'channel-key-584a8128-bbef-438f-8d11-7d7ab2d8c1d9',
-    paymentId: paymentId,
-    orderName: post.title,
-    totalAmount: post.price,
-    currency: 'CURRENCY_KRW',
-    payMethod: 'CARD',
-    customer: {
-      fullName: '포트원',
-      phoneNumber: '010-0000-1234',
-      email: 'test@portone.io'
-    }
-  })
-    .then((response) => {
-      console.log('Payment successful:', response);
-      alert('결제가 완료되었습니다.');
-    })
-    .catch((error) => {
-      console.error('Payment failed:', error);
-      alert('결제에 실패했습니다. 다시 시도해주세요.');
-    });
-}
+import { useQuery } from '@tanstack/react-query';
+import { createClient } from '@/utils/supabase/client';
+import ChatModal from '@/app/(provider)/(root)/chat/_components/ChatModal';
 
 interface PostData {
+  id: string;
   post_img: string[];
   content: string;
   price: number;
@@ -69,10 +43,73 @@ type AccountModalProps = {
 };
 
 const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portfolio }) => {
-  console.log('post', post);
+  const { currentUserId } = useSession();
+  const paymentId = `payment${crypto.randomUUID().slice(0, 8)}`;
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
-  console.log('user', user);
-  console.log('portfolio', portfolio);
+  const getUserData = async () => {
+    const supabase = createClient();
+    if (!currentUserId) {
+      throw new Error('Invalid UUID: id is null or undefined');
+    }
+    const data = await supabase.from('Users').select('*').eq('id', currentUserId).maybeSingle();
+
+    return data;
+  };
+
+  const {
+    data: Users,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['Users'],
+    queryFn: getUserData,
+    enabled: !!currentUserId
+  });
+
+  async function requestPayment(post: PostData | null) {
+    if (!post) {
+      console.error('Post data is not available');
+      return;
+    }
+
+    try {
+      const response = await PortOne.requestPayment({
+        storeId: 'store-ffd570b5-f558-4f58-abc1-12d5db5a33e0',
+        channelKey: 'channel-key-584a8128-bbef-438f-8d11-7d7ab2d8c1d9',
+        paymentId: paymentId,
+        orderName: post.title,
+        totalAmount: post.price,
+        currency: 'CURRENCY_KRW',
+        payMethod: 'CARD',
+        customer: {
+          fullName: Users?.data?.nickname,
+          phoneNumber: '010-0000-1234',
+          email: Users?.data?.email
+        }
+      });
+
+      // 결제 성공 시 서버에 알림
+      const notified = await fetch(`/api/account`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          paymentId: paymentId,
+          orderId: post.id
+        })
+      });
+
+      if (!notified.ok) {
+        throw new Error('Failed to notify the server');
+      }
+
+      alert('결제가 완료되었습니다.');
+      //   setIsChatModalOpen(true);
+    } catch (error) {
+      console.error('Payment failed:', error);
+      alert('결제에 실패했습니다. 다시 시도해주세요.');
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-0 md:p-0">
@@ -95,7 +132,12 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           </button>
         </div>
       </div>
-      ;
+      {isChatModalOpen && (
+        <ChatModal
+          chatRoomId="919eb624-780e-401f-8ec6-e640c0e52ac5" // 여기에 실제 chatRoomId를 전달합니다.
+          onClose={() => setIsChatModalOpen(false)} // ChatModal 닫는 함수 전달
+        />
+      )}{' '}
     </div>
   );
 };
