@@ -211,7 +211,9 @@ export default function ProDetail() {
                 </span>
                 <span className="text-white md:text-base text-sm">문의하기</span>
               </button>
-              <button className="md:w-full md:h-full w-[160px] h-[36px] hover:bg-primary-50 border-primary-500 border py-2 rounded-xl md:mt-2 flex flex-row justify-center items-center">
+              <button 
+                onClick={handleInquiry}
+                className="md:w-full md:h-full w-[160px] h-[36px] hover:bg-primary-50 border-primary-500 border py-2 rounded-xl md:mt-2 flex flex-row justify-center items-center">
                 <span>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
