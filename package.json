@@ -19,6 +19,7 @@
     "@uiw/react-md-editor": "^4.0.4",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.3.24",
     "js-cookie": "^3.0.5",
     "next": "14.2.5",
     "notiflix": "^3.2.7",

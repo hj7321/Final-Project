@@ -10,6 +10,7 @@ import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import defaultProfileImg from '../../../../../../../public/defaultProfileimg.svg';
+import ProDetailSkeleton from './_components/ProDetailSkeleton';
 import DetailAccount from './_components/AccountDetail';
 
 interface PostData {
@@ -46,10 +47,10 @@ export default function ProDetail() {
   const [isDetailAccountOpen, setIsDetailAccountOpen] = useState(false); // 추가: DetailAccount 모달 열림 상태 관리
 
   const { id: paramId } = useParams();
-  const id = paramId as string; // 추가: id를 문자열로 변환
+  const id = paramId as string;
   const router = useRouter();
-  const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
-  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
+  const { currentUserId } = useSession();
+  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +70,6 @@ export default function ProDetail() {
     fetchData();
   }, [id]);
 
-  // 추가 //
   const handleInquiry = () => {
     // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) {
@@ -105,7 +105,7 @@ export default function ProDetail() {
   };
 
   if (!post || !user) {
-    return <p>로딩중</p>;
+    return <ProDetailSkeleton />;
   }
 
   const handleTabClick = (tabId: string, sectionId: string) => {
@@ -205,7 +205,7 @@ export default function ProDetail() {
                 프로젝트에 대한 요구사항을 함께 논의하고, 최적의 솔루션을 제공하겠습니다. 언제든지 문의해 주세요!
               </p>
             </div>
-            <div className="mx-auto md:w-[85%] w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
+            <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
               <button
                 className="md:w-full md:h-full w-[160px] h-[36px] bg-primary-500 hover:bg-primary-600 py-2  rounded-xl flex flex-row justify-center items-center"
                 onClick={handleInquiry}
@@ -288,7 +288,7 @@ export default function ProDetail() {
                 handleTabClick('portfolio', 'section2');
               }}
             >
-              <a href="#section2">포트폴리오</a>
+              <a href="#section2">포트폴리오 {portfolio.length}</a>
             </li>
             <li
               id="reviews"
@@ -300,7 +300,7 @@ export default function ProDetail() {
                 handleTabClick('reviews', 'section3');
               }}
             >
-              <a href="#section3">리뷰</a>
+              <a href="#section3">리뷰 2</a> {/*나중에 리뷰 구현 후 변경*/}
             </li>
           </ul>
         </div>
@@ -376,7 +376,7 @@ export default function ProDetail() {
                 </div>
               </div>
 
-              <div className="mx-3 border border-slate-400 w-full h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+              <div className="mx-3 border border-slate-400 w-full justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
                 <div className="flex flex-row">
                   <Image src="/star.svg" alt="star" width={16} height={16} priority />
                   <Image src="/star.svg" alt="star" width={16} height={16} priority />
