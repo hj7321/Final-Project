@@ -1,6 +1,7 @@
 import { Database } from '@/types/supabase';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 export function createClient() {
   const cookieStore = cookies();
@@ -23,4 +24,13 @@ export function createClient() {
       }
     }
   );
+}
+
+export function createAdminSupabaseClient() {
+  return createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SERVICE_ROLE_KEY!, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
 }

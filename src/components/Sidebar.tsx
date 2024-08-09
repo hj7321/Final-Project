@@ -13,11 +13,11 @@ const buttonStyle = 'w-[220px] h-[37px] px-[16px] py-[8px] rounded-[8px] text-ce
 const linkStyle = 'flex justify-between px-[12px] py-[8px]';
 
 interface SidebarProp {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Sidebar({ setOpen }: SidebarProp) {
-  const { isLogin, userId } = useAuthStore();
+export default function Sidebar({ setSidebarOpen }: SidebarProp) {
+  const { isLogin, userId, logout } = useAuthStore();
   const router = useRouter();
 
   const getUserData = async () => {
@@ -31,31 +31,42 @@ export default function Sidebar({ setOpen }: SidebarProp) {
   });
 
   const goToLoginPage = (e: React.MouseEvent) => {
-    e.stopPropagation();
     const presentPage = window.location.href;
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
     router.push('/login');
-    setOpen((prev) => !prev);
+    setSidebarOpen((prev) => !prev);
   };
 
   const goToSignUpPage = (e: React.MouseEvent) => {
-    e.stopPropagation();
     const presentPage = window.location.href;
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
     router.push('/signup');
-    setOpen((prev) => !prev);
+    setSidebarOpen((prev) => !prev);
   };
 
   const handleMovePage = (e: React.MouseEvent, href: string) => {
-    e.stopPropagation();
     router.push(href);
-    setOpen((prev) => !prev);
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    await fetch('/api/logout', {
+      method: 'POST'
+    });
+    logout();
+    router.replace('/');
+    setSidebarOpen((prev) => !prev);
+  };
+
+  const goToDeleteUserPage = () => {
+    // 로직짜기
+    setSidebarOpen((prev) => !prev);
   };
 
   return (
-    <section className="fixed top-0 left-0 z-50 w-[252px] min-h-screen flex flex-col bg-white py-[24px] px-[16px]">
+    <section className="md:hidden fixed top-0 left-0 z-50 w-[252px] min-h-screen flex flex-col bg-white py-[24px] px-[16px]">
       <div className="flex-1 flex flex-col">
         <div className="flex-1">
           <Image
@@ -68,11 +79,15 @@ export default function Sidebar({ setOpen }: SidebarProp) {
           {isLogin ? (
             <div className="flex items-center mb-[24px] py-[8px]">
               <Image src="/defaultProfileimg.svg" alt="기본 프로필" width={63} height={63} className="mr-[16px]" />
-              <button onClick={(e) => handleMovePage(e, `/mypage/${userId}`)}>
-                <b className="text-primary-500">{Users?.data?.nickname}</b>님
-              </button>
-              <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
-              <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
+              <div className="flex flex-col gap-[8px]">
+                <button onClick={(e) => handleMovePage(e, `/mypage/${userId}`)}>
+                  <b className="text-primary-500">{Users?.data?.nickname}</b>님
+                </button>
+                <div className="flex gap-[12px]">
+                  <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
+                  <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
+                </div>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col gap-[8px] mb-[24px]">
@@ -110,9 +125,16 @@ export default function Sidebar({ setOpen }: SidebarProp) {
           </nav>
         </div>
       </div>
-      <button className={clsx(!isLogin && 'hidden', 'text-grey-400 self-start pl-[12px]', 'Caption3-L')}>
-        회원 탈퇴
-      </button>
+      <div
+        className={clsx(
+          !isLogin && 'hidden',
+          'flex flex-col gap-[16px] text-grey-400 self-start pl-[12px]',
+          'Caption2-M'
+        )}
+      >
+        <button onClick={handleLogout}>로그아웃</button>
+        <button onClick={goToDeleteUserPage}>회원 탈퇴</button>
+      </div>
     </section>
   );
 }
