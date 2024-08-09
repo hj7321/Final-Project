@@ -275,7 +275,7 @@ export default function ProDetail() {
                 handleTabClick('portfolio', 'section2');
               }}
             >
-              <a href="#section2">포트폴리오</a>
+              <a href="#section2">포트폴리오 {portfolio.length}</a>
             </li>
             <li
               id="reviews"
@@ -287,7 +287,7 @@ export default function ProDetail() {
                 handleTabClick('reviews', 'section3');
               }}
             >
-              <a href="#section3">리뷰</a>
+              <a href="#section3">리뷰 2</a> {/*나중에 리뷰 구현 후 변경*/}
             </li>
           </ul>
         </div>
