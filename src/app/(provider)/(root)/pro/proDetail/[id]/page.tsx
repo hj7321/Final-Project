@@ -40,12 +40,12 @@ export default function ProDetail() {
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
   const [activeTab, setActiveTab] = useState('service');
-  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); // 선택된 포트폴리오
+  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); 
   const { id: paramId } = useParams();
-  const id = paramId as string; // 추가: id를 문자열로 변환
+  const id = paramId as string; 
   const router = useRouter();
-  const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
-  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
+  const { currentUserId } = useSession(); 
+  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +65,7 @@ export default function ProDetail() {
     fetchData();
   }, [id]);
 
-  // 추가 //
+
   const handleInquiry = () => {
     // 문의하기 버튼 클릭 시 실행되는 함수
     if (!currentUserId || !user?.id || !id) {
@@ -193,7 +193,7 @@ export default function ProDetail() {
                 프로젝트에 대한 요구사항을 함께 논의하고, 최적의 솔루션을 제공하겠습니다. 언제든지 문의해 주세요!
               </p>
             </div>
-            <div className="mx-auto md:w-[85%] w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
+            <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
               <button
                 className="md:w-full md:h-full w-[160px] h-[36px] bg-primary-500 hover:bg-primary-600 py-2  rounded-xl flex flex-row justify-center items-center"
                 onClick={handleInquiry}
