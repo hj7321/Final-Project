@@ -58,6 +58,49 @@ export type Database = {
           },
         ]
       }
+      Bookmark: {
+        Row: {
+          created_at: string
+          id: string
+          posts_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          posts_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          posts_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bookmark_posts_id_fkey"
+            columns: ["posts_id"]
+            isOneToOne: false
+            referencedRelation: "Request Posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bookmark_posts_id_fkey1"
+            columns: ["posts_id"]
+            isOneToOne: false
+            referencedRelation: "Community Posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bookmark_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Chat: {
         Row: {
           chat_room_id: string
@@ -333,9 +376,11 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          introduction: string | null
           is_pro: boolean | null
           name: string | null
           nickname: string
+          possible_time: string | null
           profile_img: string | null
         }
         Insert: {
@@ -343,9 +388,11 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          introduction?: string | null
           is_pro?: boolean | null
           name?: string | null
           nickname: string
+          possible_time?: string | null
           profile_img?: string | null
         }
         Update: {
@@ -353,9 +400,11 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          introduction?: string | null
           is_pro?: boolean | null
           name?: string | null
           nickname?: string
+          possible_time?: string | null
           profile_img?: string | null
         }
         Relationships: [
