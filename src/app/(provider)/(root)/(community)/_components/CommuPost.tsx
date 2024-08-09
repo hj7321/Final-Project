@@ -4,6 +4,7 @@ import { CommunityPosts } from '@/types/type';
 import { useParams } from 'next/navigation';
 import useAuthStore from '@/zustand/authStore';
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -50,6 +51,8 @@ export default function CommuPost() {
     enabled: !!userIdFromPost
   });
 
+  console.log(data);
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-6 py-6">
@@ -67,6 +70,7 @@ export default function CommuPost() {
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />
+      {data?.post_img?.[0] && <Image src={data.post_img[0]} alt="Post Image" width={800} height={500} />}
       <p className="py-6">{data?.content}</p>
     </div>
   );

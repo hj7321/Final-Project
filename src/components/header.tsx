@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
@@ -17,13 +17,25 @@ const linkStyle = 'text-grey-700 hover:text-primary-500 hover:font-bold px-[12px
 export default function Header() {
   const [searchInput, setSearchInput] = useState('');
   const [number, setNumber] = useState<number>(0);
-  const [open, setOpen] = useState<boolean>(false);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [session, setSession] = useState<string | null | undefined>(null);
   const router = useRouter();
   const { isLogin, logout, userId, initializeAuthState } = useAuthStore();
 
+  // const searchParams = useSearchParams();
+  // const currentIndex = searchParams.get('index');
+
+  // useEffect(() => {
+  //   if (currentIndex) setSelectedIdx(+currentIndex);
+  //   else setSelectedIdx(null);
+  // }, [currentIndex]);
+
   const pathname = usePathname();
-  const isAuthPage = ['/login', '/signup'].includes(pathname);
+  const isAuthPage = ['/login', '/login/confirmEmail', '/login/resetPassword', '/login/sendLink', '/signup'].includes(
+    pathname
+  );
 
   const supabase = createClient();
 
@@ -89,19 +101,22 @@ export default function Header() {
     router.push('/signup');
   };
 
+  // const handleMovePage = (href: string, idx: number): void => {
+  //   router.push(`${href}?index=${idx}`);
+  // };
+
   return (
     <>
       <header
         className={clsx(
           'sticky top-0 z-40 flex h-[56px] md:h-[72px] px-[16px] md:px-[120px] py-[16px] border border-grey-100 bg-white',
           isAuthPage && 'hidden md:flex',
-          open && 'bg-grey-900 bg-opacity-50'
+          sidebarOpen && 'bg-grey-900 bg-opacity-50'
         )}
       >
         <div className="w-full flex justify-between items-center md:hidden">
-          <button onClick={() => setOpen(true)}>
+          <button onClick={() => setSidebarOpen(true)}>
             <Image src="/hamburger.svg" alt="메뉴 아이콘" width={24} height={24} />
-            {open && <Sidebar setOpen={setOpen} />}
           </button>
           <Link href="/">
             <div className="w-40 h-16 flex items-center justify-center">
@@ -112,9 +127,7 @@ export default function Header() {
               )}
             </div>
           </Link>
-          <button>
-            <Image src="/searchIcon.svg" alt="돋보기 아이콘" width={24} height={24} />
-          </button>
+          <Image src="/searchIcon.svg" alt="돋보기 아이콘" width={24} height={24} onClick={() => setSearchOpen(true)} />
         </div>
 
         <div className="w-full justify-between items-center hidden md:flex">
@@ -129,13 +142,25 @@ export default function Header() {
               </div>
             </Link>
             <nav className="ml-4 space-x-[12px]">
-              <Link href="/qna" className={linkStyle}>
+              <Link
+                href="/qna"
+                // onClick={() => handleMovePage('/qna', 0)}
+                className={clsx(selectedIdx === 0 && 'text-primary-500 font-bold', linkStyle)}
+              >
                 Q&A
               </Link>
-              <Link href="/insight" className={linkStyle}>
+              <Link
+                href="/insight"
+                // onClick={() => handleMovePage('/insight', 1)}
+                className={clsx(selectedIdx === 1 && 'text-primary-500 font-bold', linkStyle)}
+              >
                 인사이트
               </Link>
-              <Link href="/pro" className={linkStyle}>
+              <Link
+                href="/pro"
+                // onClick={() => handleMovePage('/pro', 2)}
+                className={clsx(selectedIdx === 2 && 'text-primary-500 font-bold', linkStyle)}
+              >
                 전문가 의뢰
               </Link>
             </nav>
@@ -190,7 +215,32 @@ export default function Header() {
           )}
         </div>
       </header>
-      {open && <div className="fixed inset-0 bg-grey-900 bg-opacity-50 z-30" onClick={() => setOpen(false)}></div>}
+      {sidebarOpen && <Sidebar setSidebarOpen={setSidebarOpen} />}
+      {sidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-grey-900 bg-opacity-50 z-30"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+      {searchOpen && (
+        <div className="md:hidden fixed top-0 z-50 py-[8px] px-[16px] flex gap-[8px] w-full h-[56px] items-center justify-center bg-white">
+          <Image src="/closeBtnX.svg" alt="닫기" width={24} height={24} onClick={() => setSearchOpen(false)} />
+          <div className="w-[90%] h-[40px] flex justify-between bg-grey-50 rounded-[20px] px-[16px] py-[8px]">
+            <input
+              type="text"
+              placeholder="도움이 필요한 언어, 주제를 찾아보세요."
+              className="bg-grey-50 outline-none w-[250px] h-[24px] placeholder-grey-200 placeholder:text-[12px] md:placeholder:text-[14px] text-black text-[13px] md:text-[15px]"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button onClick={handleSearch}>
+              <Image src="/searchIcon.svg" alt="돋보기 아이콘" width={24} height={24} />
+            </button>
+          </div>
+        </div>
+      )}
+      {searchOpen && <div className="md:hidden fixed inset-0" onClick={() => setSearchOpen(false)}></div>}
     </>
   );
 }
