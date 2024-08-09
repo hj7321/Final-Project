@@ -49,8 +49,12 @@ export default function ProDetail() {
   const { id: paramId } = useParams();
   const id = paramId as string;
   const router = useRouter();
-  const { currentUserId } = useSession();
-  const { chatRoomId, isChatOpen, toggleChat, setChatRoomId } = useChatRoom(currentUserId, user?.id || null, id);
+  const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
+  const { chatRoomId, isChatOpen, toggleChat, createOrFetchChatRoom } = useChatRoom(
+    currentUserId,
+    user?.id || null,
+    id
+  ); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,18 +74,20 @@ export default function ProDetail() {
     fetchData();
   }, [id]);
 
-  const handleInquiry = () => {
-    // 문의하기 버튼 클릭 시 실행되는 함수
+  // 추가(수정-승현) //
+  const handleInquiry = async () => {
     if (!currentUserId || !user?.id || !id) {
-      // 사용자 ID, 작성자 ID 또는 게시물 ID가 없을 경우 에러 로그 출력
       console.error('No user logged in, author ID or post ID missing');
       alert('로그인 후 이용해주세요.');
       const presentPage = window.location.href;
       const pagePathname = new URL(presentPage).pathname;
       Cookies.set('returnPage', pagePathname);
       router.push('/login');
+      return;
     }
-    toggleChat(); // 채팅 창 열림/닫힘 상태를 토글
+
+    await createOrFetchChatRoom(); // 채팅방 생성 또는 기존 채팅방 가져오기
+    toggleChat(); // 채팅 창 열기/닫기
   };
 
   const handlePortfolioClick = (portfolio: PortfolioData) => {

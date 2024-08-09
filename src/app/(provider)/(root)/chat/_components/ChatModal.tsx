@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Chat, Users } from '@/types/type';
 import Image from 'next/image';
-
+import DescriptionInput from '../../pro/createCard/_components/DescriptionInput';
+// import '@/css/chatMdstyle.css'
 const supabase = createClient();
 
 type ChatModalProps = {
@@ -173,6 +174,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
               className="flex-1 p-3 border border-gray-300 rounded-lg mr-2 text-sm font-normal py-3"
               placeholder="메시지를 입력하세요"
             />
+            {/* <DescriptionInput /> */}
             <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
               <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
               <div className='hidden md:block'>보내기</div>
