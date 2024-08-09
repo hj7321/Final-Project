@@ -134,6 +134,11 @@ export default function EditProfile() {
     mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
   };
 
+  const cancleButton = (): void => {
+    Notify.success('수정이 취소되었습니다.');
+    window.location.reload();
+  };
+
   if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
   if (error) {
@@ -225,7 +230,7 @@ export default function EditProfile() {
         <div className="flex mx-0 justify-between">
           <button
             type="button"
-            onClick={() => console.log('취소')}
+            onClick={() => cancleButton()}
             className="w-96  md:h-20 px-4 py-2 border border-primary-500 text-primary-500 rounded-md ml-auto"
           >
             취소하기
