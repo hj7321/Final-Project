@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import * as PortOne from '@portone/browser-sdk/v2';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
-import ChatModal from '@/app/(provider)/(root)/chat/_components/ChatModal';
 
 interface PostData {
   id: string;
@@ -45,7 +44,6 @@ type AccountModalProps = {
 const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portfolio }) => {
   const { currentUserId } = useSession();
   const paymentId = `payment${crypto.randomUUID().slice(0, 8)}`;
-  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
   const getUserData = async () => {
     const supabase = createClient();
@@ -86,7 +84,9 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           fullName: Users?.data?.nickname,
           phoneNumber: '010-0000-1234',
           email: Users?.data?.email
-        }
+        },
+        // redirectUrl: `${process.env.BASE_URL}/payment-redirect`,
+        redirectUrl: `http://localhost:3000/`
       });
 
       // 결제 성공 시 서버에 알림
@@ -97,15 +97,32 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           paymentId: paymentId,
           orderId: post.id
         })
-      });
+      })
+        .then((res) => {
+          console.log(res);
+          res.json();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-      if (!notified.ok) {
-        throw new Error('Failed to notify the server');
-      }
+      // if (!notified.ok) {
+      //   const errorData = await notified.json();
+      //   throw new Error(`Failed to notify the server: ${errorData.message}`);
+      // }
 
-      alert('결제가 완료되었습니다.');
+      console.log('try');
+
+      return alert('결제가 완료되었습니다.');
       //   setIsChatModalOpen(true);
     } catch (error) {
+      console.log('catch');
+      console.log(
+        JSON.stringify({
+          paymentId: paymentId,
+          orderId: post.id
+        })
+      );
       console.error('Payment failed:', error);
       alert('결제에 실패했습니다. 다시 시도해주세요.');
     }
@@ -132,12 +149,6 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           </button>
         </div>
       </div>
-      {isChatModalOpen && (
-        <ChatModal
-          chatRoomId="919eb624-780e-401f-8ec6-e640c0e52ac5" // 여기에 실제 chatRoomId를 전달합니다.
-          onClose={() => setIsChatModalOpen(false)} // ChatModal 닫는 함수 전달
-        />
-      )}{' '}
     </div>
   );
 };
