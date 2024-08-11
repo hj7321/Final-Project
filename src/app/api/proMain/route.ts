@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
+
 export async function GET(request: any) {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '0', 10);
@@ -27,7 +28,6 @@ export async function GET(request: any) {
       console.error('Error fetching data:', error);
       return NextResponse.json({ error: '데이터를 가져오는데 실패했습니다' });
     }
-    
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching data:', error);
