@@ -22,7 +22,7 @@
 </p>
 <p style="font-size: 1.5em; font-weight: bold;">
     <a href="https://www.figma.com/design/3ycjBsaCimkiAU7mxt8TlI/%ED%8C%94%EC%83%89%EC%A1%B0(A08)?node-id=756-12751&t=247JHFfGARCgYJ45-0">
-        피그마 바로가기
+        <img src="./public/figma.svg" style="vertical-align: -4.5px;"> 피그마 바로가기
     </a>
 </p>
 
@@ -32,7 +32,7 @@
 
 👨‍👩‍👧‍👦 [팀원 소개](#팀원-소개)
 <br>
-<img src="./public/codeu.svg" alt="코듀 캐릭터" width="18" height="18" style="vertical-align: -4px;"> [프로젝트 개요](#프로젝트-개요)
+<img src="./public/codeu.svg" alt="코듀 캐릭터" width="20" height="20" style="vertical-align: -4px;"> [프로젝트 개요](#프로젝트-개요)
 <br>
 🛠️ [기술 스택](#️-기술-스택)
 <br>
@@ -90,7 +90,7 @@
 <br>
 <br>
 
-# <img src="./public/codeu.svg" alt="코듀 캐릭터" width="40" height="40" style="vertical-align: -10px;"> 프로젝트 개요
+# <img src="./public/codeu.svg" alt="코듀 캐릭터" width="43" height="43" style="vertical-align: -13px;"> 프로젝트 개요
 
 - 프로젝트명 : **코듀(CodeU)**
 
@@ -102,7 +102,7 @@
 
   > 코딩을 하다가 막히는 부분이 생기면 대부분 구글링을 통해 해결책을 찾게 됩니다.  
   > 하지만 구글링 결과 중 상당수가 영어로 된 사이트이기 때문에, 한국인 입장에서는 정보를 찾고 이해하는 데 어려움이 있습니다.  
-  > 이러한 문제를 해결하기 위해, 저희늰 **한국어로 쉽게 접근할 수 있는 서비스를 출시**하여 **한국 개발자들이 코딩 공부를 더 수월하게 할 수 있도록** 돕고자 합니다.
+  > 이러한 문제를 해결하기 위해, 저희는 **한국어로 쉽게 접근할 수 있는 서비스를 출시**하여 **한국 개발자들이 코딩 공부를 더 수월하게 할 수 있도록** 돕고자 합니다.
 
 - 프로젝트 목표
 
