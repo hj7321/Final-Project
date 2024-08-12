@@ -33,9 +33,16 @@ export default function Header() {
   // }, [currentIndex]);
 
   const pathname = usePathname();
-  const isAuthPage = ['/login', '/login/confirmEmail', '/login/resetPassword', '/login/sendLink', '/signup'].includes(
-    pathname
-  );
+  const hideHeader = [
+    '/login',
+    '/login/confirmEmail',
+    '/login/resetPassword',
+    '/login/sendLink',
+    '/signup',
+    '/appInfo',
+    '/appInfo/personalInfo',
+    '/appInfo/serviceInfo'
+  ].includes(pathname);
 
   const supabase = createClient();
 
@@ -109,8 +116,8 @@ export default function Header() {
     <>
       <header
         className={clsx(
-          'sticky top-0 z-40 flex h-[56px] md:h-[72px] px-[16px] md:px-[120px] py-[16px] border border-grey-100 bg-white',
-          isAuthPage && 'hidden md:flex',
+          'sticky top-0 z-10 flex h-[56px] md:h-[72px] px-[16px] md:px-[120px] py-[16px] border border-grey-100 bg-white',
+          hideHeader && 'hidden md:flex',
           sidebarOpen && 'bg-grey-900 bg-opacity-50'
         )}
       >
@@ -218,12 +225,12 @@ export default function Header() {
       {sidebarOpen && <Sidebar setSidebarOpen={setSidebarOpen} />}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-grey-900 bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-grey-900 bg-opacity-50 z-20"
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
       {searchOpen && (
-        <div className="md:hidden fixed top-0 z-50 py-[8px] px-[16px] flex gap-[8px] w-full h-[56px] items-center justify-center bg-white">
+        <div className="md:hidden fixed top-0 z-20 py-[8px] px-[16px] flex gap-[8px] w-full h-[56px] items-center justify-center bg-white">
           <Image src="/closeBtnX.svg" alt="닫기" width={24} height={24} onClick={() => setSearchOpen(false)} />
           <div className="w-[90%] h-[40px] flex justify-between bg-grey-50 rounded-[20px] px-[16px] py-[8px]">
             <input
