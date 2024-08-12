@@ -43,7 +43,7 @@ type AccountModalProps = {
 
 const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portfolio }) => {
   const { currentUserId } = useSession();
-  const paymentId = `payment${crypto.randomUUID().slice(0, 8)}`;
+  const paymentId = `payment-${crypto.randomUUID().slice(0, 20)}`;
 
   const getUserData = async () => {
     const supabase = createClient();
@@ -55,11 +55,7 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
     return data;
   };
 
-  const {
-    data: Users,
-    isLoading,
-    error
-  } = useQuery({
+  const { data: Users } = useQuery({
     queryKey: ['Users'],
     queryFn: getUserData,
     enabled: !!currentUserId
@@ -84,9 +80,9 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           fullName: Users?.data?.nickname,
           phoneNumber: '010-0000-1234',
           email: Users?.data?.email
-        },
+        }
         // redirectUrl: `${process.env.BASE_URL}/payment-redirect`,
-        redirectUrl: `http://localhost:3000/`
+        // redirectUrl: `http://localhost:3000/payment-redirect`
       });
 
       // 결제 성공 시 서버에 알림
@@ -95,12 +91,13 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           paymentId: paymentId,
-          orderId: post.id
+          orderId: post.id,
+          buyerId: currentUserId,
+          proId: currentUserId
         })
       })
         .then((res) => {
           console.log(res);
-          res.json();
         })
         .catch((err) => {
           console.log(err);
