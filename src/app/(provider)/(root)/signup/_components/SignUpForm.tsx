@@ -1,13 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { validateForms } from './Validate';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '@/zustand/authStore';
 import Modal from './Modal';
 import Image from 'next/image';
 import Link from 'next/link';
+import useFetchData from '@/hooks/useFetchData';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -15,7 +16,7 @@ const inputs = [
   { label: '비밀번호 확인', type: 'password', id: 'pwCheck', icon: true },
   { label: '닉네임', type: 'text', id: 'nickname' },
   { label: '이름', type: 'text', id: 'name' },
-  { label: '생년월일', type: 'text', id: 'birth', add: 'ex)19990101' }
+  { label: '생년월일 ex)19990101', type: 'text', id: 'birth' }
 ];
 
 const checkBoxes = [
@@ -27,33 +28,26 @@ const checkBoxes = [
 ];
 
 export default function SignUpForm() {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
-  const [showPassword, setShowPassword] = useState<boolean[]>(Array(2).fill(false));
-  const [showModal, setShowModal] = useState<number | null>(null);
-  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill(''));
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false));
-  const [emailData, setEmailData] = useState<string[]>(['']);
-  const [nicknameData, setNicknameData] = useState<string[]>(['']);
-  // 회원가입 버튼 연속으로 누르는 거 막기 -> 이거 안하면 연속으로 눌렀을 때 이미 있는 유저라는 supabase 자체 에러 뜸
-  const [throttling, setThrottling] = useState<boolean>(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]); // 각 인풋 요소를 가리키는 참조 변수 배열
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null); // 선택된 인풋 필드의 인덱스
+  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 값(내용)이 담긴 배열
+  const [showPassword, setShowPassword] = useState<boolean[]>(Array(2).fill(false)); // 비밀번호를 표시할지 여부를 결정하는 boolean 값이 담긴 배열 (비밀번호, 비밀번호 확인)
+  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 유효성 메시지가 담긴 배열
+
+  const [showModal, setShowModal] = useState<number | null>(null); // 보여줄 모달의 종류를 숫자로 나타냄
+
+  const [isChecked, setIsChecked] = useState<boolean>(false); // 체크박스에서 "전체 동의"가 체크되었는지 확인하는 boolean 값
+  const [areChecked, setAreChecked] = useState<boolean[]>(Array(checkBoxes.length).fill(false)); // 체크박스에서 "전체 동의"를 제외한 각 항목이 체크되었는지 확인하는 boolean 값이 담긴 배열
+
+  const { emailData, nicknameData } = useFetchData(); // 각각 Users 테이블의 모든 이메일, 닉네임이 담긴 배열
+
+  const [throttling, setThrottling] = useState<boolean>(false); // 버튼 연속 클릭 방지
 
   const router = useRouter();
 
-  const { login, setUserId, setUserData } = useAuthStore();
+  const { login, setUserId, setUserData } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수, 유저 정보 설정 함수
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const response = await fetch('/api/signup');
-      const result = await response.json();
-      setEmailData(result.emailData);
-      setNicknameData(result.nicknameData);
-    };
-    fetchUserData();
-  }, []);
-
+  // 인풋 필드의 값이 바뀔(입력될) 때마다 호출되는 이벤트 핸들러 -> 값에 맞는 유효성 메시지가 실시간으로 바뀜
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
@@ -73,12 +67,16 @@ export default function SignUpForm() {
     setInputMsgs(newMsgs);
   };
 
+  // 비밀번호를 보여줄지, 숨길지 여부를 결정하는 이벤트 핸들러
   const handleTogglePassword = (idx: number): void => {
     const newVisibility = [...showPassword];
     newVisibility[idx] = !newVisibility[idx];
     setShowPassword(newVisibility);
   };
 
+  // "전체 동의"란의 체크 여부를 확인하는 이벤트 핸들러
+  // 체크가 되었으면, 나머지 4개의 체크박스에도 자동 체크 처리
+  // 체크가 해제되었으면, 나머지 4개의 체크박스에도 자동 체크 해제
   const handleAllCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const checkedOrNot: boolean = e.target.checked;
     setIsChecked(checkedOrNot);
@@ -86,6 +84,9 @@ export default function SignUpForm() {
     else setAreChecked(areChecked.fill(false));
   };
 
+  // "전체 동의"를 제외한 4개 항목의 체크 여부를 확인하는 이벤트 핸들러
+  // 4개 모두 체크가 되었으면, "전체 동의" 체크박스에도 자동 체크 처리
+  // 4개 중 하나라도 체크가 해제되었으면, "전체 동의" 체크박스에도 자동 체크 해제
   const handleFourCheckBoxesChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const newValues: boolean[] = [...areChecked];
     newValues[idx] = e.target.checked;
@@ -95,15 +96,18 @@ export default function SignUpForm() {
     else setIsChecked(false);
   };
 
+  // 모달을 여는 이벤트 핸들러
   const handleOpenModal = (idx: number): void => {
     setShowModal(idx);
   };
 
-  const handleCloseModal = () => {
+  // 모달을 닫는 이벤트 핸들러
+  const handleCloseModal = (): void => {
     setShowModal(null);
   };
 
-  const handleUserDataSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  // 회원가입을 진행하는(사용자 정보를 제출하는) 이벤트 핸들러
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     const areInputValuesNull: string[] = inputValues.filter((value) => value === '');
 
     if (inputMsgs[0] !== '') {
@@ -128,8 +132,8 @@ export default function SignUpForm() {
     } else if (!areChecked[0] || !areChecked[1] || !areChecked[2]) {
       return alert('모든 필수 사항에 체크해주세요.');
     } else {
-      console.log('모든 조건 충족!');
-      setThrottling(true);
+      setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
+
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
 
@@ -139,7 +143,10 @@ export default function SignUpForm() {
       const name: string = formData.get('name') as string;
       const birth: string = formData.get('birth') as string;
 
+      // 회원가입 라우트 핸들러에 보낼 유저 정보를 하나의 객체로 만듦
       const dataForSubmit = { email, password, nickname, name, birth };
+
+      // 회원가입 라우트 핸들러 호출
       const data = await fetch('/api/signup', {
         method: 'POST',
         headers: {
@@ -150,16 +157,16 @@ export default function SignUpForm() {
 
       if (data.errorMsg) {
         alert(data.errorMsg);
+        setThrottling(false); // 다시 버튼 클릭을 허용함
         return;
       }
 
-      console.log('회원가입 성공!');
-      form.reset();
-      login();
-      setUserId(data.userData.user.id);
-      setUserData(data.userData.user.user_metadata);
-
-      router.replace('signup/signUpComplete');
+      // 회원가입 성공 후 로직
+      form.reset(); // (1) 폼 내용 모두 리셋
+      login(); // (2) 로그인된 상태로 설정
+      setUserId(data.userData.user.id); // (3) 유저 고유 아이디 설정
+      setUserData(data.userData.user.user_metadata); // (4) 유저 정보 설정
+      router.replace('signup/signUpComplete'); // (5) 현재 페이지를 사용자 유형 선택 페이지로 대체
     }
   };
 
@@ -168,8 +175,9 @@ export default function SignUpForm() {
       {showModal !== null && <Modal onClose={handleCloseModal} modalNum={showModal} />}
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          if (!throttling) handleUserDataSubmit(e);
+          e.preventDefault(); // 폼 제출 방지
+          // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleSignUp 이벤트 핸들러 호출
+          if (!throttling) handleSignUp(e);
         }}
         className="w-[528px] min-h-[1012px] rounded-[24px] flex flex-col items-center py-[64px] bg-white"
       >
@@ -187,12 +195,12 @@ export default function SignUpForm() {
                 className={clsx(
                   'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[56px] md:h-[70px] border-primary-500 pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
-                    ? 'h-[56px] border-grey-100 py-[16px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-100 py-[16px] md:py-[20px]'
                     : inputMsgs[idx].length === 0
-                    ? 'h-[56px] md:h-[70px] border-grey-500 pt-[6px]'
-                    : 'h-[56px] md:h-[70px] border-error pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-500 pt-[6px]'
+                    : 'h-[56px] md:h-[66px] border-error pt-[6px]'
                 )}
               >
                 <label
@@ -218,7 +226,7 @@ export default function SignUpForm() {
                     type={showPassword[idx - 1] ? 'text' : input.type}
                     id={input.id}
                     name={input.id}
-                    placeholder={idx === selectedIdx ? '' : input.add ? `${input.label} ${input.add}` : input.label}
+                    placeholder={idx === selectedIdx ? '' : input.label}
                     ref={(el) => {
                       inputRefs.current[idx] = el;
                     }}
@@ -306,8 +314,10 @@ export default function SignUpForm() {
         <button
           type="submit"
           className={clsx(
-            throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
-            'h-[56px] w-[328px] md:w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
+            'h-[56px] w-[328px] md:w-[400px] rounded-[8px]',
+            throttling
+              ? 'hover:cursor-default bg-primary-300 text-white bg-opacity-50 text-opacity-50'
+              : 'bg-primary-500 hover:bg-primary-700 text-white'
           )}
         >
           회원가입
