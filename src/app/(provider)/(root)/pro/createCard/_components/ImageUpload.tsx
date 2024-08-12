@@ -10,6 +10,7 @@ interface ImageUploadProps {
 export default function ImageUpload({ images, handleImageDelete, handleImageChange }: ImageUploadProps) {
   return (
     <div className="w-full border-2 border-slate-400 my-[20px] rounded-md md:p-4 p-2">
+      <p className="md:ml-7 ml-2 md:text-lg text-base">이미지 첨부(필수, 최대 5개)</p>
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="flex flex-wrap md:mt-4 mt-2">
           {images.map((image, index) => (
