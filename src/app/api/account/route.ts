@@ -58,3 +58,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: `결제 검증에 실패했습니다.` }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const supabase = createClient();
+
+    // Request Posts 테이블에서 데이터 가져오기
+    const { data: requestPosts, error: requestPostsError } = await supabase.from('Request Posts').select('*');
+
+    if (requestPostsError) {
+      throw new Error('Request Posts 데이터를 가져오는 데 실패했습니다.');
+    }
+
+    // account 테이블에서 데이터 가져오기
+    const { data: accounts, error: accountsError } = await supabase.from('Accounts').select('*');
+
+    if (accountsError) {
+      throw new Error('account 데이터를 가져오는 데 실패했습니다.');
+    }
+
+    // Request Posts의 id와 account의 request_post_id를 비교하여 필터링
+    const filteredPosts = requestPosts.filter((post) =>
+      accounts.some((account) => account.request_post_id === post.id)
+    );
+
+    return NextResponse.json(filteredPosts);
+  } catch (error) {
+    return NextResponse.json({ error: '데이터를 가져오는 데 실패했습니다.' });
+  }
+}
