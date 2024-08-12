@@ -11,7 +11,7 @@ import { useInfiniteQuery, QueryFunctionContext, QueryKey } from '@tanstack/reac
 import '@/css/proMain.css'
 import useProMain from '@/hooks/useProMain';
 
-interface Posts {
+export interface Posts {
   id: string;
   user_id: string;
   title: string;
