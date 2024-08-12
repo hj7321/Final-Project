@@ -108,12 +108,9 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
       //   throw new Error(`Failed to notify the server: ${errorData.message}`);
       // }
 
-      console.log('try');
-
       return alert('결제가 완료되었습니다.');
       //   setIsChatModalOpen(true);
     } catch (error) {
-      console.log('catch');
       console.log(
         JSON.stringify({
           paymentId: paymentId,
