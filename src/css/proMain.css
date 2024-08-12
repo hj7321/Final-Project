@@ -1,0 +1,19 @@
+.post {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.post-enter {
+  opacity: 0;
+}
+
+.post-enter-active {
+  opacity: 1;
+}
+
+.post-exit {
+  opacity: 1;
+}
+
+.post-exit-active {
+  opacity: 0;
+}

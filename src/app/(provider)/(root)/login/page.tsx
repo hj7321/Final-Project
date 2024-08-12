@@ -6,9 +6,10 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent, FormEventHandler, useEffect, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import { validateForms } from '../signup/_components/Validate';
+import useFetchData from '@/hooks/useFetchData';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -19,33 +20,27 @@ const webBtnStyle = 'h-[56px] w-[400px] rounded-[12px] text-black flex justify-c
 const mobileBtnStyle = 'w-[64px] h-[64px] rounded-full flex justify-center items-center';
 
 export default function LoginPage() {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill(''));
-  const [emailData, setEmailData] = useState<string[]>(['']);
-  const [throttling, setThrottling] = useState<boolean>(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]); // 각 인풋 요소를 가리키는 참조 변수 배열
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null); // 선택된 인풋 필드의 인덱스
+  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 값(내용)이 담긴 배열
+  const [showPassword, setShowPassword] = useState<boolean>(false); // 비밀번호를 표시할지 여부를 결정하는 boolean 값
+  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 유효성 메시지가 담긴 배열
+
+  const { emailData } = useFetchData(); // Users 테이블의 모든 이메일이 담긴 배열
+
+  const [throttling, setThrottling] = useState<boolean>(false); // 버튼 연속 클릭 방지
 
   const router = useRouter();
 
-  const { login, setUserId, setUserData } = useAuthStore();
+  const { login, setUserId, setUserData } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수, 유저 정보 설정 함수
 
-  useEffect(() => {
-    const fetchEmailData = async () => {
-      const response = await fetch('/api/signup');
-      const result = await response.json();
-      setEmailData(result.emailData);
-    };
-    fetchEmailData();
-  }, []);
-
+  // 인풋 필드의 값이 바뀔(입력될) 때마다 호출되는 이벤트 핸들러 -> 값에 맞는 유효성 메시지가 실시간으로 바뀜
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
     setInputValues(newValues);
 
-    const alertMessage = validateForms(newValues[1], 1);
+    const alertMessage = validateForms(newValues[1], 1); // 로그인 페이지에서는 비밀번호 유효성 검사만 실시함
     const newMsgs = [...inputMsgs];
     if (idx === 0 && !emailData!.includes(newValues[0])) {
       newMsgs[0] = '존재하지 않는 이메일입니다.';
@@ -57,22 +52,27 @@ export default function LoginPage() {
     setInputMsgs(newMsgs);
   };
 
+  // 비밀번호를 보여줄지, 숨길지 여부를 결정하는 이벤트 핸들러
   const handleTogglePassword = (): void => {
     const newVisibility = !showPassword;
     setShowPassword(newVisibility);
   };
 
+  // 로그인을 진행하는 이벤트 핸들러
   const handleLogin = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     const areInputValuesNull: string[] = inputValues.filter((value) => value === '');
 
     if (inputMsgs[0] !== '') {
       inputRefs.current[0]!.focus();
       return;
+    } else if (inputMsgs[1] !== '') {
+      inputRefs.current[1]!.focus();
+      return;
     } else if (areInputValuesNull.length !== 0) {
       return alert('회원 정보를 모두 기입해주세요.');
     }
 
-    setThrottling(true);
+    setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -80,7 +80,10 @@ export default function LoginPage() {
     const email: string = formData.get('email') as string;
     const password: string = formData.get('pw') as string;
 
+    // 로그인 라우트 핸들러에 보낼 유저 정보를 하나의 객체로 만듦
     const dataForSubmit = { email, password };
+
+    // 로그인 라우트 핸들러 호출
     const data = await fetch('/api/login', {
       method: 'POST',
       headers: {
@@ -90,25 +93,27 @@ export default function LoginPage() {
     }).then((res) => res.json());
 
     if (data.errorMsg) {
-      setThrottling(false);
+      // 여기에서 에러가 나는 이유는 비밀번호를 잘못 입력했기 때문임
+      setThrottling(false); // 다시 버튼 클릭을 허용함
       const newMsgs = [...inputMsgs];
       newMsgs[1] = '비밀번호를 정확히 입력해주세요.';
       setInputMsgs(newMsgs);
       inputRefs.current[1]!.focus();
       return;
     }
-    console.log('로그인 성공!');
-    setThrottling(true);
-    form.reset();
-    login();
-    setUserId(data.userData.user.id);
-    setUserData(data.userData.user.user_metadata);
 
-    const redirectPage = Cookies.get('returnPage');
-    Cookies.remove('returnPage');
-    router.replace(redirectPage!);
+    // 로그인 성공 후 로직
+    form.reset(); // (1) 폼 내용 모두 리셋
+    login(); // (2) 로그인된 상태로 설정
+    setUserId(data.userData.user.id); // (3) 유저 고유 아이디 설정
+    setUserData(data.userData.user.user_metadata); // (4) 유저 정보 설정
+    // (5) 로그인 페이지로 오기 전 페이지로 리다이렉트
+    const redirectPage = Cookies.get('returnPage'); // (5-1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
+    Cookies.remove('returnPage'); // (5-2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
+    router.replace(redirectPage!); // (5-3) 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
   };
 
+  // 카카오 소셜 로그인을 진행하는 이벤트 핸들러
   const handleKakaoLogin = async () => {
     const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -120,6 +125,7 @@ export default function LoginPage() {
     if (error) console.error('카카오 로그인 에러: ', error);
   };
 
+  // 구글 소셜 로그인을 진행하는 이벤트 핸들러
   const handleGoogleLogin = async () => {
     const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -135,6 +141,7 @@ export default function LoginPage() {
     if (error) console.error('구글 로그인 에러: ', error);
   };
 
+  // 깃허브 소셜 로그인을 진행하는 이벤트 핸들러
   const handleGitHubLogin = async () => {
     const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -158,7 +165,8 @@ export default function LoginPage() {
         </div>
         <form
           onSubmit={(e) => {
-            e.preventDefault();
+            e.preventDefault(); // 폼 제출 방지
+            // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleLogin 이벤트 핸들러 호출
             if (!throttling) handleLogin(e);
           }}
           className="flex flex-col gap-[10px] items-center"
@@ -169,12 +177,12 @@ export default function LoginPage() {
                 className={clsx(
                   'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[56px] md:h-[70px] border-primary-500 pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
-                    ? 'h-[56px] border-grey-100 py-[16px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-100 py-[16px] md:py-[20px]'
                     : inputMsgs[idx].length === 0
-                    ? 'h-[56px] md:h-[70px] border-grey-500 pt-[6px]'
-                    : 'h-[56px] md:h-[70px] border-error pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-500 pt-[6px]'
+                    : 'h-[56px] md:h-[66px] border-error pt-[6px]'
                 )}
               >
                 <label
@@ -249,9 +257,10 @@ export default function LoginPage() {
           <button
             type="submit"
             className={clsx(
-              throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
-              'Body-M',
-              'h-[56px] w-[328px] md:w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white mt-[32px] mb-[16px]'
+              'h-[56px] w-[328px] md:w-[400px] rounded-[8px] mt-[32px] mb-[16px]',
+              throttling
+                ? 'hover:cursor-default bg-primary-300 text-white bg-opacity-50 text-opacity-50'
+                : 'bg-primary-500 hover:bg-primary-700 text-white'
             )}
           >
             로그인
@@ -260,8 +269,7 @@ export default function LoginPage() {
 
         <div className="w-[328px] md:w-[400px] text-[#afafaf] flex justify-end mb-[32px]">
           <Link href="/login/sendLink" className="flex text-grey-600 hover:underline">
-            <p className={clsx('Caption2-M', 'md:hidden')}>비밀번호 찾기&nbsp;&nbsp;{'>'}</p>
-            <p className={clsx('Body-M', 'hidden md:block')}>비밀번호 찾기&nbsp;&nbsp;{'>'}</p>
+            <p className="text-[12px] md:text-[16px]">비밀번호 찾기&nbsp;&nbsp;{'>'}</p>
           </Link>
         </div>
 
