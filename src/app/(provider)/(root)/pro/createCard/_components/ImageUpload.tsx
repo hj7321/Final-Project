@@ -1,4 +1,3 @@
-
 interface ImageUploadProps {
   images: File[];
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -40,9 +39,8 @@ export default function ImageUpload({ images, handleImageDelete, handleImageChan
             />
           </label>
         )}
-        <label className="md:my-4 my-3 underline underline-offset-4 text-blue-600 cursor-pointer md:text-base text-xs text-center">
-          이미지를 첨부해주세요. <br/>
-          (1개 이상 필수, 최대 5개까지 첨부 가능)
+        <label className="md:my-4 my-3 text-blue-600 cursor-pointer md:text-base text-xs text-center border border-primary-500 p-2 rounded-full">
+          이미지 첨부
           <input type="file" multiple className="hidden" onChange={handleImageChange} />
         </label>
       </div>
