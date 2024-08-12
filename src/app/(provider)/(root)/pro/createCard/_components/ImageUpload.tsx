@@ -1,3 +1,6 @@
+import Image from 'next/image';
+import uploadImg from '../../../../../../../public/uploadImg.svg'
+
 interface ImageUploadProps {
   images: File[];
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,8 +42,9 @@ export default function ImageUpload({ images, handleImageDelete, handleImageChan
             />
           </label>
         )}
-        <label className="md:my-4 my-3 text-blue-600 cursor-pointer md:text-base text-xs text-center border border-primary-500 p-2 rounded-full">
-          이미지 첨부
+        <label className="md:my-4 my-3 text-blue-600 cursor-pointer md:text-base text-xs text-center border border-primary-500 md:p-2 px-2 py-1 items-center rounded-full flex flex-row">
+          <Image src={uploadImg} alt="" width={25} height={25} className='md:mx-1 md:w-[30px] md:h-[30px] w-[20px] h-[20px]' />
+          <span className='md:mx-1 '>이미지 첨부</span>
           <input type="file" multiple className="hidden" onChange={handleImageChange} />
         </label>
       </div>
