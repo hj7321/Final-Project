@@ -1,9 +1,15 @@
 'use client';
 
-import clsx from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function ConfirmEmailPage() {
+  const router = useRouter();
+
+  const goToHomePage = () => {
+    router.replace('/');
+  };
+
   return (
     <section className="flex flex-col text-center justify-center items-center md:bg-grey-50 md:h-[90vh]">
       <div className="flex flex-col justify-center items-center w-[504px] h-[471px] bg-white p-[64px] rounded-[24px] gap-[32px]">
@@ -19,7 +25,10 @@ export default function ConfirmEmailPage() {
           <p>메일함을 확인해주세요.</p>
         </div>
         <div className="flex flex-col gap-[8px] justify-center items-center">
-          <button className="h-[56px] w-[328px] md:w-[376px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white">
+          <button
+            onClick={goToHomePage}
+            className="h-[56px] w-[328px] md:w-[376px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white"
+          >
             확인
           </button>
           <p className="text-[12px] md:hidden text-grey-600">
