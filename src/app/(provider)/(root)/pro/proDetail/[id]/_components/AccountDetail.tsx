@@ -1,8 +1,7 @@
 'use client';
 
 import { useSession } from '@/hooks/useSession';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import * as PortOne from '@portone/browser-sdk/v2';
@@ -45,6 +44,7 @@ type AccountModalProps = {
 const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portfolio }) => {
   const { currentUserId } = useSession();
   const paymentId = `payment-${crypto.randomUUID().slice(0, 20)}`;
+  const router = useRouter();
 
   const getUserData = async () => {
     const supabase = createClient();
@@ -109,8 +109,9 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
       //   throw new Error(`Failed to notify the server: ${errorData.message}`);
       // }
 
-      return alert('결제가 완료되었습니다.');
+      alert('결제가 완료되었습니다.');
       //   setIsChatModalOpen(true);
+      router.push(`/completedAccount/${paymentId}`);
     } catch (error) {
       console.log(
         JSON.stringify({
