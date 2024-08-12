@@ -56,7 +56,6 @@ export default function CommuPost() {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-6 py-6">
-        <h1 className="text-2xl font-bold">{data?.title}</h1>
         <ul className="flex gap-[24px]">
           {data?.lang_category?.map((lang, index) => (
             <li key={index} className={langSt}>
@@ -64,9 +63,14 @@ export default function CommuPost() {
             </li>
           ))}
         </ul>
-        {userIdFromPost === userData?.id && <p className="text-base font-bold">{userData?.nickname}</p>}
-        <div className="text-base font-bold flex gap-[24px]">
+        <h1 className="text-2xl font-bold">{data?.title}</h1>
+        <div className="text-base flex gap-[24px]">
+          {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
           <p>{data?.created_at.split('T')[0]}</p>
+          <div className="flex gap-[8px]">
+            <Image src="/bookmark.svg" alt="Bookmark" width={16} height={16} />
+            <p>{6}</p>
+          </div>
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />
