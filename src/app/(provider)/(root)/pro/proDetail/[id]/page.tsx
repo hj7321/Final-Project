@@ -19,7 +19,7 @@ interface PostData {
 }
 
 interface UserData {
-  id: string; // 유저 ID 추가
+  id: string; 
   nickname: string;
   profile_img: string;
 }
@@ -44,8 +44,8 @@ export default function ProDetail() {
   const { id: paramId } = useParams();
   const id = paramId as string; 
   const router = useRouter();
-  const { currentUserId } = useSession(); // 추가: 현재 사용자 ID를 가져옴
-  const { chatRoomId, isChatOpen, toggleChat,  createOrFetchChatRoom  } = useChatRoom(currentUserId, user?.id || null, id); // 채팅 방 ID, 채팅 창 열림 여부, 채팅 창 토글 함수, 채팅 방 ID 설정 함수를 가져옴
+  const { currentUserId } = useSession();
+  const { chatRoomId, isChatOpen, toggleChat,  createOrFetchChatRoom  } = useChatRoom(currentUserId, user?.id || null, id); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,12 +82,10 @@ export default function ProDetail() {
   };
 
   const handlePortfolioClick = (portfolio: PortfolioData) => {
-    // 포트폴리오 카드 클릭 시 모달 열림
     setSelectedPortfolio(portfolio);
   };
 
   const handlePortfolioModalClose = () => {
-    // 포트폴리오 모달 닫기
     setSelectedPortfolio(null);
   };
 
@@ -104,7 +102,7 @@ export default function ProDetail() {
       const sectionRect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // 섹션 중앙을 뷰포트 중앙에 맞추도록 오프셋 계산
+
       const yOffset = (viewportHeight - sectionRect.height) / 2;
       const y = sectionRect.top + window.scrollY - yOffset;
 

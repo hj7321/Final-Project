@@ -82,7 +82,7 @@ export default function ProMainPage() {
 
   const getCategoryImage = useCallback((categoryName: string) => {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
-    return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
+    return category ? category.image : '/default_image.svg';
   }, []);
 
   const filteredPosts = useMemo(() => data?.pages.flat() || [], [data]);
