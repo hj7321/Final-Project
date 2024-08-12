@@ -26,14 +26,14 @@
   font-size: 20px;
 } */
 
-.w-md-editor-toolbar ul:nth-child(2) {
+/* .w-md-editor-toolbar ul:nth-child(2) {
   display: none;
-}
+} */
 
 .w-md-editor-preview {
   display: none;
 }
-
+/* 
 @media (max-width : 768px) {
   .w-md-editor-preview {
     display: none;
@@ -41,4 +41,4 @@
   .w-md-editor-toolbar {
     display: none;
   }
-} 
+}  */
