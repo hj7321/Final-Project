@@ -1,7 +1,9 @@
-/* .w-md-editor-toolbar {
+.w-md-editor-toolbar {
   display: none;
-} */
-
+}
+.w-md-editor-input {
+  width: 100%
+}
 .w-md-editor-toolbar li > button {
   padding: 2px;
 }
@@ -28,9 +30,9 @@
   display: none;
 }
 
-/* .w-md-editor-preview {
+.w-md-editor-preview {
   display: none;
-} */
+}
 
 @media (max-width : 768px) {
   .w-md-editor-preview {
