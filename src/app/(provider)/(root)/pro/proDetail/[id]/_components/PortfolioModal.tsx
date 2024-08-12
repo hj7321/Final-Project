@@ -48,7 +48,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
               <div className='md:w-[390px] w-full h-[1.5px] bg-grey-300 mt-[30px] hidden md:block'></div>
             </div>
             <div className='md:hidden mt-[30px]'>
-              <img src={portfolio.portfolio_img} alt="포스트이미지" className=' w-[330px] h-[330px] rounded-xl'/>
+              <Image src={portfolio.portfolio_img} width={100} height={100} alt="포스트이미지" className=' w-[330px] h-[330px] rounded-xl'/>
             </div>
             <div className='mt-[30px] order-5'>
               <h2 className='md:text-xl text-lg'>프로젝트 설명</h2>
@@ -60,7 +60,7 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
             </div>
           </div>
           <div className='hidden md:block'>
-            <img src={portfolio.portfolio_img} alt="포스트이미지" className='md:w-[630px] w-[330px] h-[630px] rounded-xl'/>
+            <Image src={portfolio.portfolio_img[0]} width={300} height={300} alt="포스트이미지" className='md:w-[630px] w-[330px] h-[630px] rounded-xl'/>
           </div>
         </div> 
       </div>

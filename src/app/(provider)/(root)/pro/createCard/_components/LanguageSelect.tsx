@@ -1,4 +1,5 @@
 import { CodeCategories } from "@/components/dumy"
+import Image from "next/image"
 
 interface LanguageSelectProps {
   language : string[]
@@ -23,7 +24,7 @@ export default function LanguageSelect({language, handleLanguageSelect}: Languag
                   onChange={() => handleLanguageSelect(lang.name)}
                 />
                 <label htmlFor={lang.name} className={`cursor-pointer flex items-center ${language.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'}`}>
-                  <img src={language.includes(lang.name) ? lang.image : lang.darkImage} alt={lang.name} className="md:w-[20px] md:h-[20px] w-[14px] h-[14px]" />
+                  <Image src={language.includes(lang.name) ? lang.image : lang.darkImage} width={30} height={30} alt={lang.name} className="md:w-[20px] md:h-[20px] w-[14px] h-[14px]" />
                   <p className="ml-2 md:text-base text-sm">{lang.name}</p>
                 </label>
               </div>
