@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import useAuthStore from '@/zustand/authStore';
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
 export default function CommuCommentList() {
   const { id: paramsId } = useParams();
@@ -148,6 +149,11 @@ export default function CommuCommentList() {
                   <p>{comment.contents}</p>
                   <div className="flex gap-[24px]">
                     <p>{comment.created_at.split('T')[0]}</p>
+                    <div className="flex gap-[8px] bg-gray-300 px-[8px] py-[4px] rounded-full ">
+                      {/* 여기 패딩 넣으니까 갭 이상해짐 수정 바람 */}
+                      <Image src="/like_logo.svg" alt="like" width={20} height={20} />
+                      <p>3</p>
+                    </div>
                     <div className="flex gap-1">
                       {userId === comment.user_id && (
                         <>
