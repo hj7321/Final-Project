@@ -1,5 +1,7 @@
 
+import Image from "next/image";
 import { PortfolioData } from "../page"
+
 interface PortfolioListProps {
   portfolio: PortfolioData[];
   handlePortfolioClick: (portfolio: PortfolioData) => void;
@@ -21,8 +23,10 @@ export default function UserPortfolio({portfolio, handlePortfolioClick} : Portfo
             onClick={() => handlePortfolioClick(item)} // 포트폴리오 카드 클릭 시 모달 열림
           >
             <div className="md:w-[3/4] md:h-[140px]">
-              <img
-                src={item.portfolio_img}
+              <Image
+                src={item.portfolio_img[0]}
+                width={300}
+                height={300}
                 alt={item.title}
                 className="md:w-full md:h-full w-[64px] h-[64px] rounded-xl object-cover"
               />
