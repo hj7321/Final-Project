@@ -128,27 +128,22 @@ export default function ProDetail() {
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
       <PageBackBtn />
       <div className="flex md:flex-row flex-col-reverse justify-between items-center">
-        
         <div className="md:h-[470px] md:w-[380px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
-
           <div className="flex-col flex md:flex-col">
             <UserProfile profile={user.profile_img} nickname={user.nickname} />
             <UserDescription />
             <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price}/>
-
             <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-evenly items-center mt-[15px]">
               <InquireBtn handleInquiry={handleInquiry} />
               <PurChaseBtn handleInquiry={handleInquiry} />
             </div>
           </div>
         </div>
-
         <div className="flex flex-col">
           <PostImage postImage={post.post_img[0]} />
           <ServiceDeskTopView title={post.title} langCategory={post.lang_category} price={post.price} />
         </div>
       </div>
-
       <div className="md:mt-8 md:mt-[60px] mt-[240px]">
         <TabBar activeTab={activeTab} handleTabClick={handleTabClick} portfolioCount={portfolio.length} />
         <div>
