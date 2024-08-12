@@ -3,9 +3,10 @@
 import { createClient } from '@/utils/supabase/client';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { validateForms } from '../../signup/_components/Validate';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const inputs = [
   { label: '비밀번호', type: 'password', id: 'pw' },
@@ -13,18 +14,19 @@ const inputs = [
 ];
 
 export default function ResetPasswordPage() {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill(''));
-  const [showPassword, setShowPassword] = useState<boolean[]>(Array(2).fill(false));
-  const [changePassword, setChangePassword] = useState<string>('');
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]); // 각 인풋 요소를 가리키는 참조 변수 배열
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null); // 선택된 인풋 필드의 인덱스
+  const [inputValues, setInputValues] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 값(내용)이 담긴 배열
+  const [showPassword, setShowPassword] = useState<boolean[]>(Array(2).fill(false)); // 비밀번호를 표시할지 여부를 결정하는 boolean 값이 담긴 배열 (비밀번호, 비밀번호 확인)
+  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill('')); // 각 인풋 필드의 유효성 메시지가 담긴 배열
 
-  const [inputMsgs, setInputMsgs] = useState<string[]>(Array(inputs.length).fill(''));
+  const [throttling, setThrottling] = useState<boolean>(false); // 버튼 연속 클릭 방지
 
-  const [throttling, setThrottling] = useState<boolean>(false);
+  const router = useRouter();
 
   const supabase = createClient();
 
+  // 인풋 필드의 값이 바뀔(입력될) 때마다 호출되는 이벤트 핸들러 -> 값에 맞는 유효성 메시지가 실시간으로 바뀜
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
     const newValues = [...inputValues];
     newValues[idx] = e.target.value;
@@ -40,12 +42,14 @@ export default function ResetPasswordPage() {
     setInputMsgs(newMsgs);
   };
 
+  // 비밀번호를 보여줄지, 숨길지 여부를 결정하는 이벤트 핸들러
   const handleTogglePassword = (idx: number): void => {
     const newVisibility = [...showPassword];
     newVisibility[idx] = !newVisibility[idx];
     setShowPassword(newVisibility);
   };
 
+  // 비밀번호 변경을 진행하는 이벤트 핸들러
   const handleChangePW = async (e: FormEvent<HTMLFormElement>) => {
     if (inputMsgs[0] !== '') {
       inputRefs.current[0]!.focus();
@@ -56,31 +60,41 @@ export default function ResetPasswordPage() {
     } else if (inputValues[0] === '' || inputValues[1] === '') {
       return alert('비밀번호를 입력해주세요.');
     } else {
-      setThrottling(true);
-      console.log('여기 들어오나');
+      setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
+
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
 
       const password: string = formData.get('pw') as string;
-      setChangePassword(password);
+
+      // 비밀번호를 재설정하는 라우트 핸들러 호출
+      const data = await fetch('/api/resetPassword', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password })
+      }).then((res) => res.json());
+
+      if (data.errorMsg) {
+        console.log(data.errorMsg);
+        alert('비밀번호 변경에 실패했습니다.');
+        setThrottling(false); // 다시 버튼 클릭을 허용함
+        return;
+      }
+
+      // 비밀번호 재설정 성공 후 로직
+      alert('비밀번호가 성공적으로 변경되었습니다.'); // (1) 성공 알럿 메시지 띄우기
+      router.push('/'); // (2) 홈페이지로 이동
     }
   };
-
-  useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event == 'PASSWORD_RECOVERY') {
-        const { data, error } = await supabase.auth.updateUser({ password: changePassword });
-        if (data) alert('비밀번호가 성공적으로 변경되었습니다.');
-        if (error) alert('비밀번호 변경에 실패했습니다.');
-      }
-    });
-  }, [changePassword, supabase.auth]);
 
   return (
     <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[760px]">
       <form
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault(); // 폼 제출 방지
+          // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleChangePW 이벤트 핸들러 호출
           if (!throttling) handleChangePW(e);
         }}
         className="flex flex-col justify-center items-center w-[528px] min-h-[560px] bg-white py-[64px] rounded-[24px] gap-[32px]"
@@ -101,12 +115,12 @@ export default function ResetPasswordPage() {
                 className={clsx(
                   'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[56px] md:h-[70px] border-primary-500 pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
-                    ? 'h-[56px] border-grey-100 py-[16px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-100 py-[16px] md:py-[20px]'
                     : inputMsgs[idx].length === 0
-                    ? 'h-[56px] md:h-[70px] border-grey-500 pt-[6px]'
-                    : 'h-[56px] md:h-[70px] border-error pt-[6px]'
+                    ? 'h-[56px] md:h-[66px] border-grey-500 pt-[6px]'
+                    : 'h-[56px] md:h-[66px] border-error pt-[6px]'
                 )}
               >
                 <label
@@ -181,8 +195,10 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           className={clsx(
-            throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
-            'h-[56px] w-[328px] md:w-[400px] rounded-[8px] bg-primary-500 hover:bg-primary-700 text-white'
+            'h-[56px] w-[328px] md:w-[400px] rounded-[8px]',
+            throttling
+              ? 'hover:cursor-default bg-primary-300 text-white bg-opacity-50 text-opacity-50'
+              : ' bg-primary-500 hover:bg-primary-700 text-white'
           )}
         >
           변경 완료
