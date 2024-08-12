@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       case 'PAID':
         // 결제 완료 처리
 
+        console.log('proId', proId);
         const supabase = createClient();
         const { error } = await supabase.from('Accounts').insert([
           {

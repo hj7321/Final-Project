@@ -15,6 +15,7 @@ interface PostData {
   content: string;
   price: number;
   title: string;
+  user_id: string;
 }
 
 interface UserData {
@@ -93,7 +94,7 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           paymentId: paymentId,
           orderId: post.id,
           buyerId: currentUserId,
-          proId: currentUserId
+          proId: post.user_id
         })
       })
         .then((res) => {

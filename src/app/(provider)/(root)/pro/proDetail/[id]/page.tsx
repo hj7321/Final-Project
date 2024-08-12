@@ -29,6 +29,7 @@ export interface PostData {
   lang_category: string[];
   price: number;
   id: string;
+  user_id: string;
 }
 
 interface UserData {
