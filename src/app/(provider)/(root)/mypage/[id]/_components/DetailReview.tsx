@@ -1,6 +1,11 @@
 'use client';
 
+import { RequestReviews } from '@/types/type';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import StarRating from './StarRating';
+import { useState } from 'react';
 
 interface PortfolioData {
   id: string;
@@ -20,9 +25,25 @@ type ReviewModalProps = {
 };
 
 const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
+  const { id } = useParams();
+  const [rating, setRating] = useState(0);
+
   const imageUrl = Array.isArray(portfolio.post_img) ? portfolio.post_img[0] : '';
-  console.log('imageUrl', imageUrl);
-  console.log(portfolio);
+
+  const getReview = async () => {
+    const response = await fetch('/api/review');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: RequestReviews[] = await response.json();
+    return data.filter((post) => post.user_id === id);
+  };
+
+  const { data, isLoading, error } = useQuery<RequestReviews[]>({
+    queryKey: ['post', id],
+    queryFn: getReview,
+    enabled: !!id
+  });
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -32,16 +53,34 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
         </button>
         <div className="flex flex-col">
           <div className="flex flex-row mt-[24px]">
-            {imageUrl && <Image src={imageUrl} alt="ds" width={100} height={100} />}
+            {imageUrl && <Image src={imageUrl} alt="ds" width={100} height={100} className="w-[100px] h-[100px]" />}
             <div className="flex flex-col ml-[40px]">
               <h1 className="flex text-base  text-grey-600  font-bold ">{portfolio.lang_category}</h1>
               <h1 className="flex text-base  text-grey-800 font-bold ">{portfolio.title}</h1>
             </div>
           </div>
         </div>
-        <h1 className="flex text-base  text-grey-600 mt-2 mb-[32px]">
-          전문가 채팅에서 의뢰 내용과 채팅 시간을 상담해보세요! {portfolio.title}
-        </h1>
+        {data?.length === 0 ? (
+          <>
+            <div className="flex mt-5">
+              <StarRating totalStars={5} size={40} onRatingChange={(newRating) => setRating(newRating)} />
+              <div className="mt-3 text-gray-400 text-sm">({rating})</div>
+            </div>
+            <div>
+              <textarea
+                placeholder="솔직한 리뷰는 이용자와 모두에게 도움이 됩니다."
+                className="border border-grey-300 rounded-lg font-medium text-base mt-10 h-[100px] w-full p-2"
+                rows={4}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <h1>ds</h1>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

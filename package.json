@@ -26,6 +26,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-quill": "^2.0.0",
+    "react-rating-stars-component": "^2.2.0",
+    "react-star-rating-component": "^1.4.1",
     "supabase": "1.187.3",
     "uuid": "^10.0.0",
     "uuidv4": "^6.2.13",
