@@ -13,7 +13,7 @@ interface PostImageProps {
 export default function PostImage({ postImage }: PostImageProps) {
   const navigationButton = postImage.length > 1
   return (
-    <div className="relative carousel-container md:h-[350px] md:w-[810px] w-[330px] h-[180px] border-2 rounded-xl md:mb-[35px]">
+    <div className="relative carousel-container md:h-[350px] md:w-[810px] w-[330px] h-[180px] border-2 rounded-xl md:mb-[5px]">
       <Swiper
         className='w-full h-full'
         modules={[Navigation, Pagination ,A11y]}
