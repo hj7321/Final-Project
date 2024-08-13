@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
-import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
-import Cookies from 'js-cookie';
-import { useQuery } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
+import HeaderLayout from './HeaderLayout';
+import LoginHeaderLayout from './LoginHeaderLayout';
+import LogoutHeaderLayout from './LogoutHeaderLayout';
 
 const buttonStyle =
   'w-[75px] h-[30px] lg:w-[100px] lg:h-[40px] px-[16px] py-[8px] rounded-[8px] text-center text-[12px] lg:text-[16px] flex items-center justify-center';
@@ -22,9 +22,8 @@ export default function Header() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const [session, setSession] = useState<string | null | undefined>(null);
 
-  const { isLogin, logout, userId, initializeAuthState } = useAuthStore();
+  const { isLogin, initializeAuthState } = useAuthStore();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -33,47 +32,22 @@ export default function Header() {
 
   const hideLayout = hideLayoutPatterns.some((pattern) => pathname.startsWith(pattern));
 
+  // URL에 경로 입력했을 때에도 카테고리 색이 반영되도록 함
   useEffect(() => {
     if (pathname.startsWith('/qna')) setSelectedIdx(0);
     else if (pathname.startsWith('/insight')) setSelectedIdx(1);
     else if (pathname.startsWith('/pro')) setSelectedIdx(2);
-    // else setSelectedIdx(null)
   }, [pathname]);
 
-  const supabase = createClient();
-
   useEffect(() => {
-    const handleGetSession = async () => {
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
+    initializeAuthState();
+  }, [initializeAuthState]);
 
-      console.log(session);
-      setSession(session?.access_token);
-    };
-    handleGetSession();
-  }, [supabase.auth]);
-
-  useEffect(() => {
-    const initialize = async () => {
-      await initializeAuthState();
-    };
-    initialize();
-  }, [initializeAuthState, session]);
-
+  // 랜덤 숫자가 0.5 이상이면 0(영어 로고), 아니면 1(한국어 로고)이 되도록 함
   useEffect(() => {
     const num = Math.random() >= 0.5 ? 0 : 1;
     setNumber(num);
   }, []);
-
-  const getUserData = async () => {
-    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
-    return data;
-  };
-  const { data: Users } = useQuery({
-    queryKey: [userId],
-    queryFn: getUserData
-  });
 
   const handleSearch = () => {
     setSelectedIdx(null);
@@ -83,39 +57,9 @@ export default function Header() {
     }
   };
 
-  const handleLogout = async () => {
-    setSelectedIdx(null);
-    await fetch('/api/logout', {
-      method: 'POST'
-    });
-    logout();
-    router.replace('/');
-  };
-
   const goToHomePage = () => {
     setSelectedIdx(null);
     router.push('/');
-  };
-
-  const goToMyPage = () => {
-    setSelectedIdx(null);
-    router.push(`/mypage/${userId}`);
-  };
-
-  const goToLoginPage = () => {
-    setSelectedIdx(null);
-    const presentPage = window.location.href;
-    const pagePathname = new URL(presentPage).pathname;
-    Cookies.set('returnPage', pagePathname);
-    router.push('/login');
-  };
-
-  const goToSignUpPage = () => {
-    setSelectedIdx(null);
-    const presentPage = window.location.href;
-    const pagePathname = new URL(presentPage).pathname;
-    Cookies.set('returnPage', pagePathname);
-    router.push('/signup');
   };
 
   return (
@@ -223,7 +167,11 @@ export default function Header() {
             {/* 오른쪽 */}
             {/* 비로그인 시: 검색창, 로그인 버튼, 로그아웃 버튼 */}
             {/* 로그인 시: 검색창, 알림 아이콘, 닉네임, 로그아웃 버튼 */}
-            {isLogin ? (
+            <HeaderLayout
+              component={isLogin ? LoginHeaderLayout : LogoutHeaderLayout}
+              componentProps={{ setSelectedIdx }}
+            />
+            {/* {isLogin ? (
               <div className="flex items-center gap-[24px]">
                 <div className="flex gap-[12px] flex-shrink-0">
                   <Image
@@ -268,7 +216,7 @@ export default function Header() {
                   회원가입
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </header>
