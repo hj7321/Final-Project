@@ -14,14 +14,31 @@ import { useEffect } from 'react';
 
 export default function CreateCard() {
   const route = useRouter()
-  const { isPro } = useAuthStore()
-  useEffect(() => {
-    if(!isPro) {
-      alert('다른 방법을 시도해주세요')
-      route.push('/pro')
-    }
-  },[])
-
+  const { userId } = useAuthStore()
+  // useEffect(() => {
+  //   const getIsPro = async () => {
+  //     try {
+  //       const response = await fetch(`/api/createCard?id=${userId}`);
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //       const userState = await response.json();
+  //       if (userState.error) {
+  //         throw new Error(userState.error);
+  //       }
+        
+  //       // is_pro 값 확인 후 처리
+  //       if (!userState.is_pro) {
+  //         alert('전문가 계정으로 전환해주세요');
+  //         route.push(`/mypage/${userId}`); // 권한이 없을 때 이동할 페이지로 리다이렉트
+  //       }
+  //     } catch (error) {
+  //       console.error('Fetch Data Error:', error);
+  //     }
+  //   };
+  //   getIsPro();
+  // }, [userId]);
+  
   const {
     title,
     setTitle,
