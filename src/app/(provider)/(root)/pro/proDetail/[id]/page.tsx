@@ -123,7 +123,7 @@ export default function ProDetail() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-
+  console.log(post.post_img)
   return (
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
       <PageBackBtn />
@@ -139,8 +139,8 @@ export default function ProDetail() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <PostImage postImage={post.post_img[0]} />
+        <div className="flex flex-col md:h-[470px]">
+          <PostImage postImage={post.post_img} />
           <ServiceDeskTopView title={post.title} langCategory={post.lang_category} price={post.price} />
         </div>
       </div>

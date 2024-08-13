@@ -9,7 +9,7 @@ interface ServiceDeskTopViewProps {
 
 export default function ServiceDeskTopView({title, langCategory, price} : ServiceDeskTopViewProps) {
   return (
-    <div className="hidden md:block flex flex-col mt-[15px] md:mt-0">
+    <div className="hidden md:block flex flex-col mt-[15px] md:ml-4">
       <p className="text-base md:text-2xl">{title}</p>
       <p className="text-xs mt-1 flex flex-row flex-wrap">
         {langCategory.map((lang) => {
