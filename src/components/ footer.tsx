@@ -7,14 +7,15 @@ import { usePathname } from 'next/navigation';
 
 export default function Footer() {
   const pathname = usePathname();
-  const isAuthPage = ['/login', '/login/confirmEmail', '/login/resetPassword', '/login/sendLink', '/signup'].includes(
-    pathname
-  );
+
+  const hideLayoutPatterns = ['/login', '/signup'];
+
+  const hideLayout = hideLayoutPatterns.some((pattern) => pathname.startsWith(pattern));
 
   return (
     <>
       {
-        <footer className={clsx('h-[378px] flex flex-col justify-end', isAuthPage && 'hidden md:flex')}>
+        <footer className={clsx('h-[378px] flex flex-col justify-end', hideLayout && 'hidden md:flex')}>
           <div className="h-[314px] flex flex-col justify-center items-center gap-[30px] pt-[32px] pb-[64px] border border-grey-100 w-[100%]">
             <div className="h-[72px] flex flex-col gap-[8px] justify-center items-center">
               <Image
