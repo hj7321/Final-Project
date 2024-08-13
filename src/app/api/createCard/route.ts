@@ -57,31 +57,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '오류가 발생했습니다' }, { status: 500 });
   }
 }
-
-// export async function GET(req: any) {
-//   const { searchParams } = new URL(req.url);
-//   const id = searchParams.get('id');
-//   const supabase = createClient();
-
-//   if (!id) {
-//     return NextResponse.json({ error: 'ID is required' }, { status: 400 });
-//   }
-
-//   try {
-//     const { data, error } = await supabase
-//       .from('Users')
-//       .select('is_pro')
-//       .eq('id', id)
-//       .single();
-
-//     if (error || !data) {
-//       console.error('Failed to fetch is_pro:', error || 'No data');
-//       return NextResponse.json({ error: 'is_pro를 가져오는데 실패했습니다' }, { status: 500 });
-//     }
-
-//     return NextResponse.json(data);
-//   } catch (error) {
-//     console.error('is_pro 가져오기 실패:', error);
-//     return NextResponse.json({ error: 'is_pro를 가져오는데 실패했습니다' }, { status: 500 });
-//   }
-// }
