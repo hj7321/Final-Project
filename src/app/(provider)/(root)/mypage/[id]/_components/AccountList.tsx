@@ -5,6 +5,8 @@ import { postDumy } from './DumyData';
 import { useParams } from 'next/navigation';
 import { Accounts, Portfolio } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import DetailReview from './DetailReview';
 
 interface Account {
   id: string;
@@ -15,10 +17,15 @@ interface Account {
   user_id: string;
   created_at: string;
   lang_category: string[];
+  portfolio_img: string;
+  start_date: string;
+  end_date: string;
 }
 
 export default function AccountList() {
   const { id } = useParams();
+  const [isDetailReviewOpen, setIsDetailReviewOpen] = useState(false);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<Account | null>(null); // 추가: 선택된 포트폴리오 상태 관리
 
   const getAccount = async () => {
     const response = await fetch('/api/account');
@@ -35,7 +42,15 @@ export default function AccountList() {
     enabled: !!id
   });
 
-  console.log('data', data);
+  const handleReview = (portfolio: Account) => {
+    setSelectedPortfolio(portfolio); // 선택된 포트폴리오 설정
+    setIsDetailReviewOpen(true); // DetailAccount 모달 열기
+  };
+
+  const handleCloseReview = () => {
+    setIsDetailReviewOpen(false); // DetailAccount 모달 닫기
+    setSelectedPortfolio(null); // 선택된 포트폴리오 초기화
+  };
 
   return (
     <div className="w-full ">
@@ -53,7 +68,6 @@ export default function AccountList() {
           <>
             {data?.map((post) => {
               const imageUrl = Array.isArray(post.post_img) ? post.post_img[0] : '';
-              console.log('imageUrl:', imageUrl);
 
               return (
                 <div key={post.id} className="border rounded-lg mb-[32px] flex h-[226px]">
@@ -72,10 +86,13 @@ export default function AccountList() {
                     <div className="flex justify-between">
                       <p className="mb-[16px]">{post.price}원</p>
                       <div>
-                        <button className="mr-7 border rounded-lg border-primary-500 px-5 py-2 font-normal text-primary-500 text-xl">
+                        <button
+                          onClick={() => handleReview(post)}
+                          className="mr-7 border rounded-lg border-primary-500 px-5 py-2 font-semibold mb-3 text-primary-500 text-lg"
+                        >
                           리뷰 쓰기
                         </button>
-                        <button className="font-normal text-xl">채팅 내역</button>
+                        <button className="font-normal mb-3 text-lg">채팅 내역</button>
                       </div>
                     </div>
                   </div>
@@ -85,6 +102,9 @@ export default function AccountList() {
           </>
         )}
       </section>
+      {isDetailReviewOpen && selectedPortfolio && (
+        <DetailReview onClose={handleCloseReview} portfolio={selectedPortfolio} />
+      )}{' '}
     </div>
   );
 }
