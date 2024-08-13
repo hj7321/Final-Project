@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import favicon from '../../../../../../public/vercel.svg';
 import { CommunityPosts } from '@/types/type';
@@ -5,11 +7,14 @@ import { useParams } from 'next/navigation';
 import useAuthStore from '@/zustand/authStore';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import { useState } from 'react';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
 
 export default function CommuPost() {
+  const [bookmarkCount, setBookmarkCount] = useState<number>(0);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const { userId } = useAuthStore();
   const { id } = useParams();
 
@@ -51,7 +56,31 @@ export default function CommuPost() {
     enabled: !!userIdFromPost
   });
 
-  console.log(data);
+  const postId = data?.id;
+
+  const getBookmarkData = async (): Promise<void> => {
+    const data = await fetch('/api/bookmark', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ postId })
+    }).then((res) => res.json());
+
+    if (data.errorMsg) {
+      console.log(data.errorMsg);
+      return;
+    }
+    console.log(data.data);
+    return data.data;
+  };
+
+  const { data: bookmarkData } = useQuery({
+    queryKey: ['bookmarkCount'],
+    queryFn: () => getBookmarkData()
+  });
+
+  console.log(bookmarkData);
 
   return (
     <div className="flex flex-col">
@@ -68,7 +97,24 @@ export default function CommuPost() {
           {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
           <p>{data?.created_at.split('T')[0]}</p>
           <div className="flex gap-[8px]">
-            <Image src="/bookmark.svg" alt="Bookmark" width={16} height={16} />
+            {isClicked ? (
+              <Image
+                src="/bookmark.svg"
+                alt="글 찜한 후 북마크 아이콘"
+                width={16}
+                height={16}
+                onClick={() => setIsClicked((prev) => !prev)}
+              />
+            ) : (
+              <Image
+                src="/bookmark_dark.svg"
+                alt="글 찜하기 전 북마크 아이콘"
+                width={16}
+                height={16}
+                onClick={() => setIsClicked((prev) => !prev)}
+              />
+            )}
+            {/* 찜 횟수 요청하려면 post의 id를 라우트 핸들러에 보내야 함 */}
             <p>{6}</p>
           </div>
         </div>
