@@ -171,52 +171,6 @@ export default function Header() {
               component={isLogin ? LoginHeaderLayout : LogoutHeaderLayout}
               componentProps={{ setSelectedIdx }}
             />
-            {/* {isLogin ? (
-              <div className="flex items-center gap-[24px]">
-                <div className="flex gap-[12px] flex-shrink-0">
-                  <Image
-                    src="/alarm_comment.svg"
-                    alt="댓글 알림 아이콘"
-                    width={24}
-                    height={24}
-                    className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
-                  />
-                  <Image
-                    src="/alarm_chat.svg"
-                    alt="채팅 알림 아이콘"
-                    width={24}
-                    height={24}
-                    className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
-                  />
-                </div>
-                <div className="flex items-center gap-[24px] break-keep">
-                  <button onClick={goToMyPage} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">
-                    <b className="text-primary-500 hover:text-primary-700">{Users?.data?.nickname}</b>님
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}
-                  >
-                    로그아웃
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-[16px] text-[16px]">
-                <button
-                  onClick={goToLoginPage}
-                  className={clsx(buttonStyle, 'border border-primary-500 hover:bg-primary-50 text-primary-500')}
-                >
-                  로그인
-                </button>
-                <button
-                  onClick={goToSignUpPage}
-                  className={clsx(buttonStyle, 'bg-primary-500 hover:bg-primary-700 text-white')}
-                >
-                  회원가입
-                </button>
-              </div>
-            )} */}
           </div>
         </div>
       </header>
