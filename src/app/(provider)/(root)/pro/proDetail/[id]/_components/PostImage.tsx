@@ -11,6 +11,7 @@ interface PostImageProps {
 }
 
 export default function PostImage({ postImage }: PostImageProps) {
+  const navigationButton = postImage.length > 1
   return (
     <div className="relative carousel-container md:h-[350px] md:w-[810px] w-[330px] h-[180px] border-2 rounded-xl md:mb-[35px]">
       <Swiper
@@ -19,7 +20,7 @@ export default function PostImage({ postImage }: PostImageProps) {
         spaceBetween={50}
         slidesPerView={1}
         loop = {true}
-        navigation
+        navigation={navigationButton}
         pagination={{
           clickable : true,
           type : 'fraction',
