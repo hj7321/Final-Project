@@ -15,13 +15,6 @@ export default function CreateCard() {
   const route = useRouter();
   const { isPro } = useAuthStore();
 
-  // useEffect(() => {
-  //   if (!isPro) {
-  //     alert('다른 방법을 시도해주세요');
-  //     route.push('/pro');
-  //   }
-  // }, [isPro]);
-
   const {
     title,
     setTitle,
