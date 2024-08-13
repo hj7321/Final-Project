@@ -126,7 +126,7 @@ export default function Sidebar({ setSidebarOpen }: SidebarProp) {
           </button>
         </div>
       </section>
-      {appInfoOpen && <AppInfoSidebar setAppInfoOpen={setAppInfoOpen} />}
+      {appInfoOpen && <AppInfoSidebar setAppInfoOpen={setAppInfoOpen} setSidebarOpen={setSidebarOpen} />}
     </>
   );
 }
