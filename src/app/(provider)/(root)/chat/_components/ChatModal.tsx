@@ -160,7 +160,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
                 className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
                 <div className={`p-3 rounded-lg text-xs max-w-xs font-medium ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-100 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
-                  {message.content}
+                  {message.content}{message.created_at}
                 </div>
               </div>
             ))}

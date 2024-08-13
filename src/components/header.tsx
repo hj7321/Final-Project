@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { useQuery } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
+import ChatNotification from './ChatNotification';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 const linkStyle = 'text-grey-700 hover:text-primary-500 hover:font-bold px-[12px] py-[8px]';
