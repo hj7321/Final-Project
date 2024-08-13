@@ -4,14 +4,12 @@ import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import DeleteUserInMobile from './DeleteUserInMobile';
-
-interface AppInfoSidebarProp {
+interface AppInfoSidebarProps {
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setAppInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function AppInfoSidebar({ setAppInfoOpen }: AppInfoSidebarProp) {
+export default function AppInfoSidebar({ setSidebarOpen, setAppInfoOpen }: AppInfoSidebarProps) {
   const { logout } = useAuthStore();
   const router = useRouter();
 
@@ -29,8 +27,8 @@ export default function AppInfoSidebar({ setAppInfoOpen }: AppInfoSidebarProp) {
     });
     logout();
     router.replace('/');
-    // setSidebarOpen((prev) => !prev);
-    // 이 코드 안 써도 사이드바 닫히네??
+    setAppInfoOpen((prev) => !prev);
+    setSidebarOpen((prev) => !prev);
   };
 
   const goToDeleteUserPage = () => {
