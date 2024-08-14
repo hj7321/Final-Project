@@ -224,7 +224,7 @@ const CreatePost = () => {
         <div className="w-full mt-4">
           <button
             onClick={handleSubmit}
-            className="w-full bg-primary-500 text-white px-6 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full bg-primary-500 text-white px-6 py-2 md:py-4 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             등록하기
           </button>
