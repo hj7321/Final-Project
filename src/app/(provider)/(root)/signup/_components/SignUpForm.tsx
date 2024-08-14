@@ -9,6 +9,7 @@ import Modal from './Modal';
 import Image from 'next/image';
 import Link from 'next/link';
 import useFetchData from '@/hooks/useFetchData';
+import { Notify, Report } from 'notiflix';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -128,9 +129,9 @@ export default function SignUpForm() {
       inputRefs.current[5]!.focus();
       return;
     } else if (areInputValuesNull.length !== 0) {
-      return alert('회원 정보를 모두 기입해주세요.');
+      return Report.failure('회원가입 실패', '회원 정보를 모두 기입해주세요.', '확인');
     } else if (!areChecked[0] || !areChecked[1] || !areChecked[2]) {
-      return alert('모든 필수 사항에 체크해주세요.');
+      return Report.failure('회원가입 실패', '모든 필수 사항에 체크해주세요.', '확인');
     } else {
       setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
 
@@ -156,7 +157,7 @@ export default function SignUpForm() {
       }).then((res) => res.json());
 
       if (data.errorMsg) {
-        alert(data.errorMsg);
+        Notify.failure(data.errorMsg);
         setThrottling(false); // 다시 버튼 클릭을 허용함
         return;
       }

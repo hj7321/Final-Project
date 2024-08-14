@@ -7,6 +7,7 @@ import { FormEvent, useRef, useState } from 'react';
 import { validateForms } from '../../signup/_components/Validate';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Report, Notify } from 'notiflix';
 
 const inputs = [
   { label: '비밀번호', type: 'password', id: 'pw' },
@@ -58,7 +59,7 @@ export default function ResetPasswordPage() {
       inputRefs.current[1]!.focus();
       return;
     } else if (inputValues[0] === '' || inputValues[1] === '') {
-      return alert('비밀번호를 입력해주세요.');
+      return Report.failure('비밀번호 재설정 실패', '비밀번호를 입력해주세요.', '확인');
     } else {
       setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
 
@@ -78,13 +79,13 @@ export default function ResetPasswordPage() {
 
       if (data.errorMsg) {
         console.log(data.errorMsg);
-        alert('비밀번호 변경에 실패했습니다.');
+        Notify.failure('비밀번호 변경에 실패했습니다.');
         setThrottling(false); // 다시 버튼 클릭을 허용함
         return;
       }
 
       // 비밀번호 재설정 성공 후 로직
-      alert('비밀번호가 성공적으로 변경되었습니다.'); // (1) 성공 알럿 메시지 띄우기
+      Notify.success('비밀번호가 성공적으로 변경되었습니다.'); // (1) 성공 알럿 메시지 띄우기
       router.push('/'); // (2) 홈페이지로 이동
     }
   };
