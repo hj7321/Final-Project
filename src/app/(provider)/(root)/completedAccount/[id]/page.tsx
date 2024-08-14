@@ -1,10 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 
 export default function completedAccount() {
-  const { id } = useParams();
   return (
     <div className="w-full flex flex-col items-center justify-center h-[80vh] ">
       <Image src="/check_box.svg" alt="체크박스" width={80} height={80} className="mb-[32px]" />
