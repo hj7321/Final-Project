@@ -1,21 +1,20 @@
 'use client';
 
-import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import ChatNotification from './ChatNotification';
+import ChatNotification from '../ChatNotification';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
-interface LoginHeaderLayoutProps {
-  setSelectedIdx: React.Dispatch<React.SetStateAction<number | null>>;
+interface LoginHeaderProp {
+  nickname: string | null | undefined;
 }
 
-export default function LoginHeaderLayout({ setSelectedIdx }: LoginHeaderLayoutProps) {
+export default function LoginHeader({ nickname }: LoginHeaderProp) {
   const router = useRouter();
   const { logout, userId, initializeAuthState } = useAuthStore();
 
@@ -23,29 +22,13 @@ export default function LoginHeaderLayout({ setSelectedIdx }: LoginHeaderLayoutP
     initializeAuthState();
   }, [initializeAuthState]);
 
-  const supabase = createClient();
-
   const handleLogout = async () => {
-    setSelectedIdx(null);
     await fetch('/api/logout', {
       method: 'POST'
     });
     logout();
     router.replace('/');
-  };
-
-  const getUserData = async () => {
-    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
-    return data;
-  };
-  const { data: Users } = useQuery({
-    queryKey: [userId],
-    queryFn: getUserData
-  });
-
-  const goToMyPage = () => {
-    setSelectedIdx(null);
-    router.push(`/mypage/${userId}`);
+    router.refresh();
   };
 
   return (
@@ -62,9 +45,9 @@ export default function LoginHeaderLayout({ setSelectedIdx }: LoginHeaderLayoutP
          {userId && <ChatNotification userId={userId} />}
       </div>
       <div className="flex items-center gap-[24px] break-keep">
-        <button onClick={goToMyPage} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">
-          <b className="text-primary-500 hover:text-primary-700">{Users?.data?.nickname}</b>님
-        </button>
+        <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">
+          <b className="text-primary-500 hover:text-primary-700">{nickname}</b>님
+        </Link>
         <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
           로그아웃
         </button>

@@ -16,7 +16,7 @@ export const useChatNotifications = (userId: string) => {
       .from('Chat')
       .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at, is_read')
       .or(`consumer_id.eq.${userId},pro_id.eq.${userId}`)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }); // 최신 메시지를 우선 가져옴
 
     if (error) {
       console.error('Error fetching chat notifications:', error.message);
@@ -25,10 +25,12 @@ export const useChatNotifications = (userId: string) => {
     }
 
     const chatRoomsData: ChatRoomInfo[] = [];
+    const chatRoomsMap = new Map<string, ChatRoomInfo>();
 
     for (let chat of data) {
-      if (chat.consumer_id === userId) {
-        continue; // 현재 사용자가 보낸 메시지는 제외
+      // 각 채팅방에서 최신 메시지 하나만 처리하도록 함
+      if (chatRoomsMap.has(chat.chat_room_id)) {
+        continue;
       }
 
       const otherUserId = chat.consumer_id === userId ? chat.pro_id : chat.consumer_id;
@@ -51,20 +53,22 @@ export const useChatNotifications = (userId: string) => {
         .eq('is_read', false)
         .neq('consumer_id', userId);
 
-      chatRoomsData.push({
+      const chatRoomInfo: ChatRoomInfo = {
         chat_room_id: chat.chat_room_id,
         user_nickname: userData?.nickname || '알 수 없음',
         user_profile_img: userData?.profile_img || '',
         latest_message: chat.content,
         latest_message_time: chat.created_at || '',
         unread_count: unreadCount || 0,
-        post_lang_category: [],  // 기본값으로 빈 배열 제공
+        post_lang_category: [], // 기본값으로 빈 배열 제공
         post_title: '제목 없음', // 기본값으로 '제목 없음' 제공
-      });
+      };
+
+      chatRoomsMap.set(chat.chat_room_id, chatRoomInfo);
     }
 
-    setChatRooms(chatRoomsData);
-    setUnreadCount(chatRoomsData.reduce((sum, room) => sum + room.unread_count, 0));
+    setChatRooms(Array.from(chatRoomsMap.values()));
+    setUnreadCount(Array.from(chatRoomsMap.values()).reduce((sum, room) => sum + room.unread_count, 0));
     setLoading(false);
   };
 
