@@ -1,0 +1,11 @@
+.w-md-editor-toolbar {
+  display: none;
+}
+
+.w-md-editor-input {
+  width: 100%
+}
+
+.w-md-editor-preview {
+  display: none;
+}
