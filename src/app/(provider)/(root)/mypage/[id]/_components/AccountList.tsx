@@ -7,6 +7,7 @@ import { Accounts, Portfolio } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import DetailReview from './DetailReview';
+import { CodeCategories } from '@/components/dumy';
 
 interface Account {
   id: string;
@@ -99,27 +100,35 @@ export default function AccountList() {
         ) : (
           <>
             {accountData?.map((post) => {
-              const imageUrl = Array.isArray(post.post_img) ? post.post_img[0] : '';
               const userReview = userReviews?.find(
                 (review) => review.request_post_id === post.id && review.user_id === id
               );
 
               return (
                 <div key={post.id} className="border rounded-lg mb-[32px] flex h-[226px]">
-                  <Image
-                    src={imageUrl}
-                    alt="포트폴리오 이미지"
-                    width={180}
-                    height={180}
-                    className=" h-[180px] mr-[20px] mt-[23px] "
-                  />
-                  <div className="flex flex-col justify-between w-[892px]">
+                  <div className="flex flex-col ml-[32px] justify-between w-[892px]">
+                    <div className="flex mt-[20px]">
+                      <p className="mt-[20px] text-grey-600 text-base">거래일자: {post.created_at.slice(0, 10)}</p>
+                      <div className="flex items-center ml-auto">
+                        <Image
+                          src={
+                            CodeCategories.find((category) => category.name === post.lang_category[0])?.image ||
+                            '/defaultProfileimg.svg'
+                          }
+                          alt="d"
+                          width={12}
+                          height={12}
+                          className="w-5 h-5 "
+                        />
+                        <p className="text-base ml-2">{post.lang_category.join(', ')}</p>
+                      </div>
+                    </div>
+
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl mt-[20px] text-grey-900 font-bold">{post.title}</h3>
-                      <p className="text-base mt-[20px] ml-auto">{post.lang_category.join(', ')}</p>
+                      <h3 className="text-xl  text-grey-900 font-bold">{post.title}</h3>
                     </div>
                     <div className="flex justify-between">
-                      <p className="mb-[16px]">{post.price}원</p>
+                      <p className="mb-[50px]">{post.price}원</p>
                       <div>
                         {userReview ? (
                           <button

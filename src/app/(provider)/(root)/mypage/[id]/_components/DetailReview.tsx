@@ -8,6 +8,7 @@ import StarRating from './StarRating';
 import { useState } from 'react';
 import { Confirm, Notify } from 'notiflix';
 import AddReview from './AddReview';
+import { CodeCategories } from '@/components/dumy';
 
 interface PortfolioData {
   id: string;
@@ -161,7 +162,20 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
             <div className="flex flex-row mt-[24px] ">
               {imageUrl && <Image src={imageUrl} alt="ds" width={100} height={100} className="w-[100px] h-[100px]" />}
               <div className="flex flex-col ml-[40px]">
-                <h1 className="flex text-sm  text-grey-600  font-bold ">{portfolio.lang_category}</h1>
+                <div className="flex items-center ml-0">
+                  <Image
+                    src={
+                      CodeCategories.find((category) => category.name === portfolio.lang_category[0])?.image ||
+                      '/defaultProfileimg.svg'
+                    }
+                    alt="d"
+                    width={12}
+                    height={12}
+                    className="w-5 h-5 "
+                  />
+                  <p className="flex text-sm ml-1 text-grey-600  font-bold ">{portfolio.lang_category.join(', ')}</p>
+                </div>
+
                 <h1 className="flex text-base  text-grey-800 font-bold ">{portfolio.title}</h1>
               </div>
             </div>
