@@ -166,7 +166,7 @@ export default function ProDetail() {
         </div>
       </div>
       {/* 채팅모달 */}
-      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat}  onMessagesRead={() => {}} />}
+      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}}/>}
 
       {/* 포트폴리오 모달 */}
       {selectedPortfolio && (
