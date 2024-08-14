@@ -7,6 +7,7 @@ import useAuthStore from '@/zustand/authStore';
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import MDEditor from '@uiw/react-md-editor';
 
 export default function CommuCommentList() {
   const { id: paramsId } = useParams();
@@ -140,13 +141,20 @@ export default function CommuCommentList() {
                     onChange={(e) => setEditContent(e.target.value)}
                     className="flex p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
                   />
+                  {/* 
+                  <MDEditor
+                    height={100}
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    commands={[]}
+                  /> */}
                   <button onClick={() => handleSaveClick(comment.id)}>저장</button>
                   <button onClick={handleCancelClick}>취소</button>
                 </div>
               ) : (
                 <div>
                   <p className="font-bold">{getUserNickname(comment.user_id)}</p>
-                  <p>{comment.contents}</p>
+                  <MDEditor.Markdown source={comment.contents} />
                   <div className="flex gap-[24px]">
                     <p>{comment.created_at.split('T')[0]}</p>
                     <div className="flex gap-[8px] bg-gray-300 px-[8px] py-[4px] rounded-full ">
