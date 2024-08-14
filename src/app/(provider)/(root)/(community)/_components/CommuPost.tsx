@@ -8,6 +8,7 @@ import useAuthStore from '@/zustand/authStore';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { useState } from 'react';
+import MDEditor from '@uiw/react-md-editor';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -121,7 +122,9 @@ export default function CommuPost() {
       </div>
       <hr className="w-full border-t border-black my-8" />
       {data?.post_img?.[0] && <Image src={data.post_img[0]} alt="Post Image" width={800} height={500} />}
-      <p className="py-6">{data?.content}</p>
+
+      <MDEditor.Markdown source={data?.content} />
+      {/* <p className="py-6">{data?.content}</p> */}
     </div>
   );
 }
