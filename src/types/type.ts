@@ -16,4 +16,17 @@ export type RequestPosts = Tables<'Request Posts'>;
 
 export type RequestReviews = Tables<'Request Reviews'>;
 
-export type Chat = Tables<'Chat'>;
+export type Chat =Tables<'Chat'>
+
+
+export interface ChatRoomInfo {
+    chat_room_id: string;
+    post_lang_category: string[] | null;
+    post_title: string | null;
+    user_nickname: string | null;
+    user_profile_img: string | null;
+    latest_message: string | null;
+    latest_message_time: string | null;
+    unread_count: number;
+  }
+  

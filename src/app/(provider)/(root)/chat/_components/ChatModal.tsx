@@ -4,20 +4,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Chat, Users } from '@/types/type';
 import Image from 'next/image';
-import DescriptionInput from '../../pro/createCard/_components/DescriptionInput';
-// import '@/css/chatMdstyle.css'
+
 const supabase = createClient();
 
 type ChatModalProps = {
   chatRoomId: string;
   onClose: () => void;
+  onMessagesRead: () => void; // 메시지가 읽혔을 때 호출되는 콜백
 };
 
-const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
+const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRead }) => {
   const [messages, setMessages] = useState<Chat[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
+  const [isRead, setIsRead] = useState<boolean>(false); // 메시지 읽음 상태를 관리하는 state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
   useEffect(() => {
     const markMessagesAsRead = async () => {
-      if (!currentUser) return;
+      if (!currentUser || isRead) return;
 
       const { error } = await supabase
         .from('Chat')
@@ -41,6 +42,9 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
       if (error) {
         console.error('Error marking messages as read:', error.message);
+      } else {
+        setIsRead(true); // 읽음 상태를 true로 설정
+        onMessagesRead(); // 메시지가 읽혔을 때 콜백 호출
       }
     };
 
@@ -105,7 +109,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [chatRoomId, currentUser]);
+  }, [chatRoomId, currentUser, isRead]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -133,6 +137,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
       console.error('Error sending message:', error);
     } else {
       setNewMessage('');
+      setIsRead(false); // 새로운 메시지가 추가되면 다시 읽음 상태를 false로 설정
     }
   };
 
@@ -174,7 +179,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
               className="flex-1 p-3 border border-gray-300 rounded-lg mr-2 text-sm font-normal py-3"
               placeholder="메시지를 입력하세요"
             />
-            {/* <DescriptionInput /> */}
             <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
               <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
               <div className='hidden md:block'>보내기</div>
