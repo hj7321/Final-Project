@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
 import { useChatNotifications } from '@/hooks/useChatNotifications'; // 커스텀 훅 임포트
 import Image from 'next/image';
+import ChatModal from '@/app/(provider)/(root)/chat/_components/ChatModal';
 
 interface ChatNotificationProps {
   userId: string;
 }
 
 const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
-  const { unreadCount, chatMessages, markMessagesAsRead, loading } = useChatNotifications(userId);
+  const { unreadCount, chatRooms, markMessagesAsRead, loading, fetchChatNotifications } = useChatNotifications(userId);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(null);
 
   const toggleDropdown = () => {
     if (!loading) {
       setIsOpen(!isOpen);
-      if (!isOpen) {
-        markMessagesAsRead();
-      }
     }
+  };
+
+  const openChatModal = (chatRoomId: string) => {
+    setCurrentChatRoomId(chatRoomId);
+    setIsOpen(false); // 드롭다운 닫기
+    markMessagesAsRead(chatRoomId); // 모달이 열릴 때 해당 채팅방의 메시지를 읽음으로 표시
+  };
+
+  const closeChatModal = async () => {
+    setCurrentChatRoomId(null);
+    await fetchChatNotifications(); // 모달을 닫을 때 알림 상태를 업데이트
   };
 
   return (
@@ -31,25 +41,50 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg z-50">
-          <div className="p-4">
-            <h3 className="text-lg font-medium">메시지 알림</h3>
-            {chatMessages.length > 0 ? (
-              <ul>
-                {chatMessages.map((message) => (
-                  <li key={message.id} className="border-b py-2">
-                    <p className="text-sm">{message.content}</p>
-                    <span className="text-xs text-gray-500">
-                      {new Date(message.created_at).toLocaleDateString()}
-                    </span>
+        <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg z-50 border border-grey-100">
+          <div>
+            {chatRooms.length > 0 ? (
+              <div className="px-4 py-3">
+                {chatRooms.map((room) => (
+                  <li
+                    key={room.chat_room_id}
+                    className="border-b py-2 flex items-center"
+                    onClick={() => openChatModal(room.chat_room_id)}
+                  >
+                    <Image
+                      src={room.user_profile_img || '/defaultProfileimg.svg'}
+                      alt="상대 프로필"
+                      width={40}
+                      height={40}
+                      className="rounded-full mr-4"
+                    />
+                    <div className="flex-1">
+                      <p className="text-xs text-grey-400">{room.user_nickname}</p>
+                      <div className="flex items-center">
+                        <p className="text-sm truncate">{room.latest_message}</p>
+                        {room.unread_count > 0 && (
+                          <span className="bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ml-1">
+                            {room.unread_count}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </li>
                 ))}
-              </ul>
+              </div>
             ) : (
               <p className="text-sm text-gray-500">새로운 메시지가 없습니다.</p>
             )}
           </div>
         </div>
+      )}
+
+      {currentChatRoomId && (
+        <ChatModal
+          chatRoomId={currentChatRoomId}
+          onClose={closeChatModal}
+          onMessagesRead={() => markMessagesAsRead(currentChatRoomId)}
+        />
       )}
     </div>
   );

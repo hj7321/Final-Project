@@ -1,9 +1,7 @@
 'use client';
 
-import { CodeCategories } from '@/components/dumy';
 import useAuthStore from '@/zustand/authStore';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo} from 'react';
 import DesktopButton from './_components/DesktopButton';
 import MobileButton from './_components/MobileButton';
 import Categories from './_components/Categories';
@@ -11,6 +9,7 @@ import PostSkeleton from './_components/PostSkeleton';
 import ProPosts from './_components/ProPosts';
 import { useInfiniteQuery, QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 import '@/css/proMain.css'
+import useProMain from '@/hooks/useProMain';
 
 export interface Posts {
   id: string;
@@ -21,9 +20,14 @@ export interface Posts {
   post_img: string[];
   price: number;
 }
+
 export default function ProMainPage() {
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const route = useRouter();
+  const { 
+    selectedLanguages,
+    handleLanguageFilter,
+    handleNavigation,
+    getCategoryImage
+  } = useProMain()
   const { isPro } = useAuthStore();
 
   const fetchPosts = useCallback(
@@ -65,25 +69,6 @@ export default function ProMainPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleLanguageFilter = useCallback(
-    (lang: string) => {
-      const newSelectedLanguages = selectedLanguages.includes(lang)
-        ? selectedLanguages.filter((l) => l !== lang)
-        : [...selectedLanguages, lang];
-
-      setSelectedLanguages(newSelectedLanguages);
-    },
-    [selectedLanguages]
-  );
-
-  const handleNavigation = useCallback(() => {
-    route.push('/pro/createCard');
-  }, [route]);
-
-  const getCategoryImage = useCallback((categoryName: string) => {
-    const category = CodeCategories.find((cat) => cat.name === categoryName);
-    return category ? category.image : '/default_image.svg';
-  }, []);
 
   const filteredPosts = useMemo(() => data?.pages.flat() || [], [data]);
 

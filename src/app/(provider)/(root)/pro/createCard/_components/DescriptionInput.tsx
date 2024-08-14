@@ -14,6 +14,9 @@ export default function DescriptionInput({ description, setDescription }: Descri
         height={700}
         value={description}
         onChange={setDescription}
+        textareaProps={{
+          placeholder : "내용을 입력해 주세요. (마크다운 형식)"
+        }}
         commands={[
           commands.title1,
           commands.title2,
