@@ -12,28 +12,39 @@ export const useChatNotifications = (userId: string) => {
   const fetchChatNotifications = async () => {
     if (!userId) return;
 
-    const { data, error } = await supabase
+    // 채팅방 ID 목록을 가져오기
+    const { data: chatRoomsData, error: chatRoomsError } = await supabase
       .from('Chat')
-      .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at, is_read')
-      .or(`consumer_id.eq.${userId},pro_id.eq.${userId}`)
-      .order('created_at', { ascending: false }); // 최신 메시지를 우선 가져옴
+      .select('chat_room_id')
+      .or(`consumer_id.eq.${userId},pro_id.eq.${userId}`);
 
-    if (error) {
-      console.error('Error fetching chat notifications:', error.message);
+    if (chatRoomsError) {
+      console.error('Error fetching chat rooms:', chatRoomsError.message);
       setLoading(false);
       return;
     }
 
-    const chatRoomsData: ChatRoomInfo[] = [];
-    const chatRoomsMap = new Map<string, ChatRoomInfo>();
+    // 중복된 채팅방 ID를 제거하기 위해 Set을 사용
+    const uniqueChatRoomIds = Array.from(new Set(chatRoomsData.map((room) => room.chat_room_id)));
 
-    for (let chat of data) {
-      // 각 채팅방에서 최신 메시지 하나만 처리하도록 함
-      if (chatRoomsMap.has(chat.chat_room_id)) {
-        continue;
+    const chatRoomPromises = uniqueChatRoomIds.map(async (chatRoomId) => {
+      const { data: latestMessageData, error: latestMessageError } = await supabase
+        .from('Chat')
+        .select('content, created_at, consumer_id, pro_id')
+        .eq('chat_room_id', chatRoomId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (latestMessageError) {
+        console.error('Error fetching latest message:', latestMessageError.message);
+        return null;
       }
 
-      const otherUserId = chat.consumer_id === userId ? chat.pro_id : chat.consumer_id;
+      // 현재 사용자가 보낸 메시지인지 확인하기
+      const isUserMessage = latestMessageData.consumer_id === userId;
+
+      const otherUserId = isUserMessage ? latestMessageData.pro_id : latestMessageData.consumer_id;
 
       const { data: userData, error: userError } = await supabase
         .from('Users')
@@ -43,32 +54,42 @@ export const useChatNotifications = (userId: string) => {
 
       if (userError) {
         console.error('Error fetching user data:', userError.message);
-        continue;
+        return null;
       }
 
-      const { count: unreadCount } = await supabase
+      const { count: unreadCount, error: unreadCountError } = await supabase
         .from('Chat')
         .select('id', { count: 'exact' })
-        .eq('chat_room_id', chat.chat_room_id)
+        .eq('chat_room_id', chatRoomId)
         .eq('is_read', false)
         .neq('consumer_id', userId);
 
-      const chatRoomInfo: ChatRoomInfo = {
-        chat_room_id: chat.chat_room_id,
+      if (unreadCountError) {
+        console.error('Error fetching unread count:', unreadCountError.message);
+        return null;
+      }
+
+      return {
+        chat_room_id: chatRoomId,
         user_nickname: userData?.nickname || '알 수 없음',
         user_profile_img: userData?.profile_img || '',
-        latest_message: chat.content,
-        latest_message_time: chat.created_at || '',
+        latest_message: latestMessageData.content,
+        latest_message_time: latestMessageData.created_at || '',
         unread_count: unreadCount || 0,
-        post_lang_category: [], // 기본값으로 빈 배열 제공
+        post_lang_category: [],  // 기본값으로 빈 배열 제공
         post_title: '제목 없음', // 기본값으로 '제목 없음' 제공
-      };
+      } as ChatRoomInfo;
+    });
 
-      chatRoomsMap.set(chat.chat_room_id, chatRoomInfo);
-    }
+    const resolvedChatRooms = (await Promise.all(chatRoomPromises)).filter(Boolean) as ChatRoomInfo[];
+    resolvedChatRooms.sort((a, b) => {
+      const timeA = a.latest_message_time ? new Date(a.latest_message_time).getTime() : 0;
+      const timeB = b.latest_message_time ? new Date(b.latest_message_time).getTime() : 0;
+      return timeB - timeA;
+    });
 
-    setChatRooms(Array.from(chatRoomsMap.values()));
-    setUnreadCount(Array.from(chatRoomsMap.values()).reduce((sum, room) => sum + room.unread_count, 0));
+    setChatRooms(resolvedChatRooms);
+    setUnreadCount(resolvedChatRooms.reduce((sum, room) => sum + room.unread_count, 0));
     setLoading(false);
   };
 
