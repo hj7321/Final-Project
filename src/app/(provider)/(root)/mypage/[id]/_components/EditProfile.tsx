@@ -97,7 +97,6 @@ export default function EditProfile() {
     },
     onSuccess: () => {
       Notify.success('프로필이 성공적으로 수정되었습니다.');
-      // alert('프로필이 성공적으로 수정되었습니다.');
       window.location.reload();
     },
     onSettled: () => {
@@ -119,6 +118,20 @@ export default function EditProfile() {
     setPublicUrl('');
   };
 
+  const handleBirthChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ''); // 숫자만 남김
+
+    if (value.length > 6) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+    } else if (value.length > 4) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}`;
+    } else if (value.length > 0) {
+      value = `${value.slice(0, 4)}`;
+    }
+
+    setBirth(value);
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let imageUrl = publicUrl;
@@ -130,8 +143,7 @@ export default function EditProfile() {
       }
     }
 
-    const formattedBirth = birth.replace(/-/g, '');
-    mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
+    mutation.mutate({ nickname, profile_img: imageUrl, name, birth });
   };
 
   const cancleButton = (): void => {
@@ -219,10 +231,12 @@ export default function EditProfile() {
               생일
             </span>
             <input
-              type="date"
+              type="text"
               id="birth"
               value={birth}
-              onChange={(e) => setBirth(e.target.value)}
+              onChange={handleBirthChange}
+              placeholder="YYYY-MM-DD"
+              maxLength={11} // 최대 길이를 10자로 설정 (yyyy-mm-dd)
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
             />
           </div>
