@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
 const webBtnStyle = 'w-[193px] h-[56px] border rounded-[8px] p-[16px] text-[16px]';
 const mobileBtnStyle = 'w-[140px] h-[37px] border rounded-[8px] py-[8px] px-[16px] text-[14px]';
@@ -24,9 +23,13 @@ export default function SignUpComplete() {
         body: JSON.stringify({ userId })
       }).then((res) => res.json());
     }
-    const redirectPage = Cookies.get('returnPage');
-    Cookies.remove('returnPage');
-    router.replace(redirectPage!);
+
+    // 사용자 유형 선택 후 로직
+    const redirectPage = Cookies.get('returnPage'); // (1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
+    Cookies.remove('returnPage'); // (2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
+    if (redirectPage!.startsWith('/login'))
+      router.replace('/'); // (3) 돌아갈 페이지가 로그인 관련 페이지라면, 현재 페이지를 홈페이지로 대체
+    else router.replace(redirectPage!); // (3) 돌아갈 페이지가 로그인 관련 페이지가 아니라면, 현재 페이지를 회원가입 관련 페이지로 오기 전 페이지로 대체
   };
 
   return (

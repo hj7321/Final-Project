@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { ChatRoomInfo, Chat, Users } from '@/types/type';
+import { ChatRoomInfo } from '@/types/type';
 
 const supabase = createClient();
 
@@ -13,7 +13,7 @@ export const useChatNotifications = (userId: string) => {
     if (!userId) return;
 
     const { data, error } = await supabase
-      .from('Chat')  // Chat 타입을 명시적으로 사용
+      .from('Chat')
       .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at, is_read')
       .or(`consumer_id.eq.${userId},pro_id.eq.${userId}`)
       .order('created_at', { ascending: false });
@@ -24,13 +24,17 @@ export const useChatNotifications = (userId: string) => {
       return;
     }
 
-    const chatRoomsData: ChatRoomInfo[] = [];  // ChatRoomInfo 타입 사용
+    const chatRoomsData: ChatRoomInfo[] = [];
 
     for (let chat of data) {
+      if (chat.consumer_id === userId) {
+        continue; // 현재 사용자가 보낸 메시지는 제외
+      }
+
       const otherUserId = chat.consumer_id === userId ? chat.pro_id : chat.consumer_id;
 
       const { data: userData, error: userError } = await supabase
-        .from('Users')  // Users 타입을 명시적으로 사용
+        .from('Users')
         .select('nickname, profile_img')
         .eq('id', otherUserId)
         .single();
@@ -41,7 +45,7 @@ export const useChatNotifications = (userId: string) => {
       }
 
       const { count: unreadCount } = await supabase
-        .from('Chat')  // Chat 타입을 명시적으로 사용
+        .from('Chat')
         .select('id', { count: 'exact' })
         .eq('chat_room_id', chat.chat_room_id)
         .eq('is_read', false)
@@ -52,10 +56,10 @@ export const useChatNotifications = (userId: string) => {
         user_nickname: userData?.nickname || '알 수 없음',
         user_profile_img: userData?.profile_img || '',
         latest_message: chat.content,
-        latest_message_time: chat.created_at || "",
+        latest_message_time: chat.created_at || '',
         unread_count: unreadCount || 0,
-        post_lang_category: [],  // 빈 배열로 초기화 (필요에 따라 업데이트)
-        post_title: '',           // 빈 문자열로 초기화 (필요에 따라 업데이트)
+        post_lang_category: [],  // 기본값으로 빈 배열 제공
+        post_title: '제목 없음', // 기본값으로 '제목 없음' 제공
       });
     }
 
@@ -64,7 +68,6 @@ export const useChatNotifications = (userId: string) => {
     setLoading(false);
   };
 
-  // 메시지를 읽음으로 표시하는 함수
   const markMessagesAsRead = async (chatRoomId: string) => {
     const updatedChatRooms = chatRooms.map((room) =>
       room.chat_room_id === chatRoomId ? { ...room, unread_count: 0 } : room
@@ -74,7 +77,7 @@ export const useChatNotifications = (userId: string) => {
     setUnreadCount(updatedChatRooms.reduce((sum, room) => sum + room.unread_count, 0));
 
     const { error } = await supabase
-      .from('Chat')  // Chat 타입을 명시적으로 사용
+      .from('Chat')
       .update({ is_read: true })
       .eq('chat_room_id', chatRoomId)
       .neq('consumer_id', userId);
@@ -99,5 +102,5 @@ export const useChatNotifications = (userId: string) => {
     };
   }, [userId]);
 
-  return { unreadCount, chatRooms, markMessagesAsRead, loading, fetchChatNotifications };
+  return { unreadCount, chatRooms, loading, fetchChatNotifications, markMessagesAsRead };
 };

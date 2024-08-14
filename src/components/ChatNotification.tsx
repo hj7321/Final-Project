@@ -28,6 +28,9 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
     await fetchChatNotifications(); // 모달을 닫을 때 알림 상태를 업데이트
   };
 
+  // 읽지 않은 채팅방만 필터링
+  const unreadChatRooms = chatRooms.filter(room => room.unread_count > 0);
+
   return (
     <div className="relative">
       <button onClick={toggleDropdown} className="relative">
@@ -42,9 +45,9 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg z-50 border border-grey-100">
           <div>
-            {chatRooms.length > 0 ? (
+            {unreadChatRooms.length > 0 ? (
               <div className='px-4 py-3'>
-                {chatRooms.map((room) => (
+                {unreadChatRooms.map((room) => (
                   <li key={room.chat_room_id} className="border-b py-2 flex items-center" onClick={() => openChatModal(room.chat_room_id)}>
                     <Image
                       src={room.user_profile_img || '/defaultProfileimg.svg'}
@@ -68,21 +71,20 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">새로운 메시지가 없습니다.</p>
+              <div className='p-4'>
+                <p className="text-sm text-gray-500">새로운 메시지가 없습니다.</p>
+              </div>
             )}
-          </div>
-          <div className="flex justify-center mt-4">
-            <div className="w-2 h-2 bg-blue-600 rounded-full mx-1"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full mx-1"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full mx-1"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full mx-1"></div>
-            <div className="w-2 h-2 bg-gray-300 rounded-full mx-1"></div>
           </div>
         </div>
       )}
 
       {currentChatRoomId && (
-        <ChatModal chatRoomId={currentChatRoomId} onClose={closeChatModal} onMessagesRead={() => markMessagesAsRead(currentChatRoomId!)} />
+        <ChatModal
+          chatRoomId={currentChatRoomId}
+          onClose={closeChatModal}
+          onMessagesRead={() => markMessagesAsRead(currentChatRoomId!)}
+        />
       )}
     </div>
   );
