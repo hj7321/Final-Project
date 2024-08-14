@@ -1,16 +1,15 @@
 'use client';
 
 import useAuthStore from '@/zustand/authStore';
+import useSidebarStore from '@/zustand/sidebarStore';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-interface AppInfoSidebarProps {
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAppInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-export default function AppInfoSidebar({ setSidebarOpen, setAppInfoOpen }: AppInfoSidebarProps) {
+export default function AppInfoSidebar() {
   const { logout } = useAuthStore();
+  const { sidebarClose, appInfoSidebarClose } = useSidebarStore();
+
   const router = useRouter();
 
   const goToServiceInfoPage = () => {
@@ -27,8 +26,8 @@ export default function AppInfoSidebar({ setSidebarOpen, setAppInfoOpen }: AppIn
     });
     logout();
     router.replace('/');
-    setAppInfoOpen((prev) => !prev);
-    setSidebarOpen((prev) => !prev);
+    appInfoSidebarClose();
+    sidebarClose();
   };
 
   const goToDeleteUserPage = () => {
@@ -38,7 +37,7 @@ export default function AppInfoSidebar({ setSidebarOpen, setAppInfoOpen }: AppIn
   return (
     <section className="md:hidden fixed min-h-screen w-screen inset-0 z-40 bg-white">
       <div className="flex justify-center items-center h-[56px] p-[16px] border-b border-grey-100">
-        <button onClick={() => setAppInfoOpen((prev) => !prev)} className="left-0 absolute">
+        <button onClick={appInfoSidebarClose} className="left-0 absolute">
           <Image src="/backIcon.svg" alt="뒤로가기" width={21} height={21} />
         </button>
         <Image src="/logo_eng.svg" alt="영어 로고" width={120} height={24} />

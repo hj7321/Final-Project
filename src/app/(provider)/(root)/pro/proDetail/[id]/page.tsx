@@ -7,6 +7,7 @@ import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴�
 import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import ProDetailSkeleton from './_components/ProDetailSkeleton';
+import DetailAccount from './_components/AccountDetail';
 import useProMain from '@/hooks/useProMain';
 import PostDescription from './_components/PostDescription';
 import UserPortfolio from './_components/UserPortfolio';
@@ -27,6 +28,8 @@ export interface PostData {
   title: string;
   lang_category: string[];
   price: number;
+  id: string;
+  user_id: string;
 }
 
 interface UserData {
@@ -51,7 +54,9 @@ export default function ProDetail() {
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
   const [activeTab, setActiveTab] = useState('service');
-  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); // 선택된 포트폴리오
+  const [isDetailAccountOpen, setIsDetailAccountOpen] = useState(false); // 추가: DetailAccount 모달 열림 상태 관리
+
   const { id: paramId } = useParams();
   const id = paramId as string;
   const router = useRouter();
@@ -106,6 +111,14 @@ export default function ProDetail() {
 
   // 여기까지 //
 
+  const handleAccount = () => {
+    setIsDetailAccountOpen(true); // DetailAccount 모달 열기
+  };
+
+  const handleCloseDetailAccount = () => {
+    setIsDetailAccountOpen(false); // DetailAccount 모달 닫기
+  };
+
   if (!post || !user) {
     return <ProDetailSkeleton />;
   }
@@ -132,10 +145,10 @@ export default function ProDetail() {
           <div className="flex-col flex md:flex-col">
             <UserProfile profile={user.profile_img} nickname={user.nickname} />
             <UserDescription />
-            <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price}/>
+            <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price} />
             <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-evenly items-center mt-[15px]">
               <InquireBtn handleInquiry={handleInquiry} />
-              <PurChaseBtn handleInquiry={handleInquiry} />
+              <PurChaseBtn handleAccount={handleAccount} />
             </div>
           </div>
         </div>
@@ -153,11 +166,15 @@ export default function ProDetail() {
         </div>
       </div>
       {/* 채팅모달 */}
-      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} />}
+      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}}/>}
 
       {/* 포트폴리오 모달 */}
       {selectedPortfolio && (
         <PortfolioModal portfolio={selectedPortfolio} onClose={handlePortfolioModalClose} user={user} />
+      )}
+      {/* DetailAccount 모달 */}
+      {isDetailAccountOpen && (
+        <DetailAccount onClose={handleCloseDetailAccount} post={post} user={user} portfolio={portfolio} />
       )}
     </div>
   );

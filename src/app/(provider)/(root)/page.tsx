@@ -148,11 +148,11 @@ export default function Home() {
             {expertPosts.slice(0, 8).map((expert) => (
               <div key={expert.id} className="bg-white py-4 px-3 flex-shrink-0 w-64 md:w-auto flex flex-col items-start border border-grey-100 rounded-xl">
                 <Link href={`/pro/proDetail/${expert.id}`}>
-                  <img
+                  <Image
                     src={expert.post_img[0]}
                     alt={expert.title}
-                    width={20}
-                    height={20}
+                    width={256}
+                    height={192}
                     className="w-screen h-48 rounded-md object-cover mb-4"
                   />
                   <div className="flex items-center mb-2">

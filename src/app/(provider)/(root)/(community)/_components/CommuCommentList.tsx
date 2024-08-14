@@ -7,13 +7,14 @@ import useAuthStore from '@/zustand/authStore';
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import MDEditor from '@uiw/react-md-editor';
 
 export default function CommuCommentList() {
   const { id: paramsId } = useParams();
   const queryClient = useQueryClient();
   const { userId } = useAuthStore();
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState<string>('');
+  const [editContent, setEditContent] = useState<string | undefined>(undefined);
 
   const getComments = async (): Promise<CommunityComments[]> => {
     const response = await fetch('/api/communityComments');
@@ -97,7 +98,7 @@ export default function CommuCommentList() {
   };
 
   const handleSaveClick = (id: string) => {
-    if (!editContent.trim()) {
+    if (!editContent?.trim()) {
       console.error('내용을 입력해주세요.');
 
       getComments();
@@ -134,19 +135,21 @@ export default function CommuCommentList() {
             <div key={comment.id}>
               {editingCommentId === comment.id ? (
                 <div className="flex space-y-2 p-4 border border-gray-300 rounded-md shadow-sm gap-1">
-                  <input
+                  {/* <input
                     type="text"
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     className="flex p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
-                  />
+                  /> */}
+
+                  <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
                   <button onClick={() => handleSaveClick(comment.id)}>저장</button>
                   <button onClick={handleCancelClick}>취소</button>
                 </div>
               ) : (
                 <div>
                   <p className="font-bold">{getUserNickname(comment.user_id)}</p>
-                  <p>{comment.contents}</p>
+                  <MDEditor.Markdown source={comment.contents} />
                   <div className="flex gap-[24px]">
                     <p>{comment.created_at.split('T')[0]}</p>
                     <div className="flex gap-[8px] bg-gray-300 px-[8px] py-[4px] rounded-full ">

@@ -1,43 +1,35 @@
 'use client';
 
-import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 import AppInfoSidebar from './AppInfoSidebar';
+import useIndexStore from '@/zustand/indexStore';
+import useSidebarStore from '@/zustand/sidebarStore';
+import ChatNotification from '../ChatNotification';
 
 const buttonStyle = 'w-[220px] h-[37px] px-[16px] py-[8px] rounded-[8px] text-center';
-const linkStyle = 'flex justify-between px-[12px] py-[8px]';
+const linkStyle = 'flex justify-between px-[12px] py-[8px] text-[14px]';
 
 interface SidebarProp {
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  nickname: string | null | undefined;
 }
 
-export default function Sidebar({ setSidebarOpen }: SidebarProp) {
-  const [appInfoOpen, setAppInfoOpen] = useState<boolean>(false);
+export default function Sidebar({ nickname }: SidebarProp) {
   const { isLogin, userId } = useAuthStore();
+  const { selectedIdx } = useIndexStore();
+  const { sidebarClose, isAppInfoSidebarOpened, appInfoSidebarOpen } = useSidebarStore();
   const router = useRouter();
-
-  const getUserData = async () => {
-    const supabase = createClient();
-    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
-    return data;
-  };
-  const { data: Users } = useQuery({
-    queryKey: [userId],
-    queryFn: getUserData
-  });
 
   const goToLoginPage = (e: React.MouseEvent) => {
     const presentPage = window.location.href;
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
     router.push('/login');
-    setSidebarOpen((prev) => !prev);
+    sidebarClose();
   };
 
   const goToSignUpPage = (e: React.MouseEvent) => {
@@ -45,12 +37,12 @@ export default function Sidebar({ setSidebarOpen }: SidebarProp) {
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
     router.push('/signup');
-    setSidebarOpen((prev) => !prev);
+    sidebarClose();
   };
 
   const handleMovePage = (e: React.MouseEvent, href: string) => {
     router.push(href);
-    setSidebarOpen((prev) => !prev);
+    sidebarClose();
   };
 
   return (
@@ -70,11 +62,11 @@ export default function Sidebar({ setSidebarOpen }: SidebarProp) {
                 <Image src="/defaultProfileimg.svg" alt="기본 프로필" width={63} height={63} className="mr-[16px]" />
                 <div className="flex flex-col gap-[8px]">
                   <button onClick={(e) => handleMovePage(e, `/mypage/${userId}`)}>
-                    <b className="text-primary-500">{Users?.data?.nickname}</b>님
+                    <b className="text-primary-500">{nickname}</b>님
                   </button>
                   <div className="flex gap-[12px]">
                     <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
-                    <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
+                    {userId && <ChatNotification userId={userId} />}
                   </div>
                 </div>
               </div>
@@ -99,15 +91,24 @@ export default function Sidebar({ setSidebarOpen }: SidebarProp) {
               </div>
             )}
             <nav className="flex flex-col gap-[16px] mb-[24px]">
-              <button className={clsx(linkStyle, 'Caption1-L')} onClick={(e) => handleMovePage(e, '/qna')}>
+              <button
+                className={clsx(selectedIdx === 0 && 'text-primary-500 font-bold', linkStyle)}
+                onClick={(e) => handleMovePage(e, '/qna')}
+              >
                 <p>Q&A</p>
                 <Image src="/arrow.svg" alt="화살표" width={20} height={20} />
               </button>
-              <button className={clsx(linkStyle, 'Caption1-L')} onClick={(e) => handleMovePage(e, '/insight')}>
+              <button
+                className={clsx(selectedIdx === 1 && 'text-primary-500 font-bold', linkStyle)}
+                onClick={(e) => handleMovePage(e, '/insight')}
+              >
                 <p>인사이트</p>
                 <Image src="/arrow.svg" alt="화살표" width={20} height={20} />
               </button>
-              <button className={clsx(linkStyle, 'Caption1-L')} onClick={(e) => handleMovePage(e, '/pro')}>
+              <button
+                className={clsx(selectedIdx === 2 && 'text-primary-500 font-bold', linkStyle)}
+                onClick={(e) => handleMovePage(e, '/pro')}
+              >
                 <p>전문가 의뢰</p>
                 <Image src="/arrow.svg" alt="화살표" width={20} height={20} />
               </button>
@@ -121,12 +122,12 @@ export default function Sidebar({ setSidebarOpen }: SidebarProp) {
             'Caption2-M'
           )}
         >
-          <button onClick={() => setAppInfoOpen(true)} className="mb-[20px]">
+          <button onClick={appInfoSidebarOpen} className="mb-[20px]">
             코듀 앱 정보
           </button>
         </div>
       </section>
-      {appInfoOpen && <AppInfoSidebar setAppInfoOpen={setAppInfoOpen} setSidebarOpen={setSidebarOpen} />}
+      {isAppInfoSidebarOpened && <AppInfoSidebar />}
     </>
   );
 }

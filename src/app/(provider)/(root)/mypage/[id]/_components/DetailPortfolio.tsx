@@ -7,6 +7,7 @@ import EditPortfolio from './EditPortfolio';
 import { CodeCategories } from '@/components/dumy';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import useAuthStore from '@/zustand/authStore';
 
 interface DetailModalfolioProps {
   clickModal: () => void;
@@ -16,6 +17,7 @@ interface DetailModalfolioProps {
 const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId }) => {
   const params = useParams();
   const userId = params.id as string;
+  // const { getUserData } = useAuthStore();
 
   const getUserData = async () => {
     const supabase = createClient();
@@ -29,8 +31,10 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
     isLoading: userLoading,
     error: userError
   } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData
+    queryKey: ['Users', userId],
+    // queryFn: () => getUserData(userId),
+    queryFn: getUserData,
+    enabled: !!userId
   });
 
   const getsPortfolio = async () => {
