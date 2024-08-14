@@ -6,15 +6,10 @@ import Cookies from 'js-cookie';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
-interface LogoutHeaderLayoutProps {
-  setSelectedIdx: React.Dispatch<React.SetStateAction<number | null>>;
-}
-
-export default function LogoutHeaderLayout({ setSelectedIdx }: LogoutHeaderLayoutProps) {
+export default function LogoutHeader() {
   const router = useRouter();
 
   const goToLoginPage = () => {
-    setSelectedIdx(null);
     const presentPage = window.location.href;
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
@@ -22,7 +17,6 @@ export default function LogoutHeaderLayout({ setSelectedIdx }: LogoutHeaderLayou
   };
 
   const goToSignUpPage = () => {
-    setSelectedIdx(null);
     const presentPage = window.location.href;
     const pagePathname = new URL(presentPage).pathname;
     Cookies.set('returnPage', pagePathname);
