@@ -13,7 +13,7 @@ export const useChatNotifications = (userId: string) => {
     if (!userId) return;
 
     const { data, error } = await supabase
-      .from('Chat')
+      .from('Chat')  // Chat 타입을 명시적으로 사용
       .select('chat_room_id, post_id, consumer_id, pro_id, content, created_at, is_read')
       .or(`consumer_id.eq.${userId},pro_id.eq.${userId}`)
       .order('created_at', { ascending: false });
@@ -24,13 +24,13 @@ export const useChatNotifications = (userId: string) => {
       return;
     }
 
-    const chatRoomsData: ChatRoomInfo[] = [];
+    const chatRoomsData: ChatRoomInfo[] = [];  // ChatRoomInfo 타입 사용
 
     for (let chat of data) {
       const otherUserId = chat.consumer_id === userId ? chat.pro_id : chat.consumer_id;
 
       const { data: userData, error: userError } = await supabase
-        .from('Users')
+        .from('Users')  // Users 타입을 명시적으로 사용
         .select('nickname, profile_img')
         .eq('id', otherUserId)
         .single();
@@ -41,7 +41,7 @@ export const useChatNotifications = (userId: string) => {
       }
 
       const { count: unreadCount } = await supabase
-        .from('Chat')
+        .from('Chat')  // Chat 타입을 명시적으로 사용
         .select('id', { count: 'exact' })
         .eq('chat_room_id', chat.chat_room_id)
         .eq('is_read', false)
@@ -54,8 +54,8 @@ export const useChatNotifications = (userId: string) => {
         latest_message: chat.content,
         latest_message_time: chat.created_at || "",
         unread_count: unreadCount || 0,
-        post_lang_category: [],  // 기본값 설정
-        post_title: '',  // 기본값 설정
+        post_lang_category: [],  // 빈 배열로 초기화 (필요에 따라 업데이트)
+        post_title: '',           // 빈 문자열로 초기화 (필요에 따라 업데이트)
       });
     }
 
@@ -64,6 +64,7 @@ export const useChatNotifications = (userId: string) => {
     setLoading(false);
   };
 
+  // 메시지를 읽음으로 표시하는 함수
   const markMessagesAsRead = async (chatRoomId: string) => {
     const updatedChatRooms = chatRooms.map((room) =>
       room.chat_room_id === chatRoomId ? { ...room, unread_count: 0 } : room
@@ -73,7 +74,7 @@ export const useChatNotifications = (userId: string) => {
     setUnreadCount(updatedChatRooms.reduce((sum, room) => sum + room.unread_count, 0));
 
     const { error } = await supabase
-      .from('Chat')
+      .from('Chat')  // Chat 타입을 명시적으로 사용
       .update({ is_read: true })
       .eq('chat_room_id', chatRoomId)
       .neq('consumer_id', userId);

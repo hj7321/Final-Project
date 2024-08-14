@@ -18,6 +18,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
+  const [isRead, setIsRead] = useState<boolean>(false); // 메시지 읽음 상태를 관리하는 state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
 
   useEffect(() => {
     const markMessagesAsRead = async () => {
-      if (!currentUser) return;
+      if (!currentUser || isRead) return;
 
       const { error } = await supabase
         .from('Chat')
@@ -42,6 +43,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
       if (error) {
         console.error('Error marking messages as read:', error.message);
       } else {
+        setIsRead(true); // 읽음 상태를 true로 설정
         onMessagesRead(); // 메시지가 읽혔을 때 콜백 호출
       }
     };
@@ -107,7 +109,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [chatRoomId, currentUser]);
+  }, [chatRoomId, currentUser, isRead]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -135,6 +137,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
       console.error('Error sending message:', error);
     } else {
       setNewMessage('');
+      setIsRead(false); // 새로운 메시지가 추가되면 다시 읽음 상태를 false로 설정
     }
   };
 
