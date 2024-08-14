@@ -16,4 +16,4 @@ export type RequestPosts = Tables<'Request Posts'>;
 
 export type RequestReviews = Tables<'Request Reviews'>;
 
-export type Chat =Tables<'Chat'>
+export type Chat = Tables<'Chat'>;

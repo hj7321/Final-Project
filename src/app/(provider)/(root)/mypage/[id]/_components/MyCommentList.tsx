@@ -68,10 +68,13 @@ export default function MyCommentList() {
 
   if (!comments || comments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
-        <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
-        <div className="text-lg font-semibold mb-2">아직 남긴 댓글이 없어요</div>
-        <div className="text-sm text-gray-600 mb-4">다른 사람의 글을 읽어보고 답변을 남겨보세요 </div>
+      <div className="flex flex-col w-full">
+        <h2 className="hidden md:flex text-2xl font-bold">내가 쓴 댓글</h2>
+        <div className="flex flex-col items-center justify-center w-fullbg-white border mt-10 border-gray-300 rounded-md p-6 text-center h-96">
+          <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
+          <div className="text-lg font-semibold mb-2">아직 남긴 댓글이 없어요</div>
+          <div className="text-sm text-gray-600 mb-4">다른 사람의 글을 읽어보고 답변을 남겨보세요 </div>
+        </div>
       </div>
     );
   }

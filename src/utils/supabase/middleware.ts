@@ -45,7 +45,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
-
+  // 쿠키 가져오는 법 찾아보기 -> 여기서 한 번에 처리
   if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname === '/signup')) {
     return NextResponse.redirect(request.nextUrl.origin);
   }
