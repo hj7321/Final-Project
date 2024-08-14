@@ -10,6 +10,7 @@ import { FormEvent, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import { validateForms } from '../signup/_components/Validate';
 import useFetchData from '@/hooks/useFetchData';
+import { Report } from 'notiflix';
 
 const inputs = [
   { label: '이메일', type: 'text', id: 'email' },
@@ -69,7 +70,7 @@ export default function LoginPage() {
       inputRefs.current[1]!.focus();
       return;
     } else if (areInputValuesNull.length !== 0) {
-      return alert('회원 정보를 모두 기입해주세요.');
+      return Report.failure('로그인 실패', '회원 정보를 모두 기입해주세요.', '확인');
     }
 
     setThrottling(true); // 모든 조건을 통과했으므로, 이 시점에서 버튼 클릭을 막음 (연속 제출 방지)
@@ -110,9 +111,11 @@ export default function LoginPage() {
     // (5) 로그인 페이지로 오기 전 페이지로 리다이렉트
     const redirectPage = Cookies.get('returnPage'); // (5-1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
     Cookies.remove('returnPage'); // (5-2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
-    if (redirectPage === '/signup')
-      router.replace('/'); // (5-3) 돌아갈 페이지가 회원가입 페이지라면, 현재 페이지를 홈페이지로 대체
-    else router.replace(redirectPage!); // (5-3) 돌아갈 페이지가 회원가입 페이지가 아니라면, 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
+    if (redirectPage === '/signup' || redirectPage!.startsWith('/login')) router.replace('/');
+    // (5-3) 돌아갈 페이지가 회원가입 페이지 또는 로그인 관련 페이지라면, 현재 페이지를 홈페이지로 대체
+    else router.replace(redirectPage!);
+    // (5-3) 돌아갈 페이지가 회원가입 페이지가 아니라면, 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
+    router.refresh();
   };
 
   // 카카오 소셜 로그인을 진행하는 이벤트 핸들러

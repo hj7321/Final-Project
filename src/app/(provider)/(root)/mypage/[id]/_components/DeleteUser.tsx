@@ -4,6 +4,7 @@ import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import { FormEvent, useState } from 'react';
 import DeleteAlarmModal from './DeleteAlarmModal';
+import { Notify, Report } from 'notiflix';
 
 export default function DeleteUser() {
   const [throttling, setThrottling] = useState<boolean>(false);
@@ -29,7 +30,7 @@ export default function DeleteUser() {
 
     if (data.errorMsg) {
       console.log(data.errorMsg);
-      alert('비밀번호가 일치하지 않습니다.');
+      Report.failure('회원 탈퇴 실패', '비밀번호가 일치하지 않습니다.', '확인');
       setThrottling(false);
       return;
     }
@@ -42,7 +43,7 @@ export default function DeleteUser() {
     }).then((res) => res.json());
 
     if (userDeleteData.errorMsg) {
-      alert(userDeleteData.errorMsg);
+      Notify.failure(userDeleteData.errorMsg);
       setThrottling(false);
       return;
     }
