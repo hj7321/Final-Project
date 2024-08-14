@@ -1,10 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 
 export default function completedAccount() {
-  const { id } = useParams();
   return (
     <div className="w-full flex flex-col items-center justify-center h-[80vh] ">
       <Image src="/check_box.svg" alt="체크박스" width={80} height={80} className="mb-[32px]" />
@@ -14,8 +12,6 @@ export default function completedAccount() {
       </h1>
 
       <button className="w-[376px] h-[56px] rounded-lg bg-primary-500 text-white">전문가 채팅으로 이동</button>
-
-      {/* <p>결제 ID: {id}</p> */}
     </div>
   );
 }
