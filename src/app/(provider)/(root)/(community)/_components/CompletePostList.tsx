@@ -11,7 +11,8 @@ import useAuthStore from '@/zustand/authStore';
 import Cookies from 'js-cookie';
 
 export default function CompletePostList() {
-  const pathname = usePathname().split('/')[1];
+  const pathname = usePathname();
+  console.log(pathname);
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
   // const [view, setView] = useState<boolean>(true);
@@ -42,7 +43,7 @@ export default function CompletePostList() {
           onClick={handleCheckLogin}
         >
           <Image src="/pencil.svg" alt="pencilLogo" width={24} height={24} className="" />{' '}
-          {pathname === 'pna' ? '질문 남기기' : pathname === 'insight' ? '지식 공유하기' : '질문 남기기'}
+          {pathname === '/qna' ? '질문 남기기' : '지식 공유하기'}
         </Link>
         {/* <div className="h-[40px] flex items-center gap-[24px]">
           <p onClick={() => handleListChange()} className={view ? 'font-black' : 'font-medium'}>

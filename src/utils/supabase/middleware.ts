@@ -32,6 +32,7 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user }
   } = await supabase.auth.getUser();
+  console.log(user);
 
   // 사용자가 없는데(세션 만료) 의뢰 또는 커뮤티니 글쓰기 페이지인 경우 로그인 페이지로 리디렉션
   if (
@@ -47,6 +48,15 @@ export async function updateSession(request: NextRequest) {
   // 쿠키 가져오는 법 찾아보기 -> 여기서 한 번에 처리
   if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname === '/signup')) {
     return NextResponse.redirect(request.nextUrl.origin);
+  }
+
+  if (user) {
+    const { data } = await supabase.from('Users').select('is_pro').eq('id', user.id).maybeSingle();
+    if(!(data?.is_pro) && request.nextUrl.pathname === '/pro/createCard') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/pro';
+      return NextResponse.redirect(url)
+    }
   }
 
   // 반드시 supabaseResponse 객체를 그대로 반환해야 한다.

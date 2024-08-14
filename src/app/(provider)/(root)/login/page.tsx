@@ -110,8 +110,9 @@ export default function LoginPage() {
     // (5) 로그인 페이지로 오기 전 페이지로 리다이렉트
     const redirectPage = Cookies.get('returnPage'); // (5-1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
     Cookies.remove('returnPage'); // (5-2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
-    console.log({ redirectPage });
-    router.replace(redirectPage!); // (5-3) 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
+    if (redirectPage === '/signup')
+      router.replace('/'); // (5-3) 돌아갈 페이지가 회원가입 페이지라면, 현재 페이지를 홈페이지로 대체
+    else router.replace(redirectPage!); // (5-3) 돌아갈 페이지가 회원가입 페이지가 아니라면, 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
   };
 
   // 카카오 소셜 로그인을 진행하는 이벤트 핸들러
