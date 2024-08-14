@@ -66,7 +66,7 @@ const CreatePost = () => {
         contentRef.current.value = '';
       }
       alert('게시글 등록이 완료되었습니다.');
-      router.push('/qna');
+      router.push(`/${selectedCategory.toLowerCase()}`);
     }
   });
 
@@ -167,7 +167,7 @@ const CreatePost = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div className='flex md:flex-row flex-col justify-between h-[180px] mb-4'>
+        <div className="flex md:flex-row flex-col justify-between h-[180px] mb-4">
           <div className="border border-grey-100 p-3 rounded-xl md:w-[60%] w-full">
             <label className="block text-sm font-medium text-gray-700 mb-4">언어 선택 (필수, 중복 선택 가능) </label>
             <div className="flex flex-row flex-wrap justify-center items-center gap-2">
@@ -208,7 +208,7 @@ const CreatePost = () => {
             </div>
           </div>
         </div>
-        <div className='mt-[220px] md:mt-[0]'>
+        <div className="mt-[220px] md:mt-[0]">
           <label className="block text-sm font-medium text-gray-700"></label>
           <div data-color-mode="light">
             <MDEditor
