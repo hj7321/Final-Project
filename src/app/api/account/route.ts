@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // 1. 포트원 결제내역 단건조회 API 호출
     const paymentResponse = await fetch(`https://api.portone.io/payments/${paymentId}`, {
-      headers: { Authorization: `PortOne ${process.env.PORTONE_API_SECRET}`, 'Content-Type': 'application/json' }
+      headers: { Authorization: `PortOne ${PORTONE_API_SECRET}`, 'Content-Type': 'application/json' }
     });
 
     if (!paymentResponse.ok) {
@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     switch (payment.status) {
       case 'PAID':
         // 결제 완료 처리
-
         console.log('proId', proId);
         const supabase = createClient();
         const { error } = await supabase.from('Accounts').insert([
@@ -48,7 +47,22 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ message: '데이터베이스 삽입에 실패했습니다.' }, { status: 500 });
         }
 
-        return NextResponse.json({ message: '결제가 성공적으로 처리되었습니다.' }, { status: 200 });
+        // 4. 결제 취소 처리
+        const cancelResponse = await fetch(`https://api.portone.io/payments/${paymentId}/cancel`, {
+          method: 'POST',
+          headers: { Authorization: `PortOne ${PORTONE_API_SECRET}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reason: '테스트 결제 취소'
+          })
+        });
+
+        if (!cancelResponse.ok) {
+          const cancelErrorData = await cancelResponse.json().catch(() => ({}));
+          console.error('Cancel failed:', cancelResponse.status, cancelResponse.statusText, cancelErrorData);
+          return NextResponse.json({ message: '결제 취소에 실패했습니다.' }, { status: 500 });
+        }
+
+        return NextResponse.json({ message: '결제가 성공적으로 처리되고 취소되었습니다.' }, { status: 200 });
 
       default:
         return NextResponse.json({ message: '알 수 없는 결제 상태입니다.' }, { status: 400 });
