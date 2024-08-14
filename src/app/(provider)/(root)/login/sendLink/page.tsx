@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Notify } from 'notiflix';
 import { FormEvent, useRef, useState } from 'react';
 
 export default function SendLinkPage() {
@@ -61,7 +62,7 @@ export default function SendLinkPage() {
 
       if (data.errorMsg) {
         console.log(data.errorMsg);
-        alert('링크 전송에 실패했습니다.');
+        Notify.failure('링크 전송에 실패했습니다.');
         setThrottling(false); // 다시 버튼 클릭을 허용함
         return;
       }

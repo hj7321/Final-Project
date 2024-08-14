@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import TermsOfService from '../app/(provider)/(root)/signup/_components/TermsOfService';
-import PersonalInfo from '../app/(provider)/(root)/signup/_components/PersonalInfo';
+import TermsOfService from '../../app/(provider)/(root)/signup/_components/TermsOfService';
+import PersonalInfo from '../../app/(provider)/(root)/signup/_components/PersonalInfo';
 
 interface DetailInfoProp {
   content: string;

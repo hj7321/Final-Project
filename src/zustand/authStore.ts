@@ -33,6 +33,7 @@ interface AuthState {
   setUserId: (userId: Users['id'] | null) => void;
   setUserData: (userData: UserMetadata | null) => void;
   initializeAuthState: () => Promise<void>;
+  // getUserData: (userId: string) => Promise<Users> Users 테이블 타입 추가하기
 }
 
 const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set) => {
@@ -44,19 +45,8 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
       data: { session }
     } = await supabase.auth.getSession();
 
-    console.log(session);
-
     if (session) {
-      console.log('동작함');
       const { data } = await supabase.from('Users').select('is_pro').eq('id', session.user.id);
-      // userId에 맞는 데이터 가져오기
-      // const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
-      // const { data: userData } = useQuery({
-      //   queryKey: [session.user.id],
-      //   queryFn: async () => {
-      //     const data = await supabase.from('Users').select('*').eq('id', session.user.id!).maybeSingle();
-      //   }
-      // });
 
       set({
         isLoading: false,
@@ -78,6 +68,16 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
 
   initializeAuthState();
 
+  const getUserData = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      // 추가 작업
+    }
+  };
+
   return {
     isLoading: true,
     isLogin: false,
@@ -88,7 +88,8 @@ const useAuthStore: UseBoundStore<StoreApi<AuthState>> = create<AuthState>((set)
     logout: () => set({ isLogin: false, isPro: null, userId: null, userData: null }),
     setUserId: (userId) => set({ userId }),
     setUserData: (userData) => set({ userData }),
-    initializeAuthState
+    initializeAuthState,
+    getUserData
   };
 });
 

@@ -5,6 +5,7 @@ import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Notify, Report } from 'notiflix';
 import { FormEvent, useState } from 'react';
 
 export default function DeleteUserInMobile() {
@@ -32,7 +33,7 @@ export default function DeleteUserInMobile() {
 
     if (data.errorMsg) {
       console.log(data.errorMsg);
-      alert('비밀번호가 일치하지 않습니다.');
+      Report.failure('회원 탈퇴 실패', '비밀번호가 일치하지 않습니다.', '확인');
       setThrottling(false);
       return;
     }
@@ -45,7 +46,7 @@ export default function DeleteUserInMobile() {
     }).then((res) => res.json());
 
     if (userDeleteData.errorMsg) {
-      alert(userDeleteData.errorMsg);
+      Notify.failure(userDeleteData.errorMsg);
       setThrottling(false);
       return;
     }
