@@ -127,7 +127,7 @@ export default function AccountList() {
                     <div className="flex justify-between items-center">
                       <h3 className="text-xl  text-grey-900 font-bold">{post.title}</h3>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-col md:flex-row justify-between">
                       <p className="mb-[50px]">{post.price}원</p>
                       <div>
                         {userReview ? (

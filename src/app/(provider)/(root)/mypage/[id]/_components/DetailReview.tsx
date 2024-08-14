@@ -154,7 +154,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
       {data?.length === 0 ? (
         <AddReview onClose={onClose} portfolio={portfolio} userId={userId} addMutation={addMutation} />
       ) : (
-        <div className="bg-white flex flex-col p-6 w-[40%] h-[350px] relative overflow-auto rounded-xl">
+        <div className="bg-white flex flex-col p-6 w-90% md:w-[40%] h-[350px] relative overflow-auto rounded-xl">
           <div className="flex flex-col">
             <button onClick={onClose} className="absolute top-2 right-4 text-grey-600 flex font-thin justify-end ">
               x
