@@ -97,7 +97,7 @@ export default function Latest() {
                   )}
                   <div className="flex flex-col gap-[24px] ">
                     <h1 className="font-black text-[20px]">{post.title}</h1>
-                    <div className="font-medium text-[16px] w-full h-[45px] overflow-hidden text-ellipsis line-clamp-2">
+                    <div className="font-medium text-[16px] w-full h-[45px] overflow-hidden text-ellipsis line-clamp-2" data-color-mode="light">
                       <MDEditor.Markdown source={post.content} />
                     </div>
                     <p className="font-medium text-[16px]">{getUserNickname(post.user_id)}</p>

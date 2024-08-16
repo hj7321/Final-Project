@@ -35,7 +35,7 @@ export default function ProDetailSkeleton() {
           <div className="mx-auto md:mt-5 my-3 md:w-[30ch] w-120px md:h-[72px] h-[32px] rounded-xl md:min-h-[50px] bg-grey-50">
             <p className="md:w-[30ch] w-[330px] md:h-[72px] rounded-xl md:min-h-[50px] bg-grey-50"></p>
           </div>
-          <div className="mx-auto md:w-[85%] w-full md:mt-5 my-2 flex flex-row justify-between items-center md:flex-col">
+          <div className="mx-auto md:w-[85%] w-full md:mt-5 my-2 flex flex-row justify-between items-center">
             <button
               className="md:w-full md:h-[40px] w-[160px] h-[36px] py-2 rounded-xl flex flex-row justify-center items-center bg-grey-50"
             >

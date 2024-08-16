@@ -192,8 +192,10 @@ export default function CommuPost() {
       </div>
       <hr className="w-full border-t border-black my-8" />
       {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
-
-      <MDEditor.Markdown source={postData?.content} />
+      <div data-color-mode="light">
+        <MDEditor.Markdown source={postData?.content} />
+      </div>
+      {/* <p className="py-6">{data?.content}</p> */}
     </div>
   );
 }
