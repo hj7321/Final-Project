@@ -77,23 +77,23 @@ export default function CommuPost() {
     queryFn: () => getBookmarkData()
   });
 
-  const mutation = useMutation({
-    mutationFn: () => {
-      // 실제 bookmark를 삭제하거나, 추가하거나
-    },
-    onMutate: () => {
-      // 1. 기존 useQuery에서 데이터를 가져오는 걸 일단 멈춘다.
-      // await queryClient.cancelQueries({ queryKey:  ['bookmarkCount', id] })
-      // 2. 이전에 가지고 있던 값을 잠시 가져온다.
-      // Snapshot the previous value
-      // const previousTodos = queryClient.getQueryData(['bookmarkCount', id])
-      // 3.state 변경하듯이 값을 갈아끼운다.
-      // Optimistically update to the new value
-      // queryClient.setQueryData(['todos'], (old) => [...old, newTodo])
-      //4.  Return a context object with the snapshotted value
-      // return { previousTodos }
-    }
-  });
+  // const mutation = useMutation({
+  //   mutationFn: () => {
+  //     실제 bookmark를 삭제하거나, 추가하거나
+  //   },
+  //   onMutate: () => {
+  //     1. 기존 useQuery에서 데이터를 가져오는 걸 일단 멈춘다.
+  //     await queryClient.cancelQueries({ queryKey:  ['bookmarkCount', id] })
+  //     2. 이전에 가지고 있던 값을 잠시 가져온다.
+  //     Snapshot the previous value
+  //     const previousTodos = queryClient.getQueryData(['bookmarkCount', id])
+  //     3.state 변경하듯이 값을 갈아끼운다.
+  //     Optimistically update to the new value
+  //     queryClient.setQueryData(['todos'], (old) => [...old, newTodo])
+  //     4.  Return a context object with the snapshotted value
+  //     return { previousTodos }
+  //   }
+  // });
 
   return (
     <div className="flex flex-col">
