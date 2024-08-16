@@ -49,10 +49,22 @@ export interface PortfolioData {
   end_date: string;
 }
 
+interface ReviewData {
+  id: string;
+  create_at: string;
+  stars: number;
+  contents: string;
+  request_post_id: string;
+  user : {
+    nickname : string
+  }
+}
+
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [activeTab, setActiveTab] = useState('service');
   const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); // 선택된 포트폴리오
   const [isDetailAccountOpen, setIsDetailAccountOpen] = useState(false); // 추가: DetailAccount 모달 열림 상태 관리
@@ -67,6 +79,7 @@ export default function ProDetail() {
     id
   );
   const { getCategoryImage } = useProMain();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,6 +91,9 @@ export default function ProDetail() {
         setPost(data.postData);
         setUser(data.userData);
         setPortfolio(data.portfolioData);
+        setReviews(data.reviewData);
+
+        console.log('리뷰 데이터 가져와서 저장함', data.reviewData);
       } catch (error) {
         console.error('Fetch data error:', error);
       }
@@ -136,7 +152,6 @@ export default function ProDetail() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-  console.log(post.post_img)
   return (
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
       <PageBackBtn />
@@ -162,11 +177,32 @@ export default function ProDetail() {
         <div>
           <PostDescription content={post.content} />
           <UserPortfolio portfolio={portfolio} handlePortfolioClick={handlePortfolioClick} />
-          <Reviews />
+          {/* <Reviews /> */}
+          <div id="section3" className="p-2 my-4">
+            <h1 className="md:text-2xl text-base">리뷰</h1>
+            <div className="mt-4 flex flex-col justify-center items-center">
+              {reviews.map((review) => (
+                <div className="mx-3 border border-slate-400 w-full flex flex-col justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+                  <div className="flex flex-row">{review.stars}</div>
+                  <div className="line-clamp-1 md:my-2 my-1">
+                    <p className="md:text-xl text-xs line-clamp-1">{review.contents}</p>
+                  </div>
+                  <div className="flex flex-row text-grey-400">
+                    <div>
+                      <p className="md:text-base text-[10px]">작성자 : {review.user.nickname}</p>
+                    </div>
+                    <div className="mx-2 md:text-base text-[10px] ">
+                      <p>작성일 : 2024.08.01</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       {/* 채팅모달 */}
-      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}}/>}
+      {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}} />}
 
       {/* 포트폴리오 모달 */}
       {selectedPortfolio && (

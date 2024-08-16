@@ -1,7 +1,7 @@
 
 import Image from "next/image"
 
-export default function Reviews() {
+export default function Reviews({reviews} : any) {
   return (
     <div id="section3" className="p-2 my-4">
     <h1 className="md:text-2xl text-base">리뷰</h1>
