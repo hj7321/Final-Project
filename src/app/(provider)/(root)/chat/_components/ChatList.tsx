@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import ChatModal from './ChatModal';
 import { CodeCategories } from '@/components/dumy';
@@ -37,7 +37,7 @@ const ChatList = () => {
     fetchSession();
   }, []);
 
-  const fetchChatRooms = async () => {
+  const fetchChatRooms = useCallback(async () => {
     if (!currentUserId) return;
 
     const { data: chatData, error: chatError } = await supabase
@@ -123,7 +123,7 @@ const ChatList = () => {
       );
       setChatRooms(resolvedChatRooms);
     }
-  };
+  }, [currentUserId, setChatRooms]);
 
   useEffect(() => {
     fetchChatRooms();
@@ -138,7 +138,7 @@ const ChatList = () => {
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [currentUserId]);
+  }, [currentUserId, fetchChatRooms]);
 
   const getCategoryImage = (category: string) => {
     const categoryData = CodeCategories.find((cat) => cat.name === category);
@@ -164,9 +164,7 @@ const ChatList = () => {
   const markMessagesAsRead = (chatRoomId: string) => {
     // 특정 채팅방의 메시지를 읽음 처리
     setChatRooms((prevChatRooms) =>
-      prevChatRooms.map((room) =>
-        room.chat_room_id === chatRoomId ? { ...room, unread_count: 0 } : room
-      )
+      prevChatRooms.map((room) => (room.chat_room_id === chatRoomId ? { ...room, unread_count: 0 } : room))
     );
   };
 

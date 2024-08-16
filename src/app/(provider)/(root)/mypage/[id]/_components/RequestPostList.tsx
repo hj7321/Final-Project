@@ -3,7 +3,6 @@
 import { useParams } from 'next/navigation';
 import { CommunityPosts } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
-import useAuthStore from '@/zustand/authStore';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -49,7 +48,13 @@ export default function QnaPostList() {
           <div key={post.id} className="bg-white rounded-2xl">
             <div className="flex flex-col md:flex-row">
               {post.post_img && post.post_img.length > 0 && (
-                <img src={post.post_img[0]} className="w-72 h-40 ml-6 mb-3 md:ml-0 md:mb-0 rounded-lg " />
+                <Image
+                  src={post.post_img[0]}
+                  alt="썸네일 이미지"
+                  width={288}
+                  height={160}
+                  className="w-72 h-40 ml-6 mb-3 md:ml-0 md:mb-0 rounded-lg "
+                />
               )}
               <div className="flex flex-col">
                 <Link href={`/pro/proDetail/${post.id}`}>

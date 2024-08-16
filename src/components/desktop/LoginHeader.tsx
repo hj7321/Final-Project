@@ -42,7 +42,7 @@ export default function LoginHeader({ nickname }: LoginHeaderProp) {
           className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
         />
         {/* 채팅알림 */}
-         {userId && <ChatNotification userId={userId} />}
+        {userId && <ChatNotification userId={userId} />}
       </div>
       <div className="flex items-center gap-[24px] break-keep">
         <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">

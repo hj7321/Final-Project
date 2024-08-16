@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { ChatRoomInfo } from '@/types/type';
 
@@ -9,7 +9,7 @@ export const useChatNotifications = (userId: string) => {
   const [chatRooms, setChatRooms] = useState<ChatRoomInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchChatNotifications = async () => {
+  const fetchChatNotifications = useCallback(async () => {
     if (!userId) return;
 
     // 채팅방 ID 목록을 가져오기
@@ -76,8 +76,8 @@ export const useChatNotifications = (userId: string) => {
         latest_message: latestMessageData.content,
         latest_message_time: latestMessageData.created_at || '',
         unread_count: unreadCount || 0,
-        post_lang_category: [],  // 기본값으로 빈 배열 제공
-        post_title: '제목 없음', // 기본값으로 '제목 없음' 제공
+        post_lang_category: [], // 기본값으로 빈 배열 제공
+        post_title: '제목 없음' // 기본값으로 '제목 없음' 제공
       } as ChatRoomInfo;
     });
 
@@ -91,7 +91,7 @@ export const useChatNotifications = (userId: string) => {
     setChatRooms(resolvedChatRooms);
     setUnreadCount(resolvedChatRooms.reduce((sum, room) => sum + room.unread_count, 0));
     setLoading(false);
-  };
+  }, [userId]);
 
   const markMessagesAsRead = async (chatRoomId: string) => {
     const updatedChatRooms = chatRooms.map((room) =>
@@ -125,7 +125,7 @@ export const useChatNotifications = (userId: string) => {
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [userId]);
+  }, [userId, fetchChatNotifications]);
 
   return { unreadCount, chatRooms, loading, fetchChatNotifications, markMessagesAsRead };
 };

@@ -50,8 +50,9 @@ const useSearchPosts = (query: string) => {
         const counts = {
           total: filteredResults.length,
           qna: filteredResults.filter((item) => item.category === 'Community' && item.post_category === 'QnA').length,
-          insight: filteredResults.filter((item) => item.category === 'Community' && item.post_category === 'Insight').length,
-          request: filteredResults.filter((item) => item.category === 'Request').length,
+          insight: filteredResults.filter((item) => item.category === 'Community' && item.post_category === 'Insight')
+            .length,
+          request: filteredResults.filter((item) => item.category === 'Request').length
         };
 
         setResults(filteredResults);
@@ -68,7 +69,7 @@ const useSearchPosts = (query: string) => {
     };
 
     fetchPosts();
-  }, [query]);
+  }, [query, supabase]);
 
   return { results, filteredResults, setFilteredResults, counts, userMap };
 };

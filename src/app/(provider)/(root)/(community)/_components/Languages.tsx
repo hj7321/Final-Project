@@ -38,7 +38,7 @@ export default function Languages() {
 
   useEffect(() => {
     fetchData(selectedLanguages);
-  }, [selectedLanguages]);
+  }, [selectedLanguages, fetchData]);
 
   return (
     <div>

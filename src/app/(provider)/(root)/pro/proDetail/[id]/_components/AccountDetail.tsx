@@ -1,12 +1,9 @@
 'use client';
 
 import { useSession } from '@/hooks/useSession';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 import * as PortOne from '@portone/browser-sdk/v2';
-import { useQuery } from '@tanstack/react-query';
-import { createClient } from '@/utils/supabase/client';
+import useProfile from '@/hooks/useProfile';
 
 interface PostData {
   id: string;
@@ -46,21 +43,24 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
   const paymentId = `payment-${crypto.randomUUID().slice(0, 20)}`;
   const router = useRouter();
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    if (!currentUserId) {
-      throw new Error('Invalid UUID: id is null or undefined');
-    }
-    const data = await supabase.from('Users').select('*').eq('id', currentUserId).maybeSingle();
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
+  //   if (!currentUserId) {
+  //     throw new Error('Invalid UUID: id is null or undefined');
+  //   }
+  //   const data = await supabase.from('Users').select('*').eq('id', currentUserId).maybeSingle();
 
-    return data;
-  };
+  //   return data;
+  // };
+  // const { data: Users } = useQuery({
+  //   queryKey: ['Users'],
+  //   queryFn: getUserData,
+  //   enabled: !!currentUserId
+  // });
 
-  const { data: Users } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData,
-    enabled: !!currentUserId
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(currentUserId);
 
   async function requestPayment(post: PostData | null) {
     if (!post) {
@@ -78,9 +78,9 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
         currency: 'CURRENCY_KRW',
         payMethod: 'CARD',
         customer: {
-          fullName: Users?.data?.nickname,
+          fullName: userData?.nickname,
           phoneNumber: '010-0000-1234',
-          email: Users?.data?.email
+          email: userData?.email
         }
         // redirectUrl: `${process.env.BASE_URL}/payment-redirect`,
         // redirectUrl: `http://localhost:3000/payment-redirect`

@@ -33,7 +33,7 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const { login, setUserId, setUserData } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수, 유저 정보 설정 함수
+  const { login, setUserId } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수, 유저 정보 설정 함수
 
   // 인풋 필드의 값이 바뀔(입력될) 때마다 호출되는 이벤트 핸들러 -> 값에 맞는 유효성 메시지가 실시간으로 바뀜
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -107,14 +107,13 @@ export default function LoginPage() {
     form.reset(); // (1) 폼 내용 모두 리셋
     login(); // (2) 로그인된 상태로 설정
     setUserId(data.userData.user.id); // (3) 유저 고유 아이디 설정
-    setUserData(data.userData.user.user_metadata); // (4) 유저 정보 설정
-    // (5) 로그인 페이지로 오기 전 페이지로 리다이렉트
-    const redirectPage = Cookies.get('returnPage'); // (5-1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
-    Cookies.remove('returnPage'); // (5-2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
-    if (redirectPage === '/signup' || redirectPage!.startsWith('/login')) router.replace('/');
-    // (5-3) 돌아갈 페이지가 회원가입 페이지 또는 로그인 관련 페이지라면, 현재 페이지를 홈페이지로 대체
+    // (4) 로그인 페이지로 오기 전 페이지로 리다이렉트
+    const redirectPage = Cookies.get('returnPage'); // (4-1) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 가져옴
+    Cookies.remove('returnPage'); // (4-2) 쿠키에서 "returnPage"를 키로 하는 값(pathname)을 지움
+    if (redirectPage === '/signup' || redirectPage?.startsWith('/login') || !redirectPage) router.replace('/');
+    // (4-3) 돌아갈 페이지가 회원가입 페이지 또는 로그인 관련 페이지이거나 없다면, 현재 페이지를 홈페이지로 대체
     else router.replace(redirectPage!);
-    // (5-3) 돌아갈 페이지가 회원가입 페이지가 아니라면, 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
+    // (4-3) 위의 경우가 아니라면, 현재 페이지를 로그인 페이지로 오기 전 페이지로 대체
     router.refresh();
   };
 
@@ -159,8 +158,8 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[1000px]">
-      <div className="flex flex-col justify-center items-center w-[528px] min-h-[835px] bg-white py-[64px] rounded-[24px]">
+    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
+      <div className="w-[528px] flex flex-col items-center p-[64px] bg-white">
         <Image src="/logo_eng.svg" alt="영어 로고" width={180} height={60} className="hidden md:flex mb-[32px]" />
         <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px] mb-[32px]">
           <Link href="/" className="left-0 absolute">
@@ -180,14 +179,14 @@ export default function LoginPage() {
             <div key={input.id} className="flex flex-col items-center relative">
               <div
                 className={clsx(
-                  'w-[328px] md:w-[400px] border rounded-[8px] px-[16px]',
+                  'w-[328px] md:w-[400px] h-[56px] md:h-[66px] border rounded-[8px] px-[16px]',
                   idx === selectedIdx
-                    ? 'h-[56px] md:h-[66px] border-primary-500 pt-[6px]'
+                    ? 'border-primary-500 pt-[6px]'
                     : inputValues[idx].length === 0
-                    ? 'h-[56px] md:h-[66px] border-grey-100 py-[16px] md:py-[20px]'
+                    ? 'border-grey-100 py-[16px] md:py-[20px]'
                     : inputMsgs[idx].length === 0
-                    ? 'h-[56px] md:h-[66px] border-grey-500 pt-[6px]'
-                    : 'h-[56px] md:h-[66px] border-error pt-[6px]'
+                    ? 'border-grey-500 pt-[6px]'
+                    : 'border-error pt-[6px]'
                 )}
               >
                 <label

@@ -1,9 +1,16 @@
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: Request, { params }: { params: { userId: string } }) {
-  const userId = params.userId;
   const supabase = createClient();
-  const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-  if (error) throw error;
-  return Response.json({ data });
+  const userId = params.userId;
+
+  const { data, error } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
+
+  if (error) {
+    console.log('사용자 데이터 가져오기 실패: ', error.message);
+    return Response.json({ errorMsg: error.message });
+  } else {
+    console.log('사용자 데이터 가져오기 성공');
+    return Response.json({ userData: data });
+  }
 }

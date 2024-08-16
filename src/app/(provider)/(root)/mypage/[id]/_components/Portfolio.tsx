@@ -196,12 +196,15 @@ export default function Portfolio() {
             {data?.map((post) => (
               <div key={post.id} className="bg-white p-4 rounded-2xl">
                 <div className="flex mr-20">
-                  <img
+                  <Image
                     src={
                       post.portfolio_img && post.portfolio_img.length > 0
                         ? post.portfolio_img[0]
                         : 'https://via.placeholder.com/150?text=No+Image'
                     }
+                    alt="썸네일 이미지"
+                    width={288}
+                    height={160}
                     className="md:w-72 md:h-40 w-[64px] h-[64px] rounded-lg cursor-pointer transition-transform duration-200 md:hover:scale-110 delay-100"
                     onClick={() => handleDetailNavigation(post.id)}
                   />
