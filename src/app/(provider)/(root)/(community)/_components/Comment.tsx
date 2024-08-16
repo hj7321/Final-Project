@@ -33,13 +33,13 @@ export default function Comment({
   return (
     <div key={comment.id}>
       {editingCommentId === comment.id ? (
-        <div className="flex space-y-2 p-4 border border-gray-300 rounded-md shadow-sm gap-1">
-          <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
+        <div data-color-mode="light" className="flex space-y-2 p-4 border border-gray-300 rounded-md shadow-sm gap-1">
+          <MDEditor height={100} value={editContent} onChange={() => setEditContent} commands={[]} />
           <button onClick={() => handleSaveClick(comment.id)}>저장</button>
           <button onClick={handleCancelClick}>취소</button>
         </div>
       ) : (
-        <div>
+        <div data-color-mode="light">
           <p className="font-bold">{getUserNickname(comment.user_id)}</p>
           <MDEditor.Markdown source={comment.contents} />
           <div className="flex gap-[24px]">
