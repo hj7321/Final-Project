@@ -91,7 +91,7 @@ export default function DesktopHeader({
       {/* 오른쪽 */}
       {/* 비로그인 시: 검색창, 로그인 버튼, 로그아웃 버튼 */}
       {/* 로그인 시: 검색창, 알림 아이콘, 닉네임, 로그아웃 버튼 */}
-      {isLogin ? <LoginHeader nickname={nickname} /> : <LogoutHeader />}
+      {isLogin ? <LoginHeader isLogin={isLogin} nickname={nickname} /> : <LogoutHeader />}
     </div>
   );
 }
