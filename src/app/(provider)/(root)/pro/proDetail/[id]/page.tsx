@@ -21,6 +21,7 @@ import ServiceMobileView from './_components/ServiceMobileView';
 import UserDescription from './_components/UserDescription';
 import UserProfile from './_components/UserProfile';
 import PageBackBtn from './_components/PageBackBtn';
+import { randomUUID } from 'crypto';
 
 export interface PostData {
   post_img: string[];
@@ -51,7 +52,7 @@ export interface PortfolioData {
 
 interface ReviewData {
   id: string;
-  create_at: string;
+  created_at: string;
   stars: number;
   contents: string;
   request_post_id: string;
@@ -93,7 +94,6 @@ export default function ProDetail() {
         setPortfolio(data.portfolioData);
         setReviews(data.reviewData);
 
-        console.log('리뷰 데이터 가져와서 저장함', data.reviewData);
       } catch (error) {
         console.error('Fetch data error:', error);
       }
@@ -182,7 +182,7 @@ export default function ProDetail() {
             <h1 className="md:text-2xl text-base">리뷰</h1>
             <div className="mt-4 flex flex-col justify-center items-center">
               {reviews.map((review) => (
-                <div className="mx-3 border border-slate-400 w-full flex flex-col justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
+                <div key={review.created_at} className="mx-3 border border-slate-400 w-full flex flex-col justify-between h-[100px] md:h-auto md:p-4 p-3 rounded-xl mb-3">
                   <div className="flex flex-row">{review.stars}</div>
                   <div className="line-clamp-1 md:my-2 my-1">
                     <p className="md:text-xl text-xs line-clamp-1">{review.contents}</p>
@@ -192,7 +192,7 @@ export default function ProDetail() {
                       <p className="md:text-base text-[10px]">작성자 : {review.user.nickname}</p>
                     </div>
                     <div className="mx-2 md:text-base text-[10px] ">
-                      <p>작성일 : 2024.08.01</p>
+                      <p>작성일 : {review.created_at.slice(0,10)}</p>
                     </div>
                   </div>
                 </div>
