@@ -11,10 +11,11 @@ import ChatNotification from '../ChatNotification';
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
 interface LoginHeaderProp {
+  isLogin: boolean;
   nickname: string | null | undefined;
 }
 
-export default function LoginHeader({ nickname }: LoginHeaderProp) {
+export default function LoginHeader({ isLogin, nickname }: LoginHeaderProp) {
   const router = useRouter();
   const { logout, userId, initializeAuthState } = useAuthStore();
 
@@ -42,7 +43,7 @@ export default function LoginHeader({ nickname }: LoginHeaderProp) {
           className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
         />
         {/* 채팅알림 */}
-        {userId && <ChatNotification userId={userId} />}
+        {isLogin && <ChatNotification userId={userId!} />}
       </div>
       <div className="flex items-center gap-[24px] break-keep">
         <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">
