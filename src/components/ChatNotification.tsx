@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useChatNotifications } from '@/hooks/useChatNotifications'; // 커스텀 훅 임포트
+import React, { useState, useEffect } from 'react';
+import { useChatNotifications } from '@/hooks/useChatNotifications';
 import Image from 'next/image';
 import ChatModal from '@/app/(provider)/(root)/chat/_components/ChatModal';
 
@@ -8,9 +8,14 @@ interface ChatNotificationProps {
 }
 
 const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
-  const { unreadCount, chatRooms, markMessagesAsRead, loading, fetchChatNotifications } = useChatNotifications(userId); // fetchChatNotifications 추가
+  const { unreadCount, chatRooms, markMessagesAsRead, loading, fetchChatNotifications } = useChatNotifications(userId);
   const [isOpen, setIsOpen] = useState(false);
   const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // 실시간 구독을 유지하기 위해 모달 열기/닫기와 구독 설정을 분리
+    fetchChatNotifications();
+  }, [fetchChatNotifications]);
 
   const toggleDropdown = () => {
     if (!loading) {
@@ -21,11 +26,12 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
   const openChatModal = (chatRoomId: string) => {
     setCurrentChatRoomId(chatRoomId);
     setIsOpen(false); // 드롭다운 닫기
+    // 여기는 구독을 해제하지 않음
   };
 
   const closeChatModal = async () => {
     setCurrentChatRoomId(null);
-    await fetchChatNotifications(); // 모달을 닫을 때 알림 상태를 업데이트
+    await fetchChatNotifications(); // 모달을 닫을 때 알림 상태를 다시 가져옴
   };
 
   // 읽지 않은 채팅방만 필터링
@@ -43,7 +49,7 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg z-50 border border-grey-100">
+        <div className="md:absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg z-50 border border-grey-100">
           <div>
             {unreadChatRooms.length > 0 ? (
               <div className='px-4 py-3'>
