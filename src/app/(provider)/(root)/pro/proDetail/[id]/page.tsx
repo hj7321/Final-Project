@@ -21,7 +21,6 @@ import ServiceMobileView from './_components/ServiceMobileView';
 import UserDescription from './_components/UserDescription';
 import UserProfile from './_components/UserProfile';
 import PageBackBtn from './_components/PageBackBtn';
-import { randomUUID } from 'crypto';
 
 export interface PostData {
   post_img: string[];
