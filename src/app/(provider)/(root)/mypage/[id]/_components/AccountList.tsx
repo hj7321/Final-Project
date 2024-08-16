@@ -21,6 +21,7 @@ interface Account {
   portfolio_img: string;
   start_date: string;
   end_date: string;
+  consumer_id: string;
 }
 
 interface Review {
@@ -31,11 +32,12 @@ interface Review {
 }
 export default function AccountList() {
   const { id } = useParams();
+
   const [isDetailReviewOpen, setIsDetailReviewOpen] = useState(false);
   const [selectedPortfolio, setSelectedPortfolio] = useState<Account | null>(null);
 
-  const getAccount = async () => {
-    const response = await fetch('/api/account');
+  const getAccountPortfolio = async () => {
+    const response = await fetch(`/api/account?consumer_id=${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -58,7 +60,7 @@ export default function AccountList() {
     error: accountError
   } = useQuery<Account[]>({
     queryKey: ['accountData', id],
-    queryFn: getAccount,
+    queryFn: getAccountPortfolio,
     enabled: !!id
   });
 

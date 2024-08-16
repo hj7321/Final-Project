@@ -99,7 +99,7 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
               alt="유저 이미지"
               width={36}
               height={36}
-              className="rounded-[50%] mr-4 overflow-hidden w-20 h-20 "
+              className="rounded-[50%] mr-4overflow-hidden w-20 h-20 "
             />
             <h1 className="text-xl font-bold">{Users?.nickname}</h1>
           </div>
@@ -110,7 +110,7 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
             </div>
             <div className="mt-8 mb-5">{title}</div>
             <div className="border-t border-gray-300 my-10"></div>
-            <div className="flex  mt-10 mr-2">
+            <div className="flex flex-col md:flex-row mt-10 mr-2">
               {previewUrls.length > 0 ? (
                 <img src={previewUrls[0]} alt="썸네일이 등록되어 있지 않습니다." className="rounded-md" />
               ) : (

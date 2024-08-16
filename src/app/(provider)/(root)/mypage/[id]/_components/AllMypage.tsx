@@ -15,6 +15,8 @@ import SendReview from './SendReview';
 import ChatList from '../../../chat/_components/ChatList';
 import Image from 'next/image';
 import DeleteUser from './DeleteUser';
+import '../../../../../../css/loder.css';
+import clsx from 'clsx';
 
 export default function AllMypage() {
   const { id } = useParams();
@@ -98,7 +100,16 @@ export default function AllMypage() {
     }
   });
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className={clsx('flex flex-col justify-center mt-[300px] mb-[400px]  items-center')}>
+        <div className={clsx('icon', 'flex gap-[3px]')}>
+          <div className="circle"></div>
+          <div className="circle"></div>
+        </div>
+        <div className="text-primary-500 text-2xl font-bold mt-3"> Loading...</div>
+      </div>
+    );
 
   if (error) {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
