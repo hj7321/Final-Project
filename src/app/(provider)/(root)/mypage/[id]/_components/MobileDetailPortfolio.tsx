@@ -15,7 +15,8 @@ interface MobileDetailPortfolioProps {
 }
 
 export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDetailPortfolioProps) {
-  const { userId } = useParams<{ userId: string }>();
+  const params = useParams();
+  const userId = params.id as string;
 
   // 리팩토링 전
   // const getUserData = async () => {
@@ -116,7 +117,7 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
             <div className="border-t border-gray-300 my-10"></div>
             <div className="flex flex-col md:flex-row mt-10 mr-2">
               {previewUrls.length > 0 ? (
-                <Image src={previewUrls[0]} alt="썸네일 이미지" width={64} height={64} className="rounded-md" />
+                <Image src={previewUrls[0]} alt="썸네일 이미지" width={100} height={100} className="rounded-md" />
               ) : (
                 <Image
                   src="https://via.placeholder.com/150?text=No+Image"
@@ -127,23 +128,18 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
                 />
               )}
               {previewUrls.length > 1 &&
-                previewUrls.slice(1).map((img: string, index: number) => (
-                  // 이렇게 하면 사진이 너무 커서 모바일용에서 이상하게 됨 -> 크기 조절 필요
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Portfolio image ${index + 1}`}
-                    className="w-96 object-cover mt-4 mb-4 rounded-md"
-                  />
-                  // <Image
-                  //   key={index}
-                  //   src={img}
-                  //   alt={`Portfolio image ${index + 1}`}
-                  //   width={100}
-                  //   height={100}
-                  //   className="mt-4 mb-4 rounded-md"
-                  // />
-                ))}
+                previewUrls
+                  .slice(1)
+                  .map((img: string, index: number) => (
+                    <Image
+                      key={index}
+                      src={img}
+                      alt={`Portfolio image ${index + 1}`}
+                      width={100}
+                      height={100}
+                      className="mt-4 mb-4 rounded-md"
+                    />
+                  ))}
             </div>
             <div>
               <label className="block text-xl font-bold my-5 text-black">프로젝트 설명</label>
