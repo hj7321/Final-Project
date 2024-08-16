@@ -41,10 +41,7 @@ export default function DeleteUserInMobile() {
     }
 
     const userDeleteData = await fetch(`/api/withdrawal?userId=${userId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      method: 'DELETE'
     }).then((res) => res.json());
 
     if (userDeleteData.errorMsg) {
