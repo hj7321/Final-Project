@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { CommunityPosts } from '@/types/type';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
@@ -44,7 +44,6 @@ export default function CommuPost() {
     enabled: !!id
   });
   const userIdFromPost = postData?.user_id;
-  const postId = postData?.id;
 
   // 리팩토링 전
   // const getUserData = async (userId: string) => {
@@ -61,29 +60,40 @@ export default function CommuPost() {
   // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
 
-  const getBookmarkData = async (): Promise<void> => {
-    const data = await fetch('/api/bookmark', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ postId })
-    }).then((res) => res.json());
-
+  const getBookmarkData = async () => {
+    const { data, count } = await fetch(`/api/bookmark/${id}`).then((res) => res.json());
     if (data.errorMsg) {
       console.log(data.errorMsg);
       return;
     }
-    console.log(data.data);
-    return data.data;
+    return {
+      data,
+      count
+    };
   };
 
   const { data: bookmarkData } = useQuery({
-    queryKey: ['bookmarkCount'],
+    queryKey: ['bookmarkCount', id],
     queryFn: () => getBookmarkData()
   });
 
-  console.log(bookmarkData);
+  const mutation = useMutation({
+    mutationFn: () => {
+      // 실제 bookmark를 삭제하거나, 추가하거나
+    },
+    onMutate: () => {
+      // 1. 기존 useQuery에서 데이터를 가져오는 걸 일단 멈춘다.
+      // await queryClient.cancelQueries({ queryKey:  ['bookmarkCount', id] })
+      // 2. 이전에 가지고 있던 값을 잠시 가져온다.
+      // Snapshot the previous value
+      // const previousTodos = queryClient.getQueryData(['bookmarkCount', id])
+      // 3.state 변경하듯이 값을 갈아끼운다.
+      // Optimistically update to the new value
+      // queryClient.setQueryData(['todos'], (old) => [...old, newTodo])
+      //4.  Return a context object with the snapshotted value
+      // return { previousTodos }
+    }
+  });
 
   return (
     <div className="flex flex-col">
@@ -106,6 +116,7 @@ export default function CommuPost() {
                 alt="글 찜한 후 북마크 아이콘"
                 width={16}
                 height={16}
+                // db에 넣는 걸 추가할 예정
                 onClick={() => setIsClicked((prev) => !prev)}
               />
             ) : (
@@ -118,7 +129,7 @@ export default function CommuPost() {
               />
             )}
             {/* 찜 횟수 요청하려면 post의 id를 라우트 핸들러에 보내야 함 */}
-            <p>{6}</p>
+            <p>{bookmarkData?.count}</p>
           </div>
         </div>
       </div>

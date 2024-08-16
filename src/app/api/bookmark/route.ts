@@ -15,9 +15,10 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const supabase = createClient();
   const { postId } = await request.json();
+  console.log({ postId });
 
   const { data, error } = await supabase.from('Bookmark').select('*').eq('id', postId);
-
+  console.log({ data });
   if (error) {
     console.log('북마크 GET 에러: ', error.message);
     return Response.json({ errorMsg: error.message });
