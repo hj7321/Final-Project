@@ -153,6 +153,12 @@ export default function ProDetail() {
       Notify.success('결제가 완료되었습니다.');
       router.push(`/CompletedAccount/${paymentId}`);
     } catch (error) {
+      console.log(
+        JSON.stringify({
+          paymentId: paymentId,
+          orderId: post.id
+        })
+      );
       console.error('Payment failed:', error);
       alert('결제에 실패했습니다. 다시 시도해주세요.');
     }
