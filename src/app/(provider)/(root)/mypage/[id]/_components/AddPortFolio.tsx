@@ -196,7 +196,7 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
                   <label
                     htmlFor={lang.name}
                     className={`cursor-pointer flex items-center ${
-                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
+                      selectedLanguage === lang.name ? 'text-primary-600' : 'text-gray-500'
                     }`}
                   >
                     <Image
