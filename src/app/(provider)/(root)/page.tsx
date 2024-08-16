@@ -41,7 +41,7 @@ export default function Home() {
     };
 
     fetchPosts();
-  }, []);
+  }, [supabase]);
 
   const getCategoryImage = (categoryName: string) => {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
@@ -57,9 +57,18 @@ export default function Home() {
       {/* 메인베너 */}
       <section className="w-full md:h-[calc(100vh-75px)] mb-2 md:mb-64">
         <div className="block md:hidden w-full h-auto bg-cover bg-center">
-          <img src="/mobileMainBanner.svg" alt="모바일 메인베너" className="w-full h-auto object-cover" />
+          <Image
+            src="/mobileMainBanner.svg"
+            alt="모바일 메인베너"
+            width={360}
+            height={360}
+            className="w-full h-auto object-cover"
+          />
         </div>
-        <div className="hidden md:block w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/mainBanner.svg')" }}></div>
+        <div
+          className="hidden md:block w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: "url('/mainBanner.svg')" }}
+        ></div>
       </section>
 
       {/* 언어별 카테고리 및 커뮤니티 섹션 */}
@@ -146,7 +155,10 @@ export default function Home() {
           </div>
           <div className="flex overflow-x-auto md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
             {expertPosts.slice(0, 8).map((expert) => (
-              <div key={expert.id} className="bg-white py-4 px-3 flex-shrink-0 w-64 md:w-auto flex flex-col items-start border border-grey-100 rounded-xl">
+              <div
+                key={expert.id}
+                className="bg-white py-4 px-3 flex-shrink-0 w-64 md:w-auto flex flex-col items-start border border-grey-100 rounded-xl"
+              >
                 <Link href={`/pro/proDetail/${expert.id}`}>
                   <Image
                     src={expert.post_img[0]}
@@ -165,7 +177,7 @@ export default function Home() {
                     />
                     <span className="text-gray-400 font-extralight text-xs">{expert.lang_category[0]}</span>
                   </div>
-                  <h3 className="font-light text-sm">{truncateText(expert.title , 22)}</h3>
+                  <h3 className="font-light text-sm">{truncateText(expert.title, 22)}</h3>
                   <h3 className="text-md font-bold mt-2">{expert.price}원</h3>
                 </Link>
               </div>
