@@ -12,7 +12,6 @@ export const useChatNotifications = (userId: string) => {
   const fetchChatNotifications = useCallback(async () => {
     if (!userId) return;
 
-    // 채팅방 ID 목록을 가져오기
     const { data: chatRoomsData, error: chatRoomsError } = await supabase
       .from('Chat')
       .select('chat_room_id')
@@ -24,7 +23,6 @@ export const useChatNotifications = (userId: string) => {
       return;
     }
 
-    // 중복된 채팅방 ID를 제거하기 위해 Set을 사용
     const uniqueChatRoomIds = Array.from(new Set(chatRoomsData.map((room) => room.chat_room_id)));
 
     const chatRoomPromises = uniqueChatRoomIds.map(async (chatRoomId) => {
@@ -41,10 +39,7 @@ export const useChatNotifications = (userId: string) => {
         return null;
       }
 
-      // 현재 사용자가 보낸 메시지인지 확인하기
-      const isUserMessage = latestMessageData.consumer_id === userId;
-
-      const otherUserId = isUserMessage ? latestMessageData.pro_id : latestMessageData.consumer_id;
+      const otherUserId = latestMessageData.consumer_id === userId ? latestMessageData.pro_id : latestMessageData.consumer_id;
 
       const { data: userData, error: userError } = await supabase
         .from('Users')
@@ -118,7 +113,7 @@ export const useChatNotifications = (userId: string) => {
     const chatChannel = supabase
       .channel('realtime:chat')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat' }, () => {
-        fetchChatNotifications(); // 새 메시지가 추가될 때마다 알림 상태를 다시 가져옴.
+        fetchChatNotifications(); 
       })
       .subscribe();
 
