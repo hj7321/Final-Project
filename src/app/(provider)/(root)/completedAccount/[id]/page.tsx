@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import ChatModal from '../../chat/_components/ChatModal';
 
-export default function completedAccount() {
+export default function CompletedAccount() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleChatOpen = () => {

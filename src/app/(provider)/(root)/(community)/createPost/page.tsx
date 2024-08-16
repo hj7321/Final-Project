@@ -36,7 +36,7 @@ const CreatePost = () => {
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('QnA');
 
   const savePost = async (data: CommunityPostsData) => {
     const response = await fetch('/api/communityAdd', {
