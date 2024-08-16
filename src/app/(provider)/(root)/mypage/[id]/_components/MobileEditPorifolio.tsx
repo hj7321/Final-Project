@@ -1,13 +1,13 @@
 'use client';
 
-import { CodeCategories } from '@/components/dumy';
 import { Portfolio } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useState } from 'react';
-import EditPortfolio from './EditPortfolio';
 import { createClient } from '@/utils/supabase/client';
 import { Notify } from 'notiflix';
+import Image from 'next/image';
+import useProfile from '@/hooks/useProfile';
 
 interface MobileEditPortfolioProps {
   portfolioId: string | null;
@@ -15,26 +15,28 @@ interface MobileEditPortfolioProps {
 }
 
 export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditPortfolioProps) {
-  const params = useParams();
-  const userId = params.id as string;
+  const { userId } = useParams<{ userId: string }>();
 
-  const getUserData = async () => {
-    const supabase = createClient();
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
 
-    const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-    if (error) throw error;
-    return data;
-  };
+  //   const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
+  //   if (error) throw error;
+  //   return data;
+  // };
+  // const {
+  //   data: Users,
+  //   isLoading,
+  //   error
+  // } = useQuery({
+  //   queryKey: ['Users'],
+  //   queryFn: getUserData,
+  //   enabled: !!userId
+  // });
 
-  const {
-    data: Users,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData,
-    enabled: !!userId
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const getsPortfolio = async () => {
     const response = await fetch('/api/portFolio');
@@ -156,9 +158,11 @@ export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditP
                   <div className="mt-4 flex flex-wrap space-y-4">
                     {previewUrls.map((url, index) => (
                       <div key={index} className="relative">
-                        <img
+                        <Image
                           src={url}
                           alt={`Uploaded ${index}`}
+                          width={160}
+                          height={160}
                           className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
                         />
                         <button
@@ -173,11 +177,19 @@ export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditP
                 </div>
                 썸네일
                 {previewUrls.length > 0 ? (
-                  <img src={previewUrls[0]} alt="Portfolio Image" className="w-96 object-cover mt-1 mb-4 rounded-md" />
+                  <Image
+                    src={previewUrls[0]}
+                    alt="Portfolio Image"
+                    width={400}
+                    height={400}
+                    className="w-96 object-cover mt-1 mb-4 rounded-md"
+                  />
                 ) : (
-                  <img
+                  <Image
                     src="https://via.placeholder.com/150?text=No+Image"
                     alt="No Image"
+                    width={296.8}
+                    height={160}
                     className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
                   />
                 )}
@@ -185,11 +197,13 @@ export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditP
                   previewUrls
                     .slice(1)
                     .map((img, index) => (
-                      <img
+                      <Image
                         key={index}
                         src={img}
                         alt={`Portfolio image ${index}`}
-                        className="w-40  object-cover mt-1 mb-4 rounded-md"
+                        width={400}
+                        height={400}
+                        className="w-40 object-cover mt-1 mb-4 rounded-md"
                       />
                     ))}
               </div>
