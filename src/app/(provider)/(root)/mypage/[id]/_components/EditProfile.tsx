@@ -188,7 +188,7 @@ export default function EditProfile() {
                 alt="프로필 사진"
                 width={144}
                 height={144}
-                className="rounded-full cursor-pointer"
+                className="rounded-[50%] cursor-pointer"
               />
               {previewImage !== '/defaultProfileimg.svg' && (
                 <button
