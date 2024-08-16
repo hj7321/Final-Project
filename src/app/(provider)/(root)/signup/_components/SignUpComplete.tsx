@@ -35,7 +35,7 @@ export default function SignUpComplete() {
   };
 
   return (
-    <section className="flex h-[600px] bg-grey-50">
+    <section className="flex h-[600px] bg-grey-50 md:h-[90vh]">
       <div className="m-auto text-center content-center justify-center items-center w-[328px] h-[360px] md:w-[651px] md:h-[438px] bg-white rounded-[24px] p-[64px] flex flex-col gap-[32px]">
         <Image
           src="/helloworld.svg"
@@ -80,7 +80,8 @@ export default function SignUpComplete() {
             </div>
           </div>
           <h2 className="text-primary-400 text-[10px] md:text-[14px]">
-            * 전문가 활동 시, 포트폴리오를 등록하면 매칭율이 높아져요!
+            <p>* 전문가 활동 시, 포트폴리오를 등록하면 매칭율이 높아져요!</p>
+            <p>* 전문가 포트폴리오는 마이페이지에서 등록 가능해요!</p>
           </h2>
         </div>
       </div>
