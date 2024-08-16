@@ -15,7 +15,8 @@ interface MobileEditPortfolioProps {
 }
 
 export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditPortfolioProps) {
-  const { userId } = useParams<{ userId: string }>();
+  const params = useParams();
+  const userId = params.id as string;
 
   // 리팩토링 전
   // const getUserData = async () => {

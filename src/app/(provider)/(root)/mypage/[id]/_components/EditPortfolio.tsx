@@ -1,7 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import type { Portfolio, } from '@/types/type';
+import type { Portfolio } from '@/types/type';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Notify } from 'notiflix';
@@ -14,7 +14,8 @@ interface EditPortfolioProps {
 }
 
 const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }) => {
-  const { userId } = useParams<{ userId: string }>();
+  const params = useParams();
+  const userId = params.id as string;
 
   // 리팩토링 전
   // const getUserData = async () => {
