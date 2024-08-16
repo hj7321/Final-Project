@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import uploadImg from '../../../../../../../public/uploadImg.svg'
+import uploadImg from '../../../../../../../public/uploadImg.svg';
 
 interface ImageUploadProps {
   images: File[];
@@ -15,9 +15,11 @@ export default function ImageUpload({ images, handleImageDelete, handleImageChan
         <div className="flex flex-wrap md:mt-4 mt-2">
           {images.map((image, index) => (
             <div key={index} className="relative md:w-[100px] md:h-[100px] w-[50px] h-[50px] mr-2 mb-2">
-              <img
+              <Image
                 src={URL.createObjectURL(image)}
                 alt={`preview ${index}`}
+                width={100}
+                height={100}
                 className="w-full h-full object-cover rounded-md cursor-pointer"
                 onClick={() => handleImageDelete(index)}
               />
@@ -44,8 +46,14 @@ export default function ImageUpload({ images, handleImageDelete, handleImageChan
           </label>
         )}
         <label className="md:my-4 my-3 text-blue-600 cursor-pointer md:text-base text-xs text-center border border-primary-500 md:p-2 px-2 py-1 items-center rounded-full flex flex-row">
-          <Image src={uploadImg} alt="" width={25} height={25} className='md:mx-1 md:w-[30px] md:h-[30px] w-[20px] h-[20px]' />
-          <span className='md:mx-1 '>이미지 첨부</span>
+          <Image
+            src={uploadImg}
+            alt=""
+            width={25}
+            height={25}
+            className="md:mx-1 md:w-[30px] md:h-[30px] w-[20px] h-[20px]"
+          />
+          <span className="md:mx-1 ">이미지 첨부</span>
           <input type="file" multiple className="hidden" onChange={handleImageChange} />
         </label>
       </div>

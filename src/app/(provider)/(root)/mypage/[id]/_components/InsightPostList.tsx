@@ -48,7 +48,13 @@ export default function InsightPostList() {
           <div key={post.id} className="bg-white p-4 rounded-2xl">
             <div className="flex flex-col md:flex-row">
               {post.post_img && post.post_img.length > 0 && (
-                <img src={post.post_img[0]} className="w-72 h-40 rounded-lg " />
+                <Image
+                  src={post.post_img[0]}
+                  alt="게시물 이미지"
+                  width={288}
+                  height={160}
+                  className="w-72 h-40 rounded-lg"
+                />
               )}
               <div className="flex flex-col">
                 {post.post_category && (
