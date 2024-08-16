@@ -1,13 +1,12 @@
 'use client';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import type { Portfolio } from '@/types/type';
+import { type Portfolio } from '@/types/type';
 import { useEffect, useState } from 'react';
 import EditPortfolio from './EditPortfolio';
 import { CodeCategories } from '@/components/dumy';
-import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
-import useAuthStore from '@/zustand/authStore';
+import useProfile from '@/hooks/useProfile';
 
 interface DetailModalfolioProps {
   clickModal: () => void;
@@ -15,27 +14,27 @@ interface DetailModalfolioProps {
 }
 
 const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId }) => {
-  const params = useParams();
-  const userId = params.id as string;
-  // const { getUserData } = useAuthStore();
+  const { userId } = useParams<{ userId: string }>();
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-    if (error) throw error;
-    return data;
-  };
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
+  //   const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
+  //   if (error) throw error;
+  //   return data;
+  // };
+  // const {
+  //   data: userData,
+  //   isLoading: userLoading,
+  //   error: userError
+  // } = useQuery({
+  //   queryKey: ['Users', userId],
+  //   queryFn: getUserData,
+  //   enabled: !!userId
+  // });
 
-  const {
-    data: Users,
-    isLoading: userLoading,
-    error: userError
-  } = useQuery({
-    queryKey: ['Users', userId],
-    // queryFn: () => getUserData(userId),
-    queryFn: getUserData,
-    enabled: !!userId
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const getsPortfolio = async () => {
     const response = await fetch('/api/portFolio');
@@ -94,17 +93,19 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
           <div className="w-[40%] pr-4 ml-7">
             <div className="flex items-center mt-20 mb-7">
               <Image
-                src={Users?.profile_img || '/defaultProfileimg.svg'}
+                src={userData?.profile_img || '/defaultProfileimg.svg'}
                 alt="유저 이미지"
                 width={36}
                 height={36}
                 className="rounded-[50%] mr-4 overflow-hidden w-20 h-20 "
               />
-              <h1 className="text-xl font-bold">{Users?.nickname}</h1>
+              <h1 className="text-xl font-bold">{userData?.nickname}</h1>
             </div>
             <div className="flex flex-col mx-auto space-y-4">
               <div className="flex text-base text-gray-500">
-                {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-6 h-6" />}
+                {categoryImage && (
+                  <Image src={categoryImage} alt={langCategory} width={24} height={24} className="mr-2" />
+                )}
                 {langCategory}
               </div>
               <div className="mt-8 mb-5">{title}</div>
@@ -131,18 +132,26 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
           </div>
           <div className="flex flex-col items-end w-[60%] mt-10 mr-2">
             {previewUrls.length > 0 ? (
-              <img src={previewUrls[0]} alt="썸네일이 등록되어 있지 않습니다." className="rounded-md" />
+              <Image src={previewUrls[0]} alt="썸네일" width={600} height={600} className="rounded-md w-full" />
             ) : (
-              <img src="https://via.placeholder.com/150?text=No+Image" alt="No Image" className="rounded-md" />
+              <Image
+                src="https://via.placeholder.com/150?text=No+Image"
+                alt="No Image"
+                width={150}
+                height={150}
+                className="rounded-md"
+              />
             )}
             {previewUrls.length > 1 &&
               previewUrls
                 .slice(1)
                 .map((img: string, index: number) => (
-                  <img
+                  <Image
                     key={index}
                     src={img}
                     alt={`Portfolio image ${index + 1}`}
+                    width={600}
+                    height={600}
                     className="w-96 object-cover mt-4 mb-4 rounded-md"
                   />
                 ))}

@@ -1,8 +1,10 @@
 'use client';
 
+import useProfile from '@/hooks/useProfile';
 import { Users } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { Notify } from 'notiflix';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
@@ -16,25 +18,28 @@ export default function EditProfile() {
   const [uploadImg, setUploadImg] = useState<File | null>(null);
   const [publicUrl, setPublicUrl] = useState<string>('');
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   const queryClient = useQueryClient();
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from('Users').select('*').eq('id', id).single();
-    if (error) throw error;
-    return data;
-  };
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
+  //   const { data, error } = await supabase.from('Users').select('*').eq('id', id).single();
+  //   if (error) throw error;
+  //   return data;
+  // };
+  // const {
+  //   data: userData,
+  //   isPending,
+  //   error
+  // } = useQuery({
+  //   queryKey: ['Users', id],
+  //   queryFn: getUserData
+  // });
 
-  const {
-    data: userData,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['Users', id],
-    queryFn: getUserData
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(id);
 
   useEffect(() => {
     if (userData) {
@@ -96,8 +101,9 @@ export default function EditProfile() {
       queryClient.setQueryData(['Users'], context?.previousUserData);
     },
     onSuccess: () => {
-      Notify.success('프로필이 성공적으로 수정되었습니다.');
-      // alert('프로필이 성공적으로 수정되었습니다.');
+      Notify.success('프로필이 성공적으로 수정되었습니다.', {
+        width: '290px'
+      });
       window.location.reload();
     },
     onSettled: () => {
@@ -139,10 +145,10 @@ export default function EditProfile() {
     window.location.reload();
   };
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  if (isUserDataPending) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
-  if (error) {
-    return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
+  if (userDataError) {
+    return <div className="h-screen flex items-center justify-center">Error: {userDataError.message}</div>;
   }
 
   return (
@@ -152,10 +158,12 @@ export default function EditProfile() {
         <div className="mb-6">
           <label htmlFor="profilePic" className="block mb-4">
             <div className="relative">
-              <img
+              <Image
                 src={previewImage || '/defaultProfileimg.svg'}
                 alt="프로필 사진"
-                className="rounded-full w-36 h-36 cursor-pointer"
+                width={144}
+                height={144}
+                className="rounded-full cursor-pointer"
               />
               {previewImage !== '/defaultProfileimg.svg' && (
                 <button
