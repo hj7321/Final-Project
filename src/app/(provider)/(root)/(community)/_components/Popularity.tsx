@@ -1,5 +1,5 @@
-import { CommunityPosts } from '@/types/type';
-import { createClient } from '@/utils/supabase/client';
+import useProfile from '@/hooks/useProfile';
+import { CommunityPosts, Users } from '@/types/type';
 import useAuthStore from '@/zustand/authStore';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -23,8 +23,6 @@ export default function Popularity() {
   const { userId } = useAuthStore();
   const pathname = usePathname().split('/')[1];
 
-  console.log(pathname);
-
   const getPosts = async (): Promise<CommunityPosts[]> => {
     const response = await fetch('/api/communityReadPopularity');
     if (!response.ok) {
@@ -36,20 +34,28 @@ export default function Popularity() {
     return filteredData;
   };
 
-  const { data, isLoading, error } = useQuery<CommunityPosts[]>({
+  const {
+    data: postData,
+    isLoading,
+    error
+  } = useQuery<CommunityPosts[]>({
     queryKey: ['post'],
     queryFn: getPosts
   });
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
-    return data;
-  };
-  const { data: Users } = useQuery({
-    queryKey: [userId],
-    queryFn: getUserData
-  });
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
+  //   const data = await supabase.from('Users').select('*').eq('id', userId!).maybeSingle();
+  //   return data;
+  // };
+  // const { data: Users } = useQuery({
+  //   queryKey: [userId],
+  //   queryFn: getUserData
+  // });
+
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   // if (isLoading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error.message}</div>;
@@ -57,8 +63,8 @@ export default function Popularity() {
   return (
     <>
       <div className="flex flex-col gap-[24px]">
-        {data &&
-          data.map((post) => (
+        {postData &&
+          postData.map((post) => (
             <div key={post.id}>
               <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
                 <div className="flex flex-col gap-[24px] p-[32px] px-[24px] border border-[#D9d9d9] rounded-[16px]">
@@ -66,7 +72,7 @@ export default function Popularity() {
                   <p className="font-medium text-[16px] w-[995px] h-[45px] overflow-hidden text-ellipsis line-clamp-2">
                     {post.content}
                   </p>
-                  <p className="font-medium text-[16px]">{Users?.data?.nickname}</p>
+                  <p className="font-medium text-[16px]">{userData?.nickname}</p>
                 </div>
               </Link>
             </div>

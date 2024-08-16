@@ -3,9 +3,9 @@
 import useResetPassword from '@/hooks/useResetPassword';
 import clsx from 'clsx';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordInMobile() {
   const {
     inputs,
     inputRefs,
@@ -20,26 +20,29 @@ export default function ResetPasswordPage() {
     handleChangePW
   } = useResetPassword();
 
+  const router = useRouter();
+
+  const goToPrevPage = () => {
+    router.back();
+  };
+
   return (
-    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault(); // 폼 제출 방지
-          // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleChangePW 이벤트 핸들러 호출
-          if (!throttling) handleChangePW(e);
-        }}
-        className="w-[528px] flex flex-col items-center p-[64px] bg-white gap-[32px]"
-      >
-        <Image src="/logo_eng.svg" alt="영어 로고" width={180} height={60} className="hidden md:flex mb-[32px]" />
-        <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px]">
-          <Link href="/" className="left-0 absolute">
-            <Image src="/backIcon.svg" alt="뒤로가기" width={21} height={21} />
-          </Link>
-          <Image src="/logo_eng.svg" alt="영어 로고" width={144} height={48} />
-        </div>
-        <h2 className="text-[20px] font-bold md:text-[24px]">비밀번호 재설정</h2>
-        <p className="text-[14px] md:text-[16px] text-grey-600">코듀(CodeU)에서 사용할 비밀번호를 입력해주세요.</p>
-        <div className="flex flex-col gap-[10px]">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault(); // 폼 제출 방지
+        // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleChangePW 이벤트 핸들러 호출
+        if (!throttling) handleChangePW(e);
+      }}
+      className="flex flex-col md:hidden fixed bg-white z-50 inset-0"
+    >
+      <div className="flex justify-center items-center h-[56px] p-[16px] border-b border-grey-100">
+        <button type="button" onClick={goToPrevPage} className="left-0 absolute">
+          <Image src="/backIcon.svg" alt="뒤로가기" width={21} height={21} />
+        </button>
+        <h2 className={clsx('H3-L', 'text-grey-900')}>비밀번호 변경</h2>
+      </div>
+      <div className="p-[16px] flex flex-col items-center">
+        <div className="flex flex-col gap-[10px] mb-[40px]">
           {inputs.map((input, idx) => (
             <div key={input.id} className="flex flex-col items-center relative">
               <div
@@ -126,15 +129,14 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           className={clsx(
-            'h-[56px] w-[328px] md:w-[400px] rounded-[8px]',
-            throttling
-              ? 'hover:cursor-default bg-primary-300 text-white bg-opacity-50 text-opacity-50'
-              : ' bg-primary-500 hover:bg-primary-700 text-white'
+            throttling && 'hover:cursor-default bg-black text-white bg-opacity-40 text-opacity-50',
+            'Body-M',
+            'w-[328px] bg-primary-500 rounded-[8px] hover:bg-primary-700 text-white p-[16px]'
           )}
         >
-          변경 완료
+          비밀번호 변경
         </button>
-      </form>
-    </section>
+      </div>
+    </form>
   );
 }

@@ -19,7 +19,7 @@ export default function CommuComment() {
   const [value, setValue] = useState<string | undefined>('');
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
-  const { id } = useParams();
+  const { id } = useParams<{id: string}>();
 
   const handleCheckLogin = () => {
     if (!isLogin) {

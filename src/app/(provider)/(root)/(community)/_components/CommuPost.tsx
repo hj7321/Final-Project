@@ -1,14 +1,12 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import favicon from '../../../../../../public/vercel.svg';
 import { CommunityPosts } from '@/types/type';
 import { useParams } from 'next/navigation';
-import useAuthStore from '@/zustand/authStore';
-import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import useProfile from '@/hooks/useProfile';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -16,7 +14,6 @@ const iconSt = 'w-[24px] h-[24px]';
 export default function CommuPost() {
   const [bookmarkCount, setBookmarkCount] = useState<number>(0);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const { userId } = useAuthStore();
   const { id } = useParams();
 
   const getPost = async (): Promise<CommunityPosts> => {
@@ -37,27 +34,32 @@ export default function CommuPost() {
   // };
   // 추후 return문 안에서 filteredData 이용
 
-  const { data, isLoading, error } = useQuery<CommunityPosts>({
+  const {
+    data: postData,
+    isLoading,
+    error
+  } = useQuery<CommunityPosts>({
     queryKey: ['post', id],
     queryFn: getPost,
     enabled: !!id
   });
+  const userIdFromPost = postData?.user_id;
+  const postId = postData?.id;
 
-  const getUserData = async (userId: string) => {
-    const supabase = createClient();
-    const { data } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
-    return data;
-  };
+  // 리팩토링 전
+  // const getUserData = async (userId: string) => {
+  //   const supabase = createClient();
+  //   const { data } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
+  //   return data;
+  // };
+  // const { data: userData } = useQuery({
+  //   queryKey: [userIdFromPost],
+  //   queryFn: () => getUserData(userIdFromPost!),
+  //   enabled: !!userIdFromPost
+  // });
 
-  const userIdFromPost = data?.user_id;
-
-  const { data: userData } = useQuery({
-    queryKey: [userIdFromPost],
-    queryFn: () => getUserData(userIdFromPost!),
-    enabled: !!userIdFromPost
-  });
-
-  const postId = data?.id;
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
 
   const getBookmarkData = async (): Promise<void> => {
     const data = await fetch('/api/bookmark', {
@@ -87,16 +89,16 @@ export default function CommuPost() {
     <div className="flex flex-col">
       <div className="flex flex-col gap-6 py-6">
         <ul className="flex gap-[24px]">
-          {data?.lang_category?.map((lang, index) => (
+          {postData?.lang_category?.map((lang, index) => (
             <li key={index} className={langSt}>
               {lang}
             </li>
           ))}
         </ul>
-        <h1 className="text-2xl font-bold">{data?.title}</h1>
+        <h1 className="text-2xl font-bold">{postData?.title}</h1>
         <div className="text-base flex gap-[24px]">
           {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
-          <p>{data?.created_at.split('T')[0]}</p>
+          <p>{postData?.created_at.split('T')[0]}</p>
           <div className="flex gap-[8px]">
             {isClicked ? (
               <Image
@@ -121,9 +123,9 @@ export default function CommuPost() {
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />
-      {data?.post_img?.[0] && <Image src={data.post_img[0]} alt="Post Image" width={800} height={500} />}
+      {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
 
-      <MDEditor.Markdown source={data?.content} />
+      <MDEditor.Markdown source={postData?.content} />
       {/* <p className="py-6">{data?.content}</p> */}
     </div>
   );
