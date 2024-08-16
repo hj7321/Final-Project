@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import ChatModal from './ChatModal';
 import { CodeCategories } from '@/components/dumy';
@@ -37,7 +37,7 @@ const ChatList = () => {
     fetchSession();
   }, []);
 
-  const fetchChatRooms = async () => {
+  const fetchChatRooms = useCallback(async () => {
     if (!currentUserId) return;
 
     const { data: chatData, error: chatError } = await supabase
@@ -123,7 +123,7 @@ const ChatList = () => {
       );
       setChatRooms(resolvedChatRooms);
     }
-  };
+  }, [currentUserId, setChatRooms]);
 
   useEffect(() => {
     fetchChatRooms();
@@ -138,7 +138,7 @@ const ChatList = () => {
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [currentUserId]);
+  }, [currentUserId, fetchChatRooms]);
 
   const getCategoryImage = (category: string) => {
     const categoryData = CodeCategories.find((cat) => cat.name === category);
@@ -161,6 +161,13 @@ const ChatList = () => {
     fetchChatRooms(); // 모달을 닫을 때 채팅방 목록을 다시 가져옵니다.
   };
 
+  const markMessagesAsRead = (chatRoomId: string) => {
+    // 특정 채팅방의 메시지를 읽음 처리
+    setChatRooms((prevChatRooms) =>
+      prevChatRooms.map((room) => (room.chat_room_id === chatRoomId ? { ...room, unread_count: 0 } : room))
+    );
+  };
+
   if (!chatRooms || chatRooms.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
@@ -180,7 +187,6 @@ const ChatList = () => {
             key={room.chat_room_id}
             className="flex flex-col justify-between w-auto md:max-w-52 h-48 md:h-64 p-2 md:py-5 md:px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
             onClick={() => openChatModal(room.chat_room_id)}
-            // style={{ height: 'auto', maxWidth: '220px', maxHeight: '255px' }}
           >
             <div>
               <div className="flex items-center justify-center mt-2 mb-2">
@@ -226,7 +232,13 @@ const ChatList = () => {
           </div>
         ))}
       </div>
-      {currentChatRoomId && <ChatModal chatRoomId={currentChatRoomId} onClose={closeChatModal} />}
+      {currentChatRoomId && (
+        <ChatModal
+          chatRoomId={currentChatRoomId}
+          onClose={closeChatModal}
+          onMessagesRead={() => markMessagesAsRead(currentChatRoomId!)} // 읽음 처리 콜백
+        />
+      )}
     </div>
   );
 };

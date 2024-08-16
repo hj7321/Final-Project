@@ -46,7 +46,7 @@ export default function SignUpForm() {
 
   const router = useRouter();
 
-  const { login, setUserId, setUserData } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수, 유저 정보 설정 함수
+  const { login, setUserId } = useAuthStore(); // 각각 로그인 함수, 유저 고유 아이디 설정 함수
 
   // 인풋 필드의 값이 바뀔(입력될) 때마다 호출되는 이벤트 핸들러 -> 값에 맞는 유효성 메시지가 실시간으로 바뀜
   const handleInputChange = (idx: number, e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -166,13 +166,12 @@ export default function SignUpForm() {
       form.reset(); // (1) 폼 내용 모두 리셋
       login(); // (2) 로그인된 상태로 설정
       setUserId(data.userData.user.id); // (3) 유저 고유 아이디 설정
-      setUserData(data.userData.user.user_metadata); // (4) 유저 정보 설정
-      router.replace('signup/signUpComplete'); // (5) 현재 페이지를 사용자 유형 선택 페이지로 대체
+      router.replace('signup/signUpComplete'); // (4) 현재 페이지를 사용자 유형 선택 페이지로 대체
     }
   };
 
   return (
-    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[1200px]">
+    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
       {showModal !== null && <Modal onClose={handleCloseModal} modalNum={showModal} />}
       <form
         onSubmit={(e) => {
@@ -180,7 +179,7 @@ export default function SignUpForm() {
           // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleSignUp 이벤트 핸들러 호출
           if (!throttling) handleSignUp(e);
         }}
-        className="w-[528px] min-h-[1012px] rounded-[24px] flex flex-col items-center py-[64px] bg-white"
+        className="w-[528px] flex flex-col items-center p-[64px] bg-white"
       >
         <h2 className={clsx('H2-L', 'hidden md:block mb-[32px]')}>회원가입</h2>
         <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px] mb-[32px]">

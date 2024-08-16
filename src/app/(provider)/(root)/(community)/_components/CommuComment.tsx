@@ -19,7 +19,7 @@ export default function CommuComment() {
   const [value, setValue] = useState<string | undefined>('');
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
-  const { id } = useParams();
+  const { id } = useParams<{id: string}>();
 
   const handleCheckLogin = () => {
     if (!isLogin) {
@@ -83,7 +83,7 @@ export default function CommuComment() {
         <div className={langSt}>댓글 개수 {commentCount}</div>
       </div>
       <div className="flex gap-[32px] mt-[32px]">
-        <div className="w-[995px]">
+        <div data-color-mode="light" className="w-[995px]">
           <MDEditor
             onClick={handleCheckLogin}
             // className="w-[995px] h-[101px] rounded-[8px] border border-black text-[16px] px-2 py-1 resize-none"

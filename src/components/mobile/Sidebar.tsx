@@ -9,6 +9,7 @@ import React from 'react';
 import AppInfoSidebar from './AppInfoSidebar';
 import useIndexStore from '@/zustand/indexStore';
 import useSidebarStore from '@/zustand/sidebarStore';
+import ChatNotification from '../ChatNotification';
 
 const buttonStyle = 'w-[220px] h-[37px] px-[16px] py-[8px] rounded-[8px] text-center';
 const linkStyle = 'flex justify-between px-[12px] py-[8px] text-[14px]';
@@ -65,7 +66,7 @@ export default function Sidebar({ nickname }: SidebarProp) {
                   </button>
                   <div className="flex gap-[12px]">
                     <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
-                    <Image src="/alarm_chat.svg" alt="채팅 알림 아이콘" width={24} height={24} />
+                    {userId && <ChatNotification userId={userId} />}
                   </div>
                 </div>
               </div>

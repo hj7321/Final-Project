@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import ChatNotification from '../ChatNotification';
 
 const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
 
@@ -40,13 +41,8 @@ export default function LoginHeader({ nickname }: LoginHeaderProp) {
           height={24}
           className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
         />
-        <Image
-          src="/alarm_chat.svg"
-          alt="채팅 알림 아이콘"
-          width={24}
-          height={24}
-          className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
-        />
+        {/* 채팅알림 */}
+        {userId && <ChatNotification userId={userId} />}
       </div>
       <div className="flex items-center gap-[24px] break-keep">
         <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">

@@ -50,11 +50,14 @@ export default function Header({ isLogin, nickname }: HeaderProps) {
     }
   };
 
+  console.log(hideLayout);
+  console.log(isSidebarOpened);
+
   return (
     <>
       <header
         className={clsx(
-          'sticky top-0 z-10 flex h-[56px] md:h-[72px] px-[16px]   py-[16px] border-b border-grey-100 bg-white',
+          'sticky top-0 z-10 flex h-[56px] md:h-[72px] px-[16px] py-[16px] border-b border-grey-100 bg-white',
           hideLayout && 'hidden md:flex',
           isSidebarOpened && 'bg-grey-900 bg-opacity-50'
         )}

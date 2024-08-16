@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import MobileEditPorifolio from './MobileEditPorifolio';
 import Image from 'next/image';
-import { createClient } from '@/utils/supabase/client';
+import useProfile from '@/hooks/useProfile';
 
 interface MobileDetailPortfolioProps {
   portfolioId: string | null;
@@ -18,21 +18,24 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
   const params = useParams();
   const userId = params.id as string;
 
-  const getUserData = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-    if (error) throw error;
-    return data;
-  };
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
+  //   const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
+  //   if (error) throw error;
+  //   return data;
+  // };
+  // const {
+  //   data: Users,
+  //   isLoading: userLoading,
+  //   error: userError
+  // } = useQuery({
+  //   queryKey: ['Users'],
+  //   queryFn: getUserData
+  // });
 
-  const {
-    data: Users,
-    isLoading: userLoading,
-    error: userError
-  } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const getsPortfolio = async () => {
     const response = await fetch('/api/portFolio');
@@ -95,36 +98,46 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
         <div className="w-full pr-4 ml-7">
           <div className="flex items-center mt-20 mb-7">
             <Image
-              src={Users?.profile_img || '/defaultProfileimg.svg'}
+              src={userData?.profile_img || '/defaultProfileimg.svg'}
               alt="유저 이미지"
               width={36}
               height={36}
               className="rounded-[50%] mr-4overflow-hidden w-20 h-20 "
             />
-            <h1 className="text-xl font-bold">{Users?.nickname}</h1>
+            <h1 className="text-xl font-bold">{userData?.nickname}</h1>
           </div>
           <div className="flex flex-col mx-auto space-y-4">
             <div className="flex text-base text-gray-500">
-              {categoryImage && <img src={categoryImage} alt={langCategory} className="mr-2 w-6 h-6" />}
+              {categoryImage && (
+                <Image src={categoryImage} alt={langCategory} width={24} height={24} className="mr-2" />
+              )}
               {langCategory}
             </div>
             <div className="mt-8 mb-5">{title}</div>
             <div className="border-t border-gray-300 my-10"></div>
             <div className="flex flex-col md:flex-row mt-10 mr-2">
               {previewUrls.length > 0 ? (
-                <img src={previewUrls[0]} alt="썸네일이 등록되어 있지 않습니다." className="rounded-md" />
+                <Image src={previewUrls[0]} alt="썸네일 이미지" width={100} height={100} className="rounded-md" />
               ) : (
-                <img src="https://via.placeholder.com/150?text=No+Image" alt="No Image" className="rounded-md" />
+                <Image
+                  src="https://via.placeholder.com/150?text=No+Image"
+                  alt="No Image"
+                  width={64}
+                  height={64}
+                  className="rounded-md"
+                />
               )}
               {previewUrls.length > 1 &&
                 previewUrls
                   .slice(1)
                   .map((img: string, index: number) => (
-                    <img
+                    <Image
                       key={index}
                       src={img}
                       alt={`Portfolio image ${index + 1}`}
-                      className="w-96 object-cover mt-4 mb-4 rounded-md"
+                      width={100}
+                      height={100}
+                      className="mt-4 mb-4 rounded-md"
                     />
                   ))}
             </div>

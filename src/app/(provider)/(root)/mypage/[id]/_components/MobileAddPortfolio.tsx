@@ -7,6 +7,7 @@ import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { Notify } from 'notiflix';
+import Image from 'next/image';
 
 interface AddPortfolioProps {
   onBack: () => void;
@@ -149,7 +150,13 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
           <div className="flex space-x-4">
             <div className="w-1/2">
               {thumbnailPreview && (
-                <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-2 w-full h-auto" />
+                <Image
+                  src={thumbnailPreview}
+                  alt="Thumbnail Preview"
+                  width={300}
+                  height={300}
+                  className="mt-2 w-full h-auto"
+                />
               )}
               <label className="block text-sm font-medium text-gray-700">썸네일 이미지를 등록해주세요.</label>
               <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
@@ -157,7 +164,14 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
             <div className="w-1/2">
               <div className="mt-2 grid grid-cols-3 gap-2">
                 {additionalPreviews.map((preview, index) => (
-                  <img key={index} src={preview} alt={`Preview ${index}`} className="w-full h-auto" />
+                  <Image
+                    key={index}
+                    src={preview}
+                    alt={`Preview ${index}`}
+                    width={300}
+                    height={300}
+                    className="w-full h-auto"
+                  />
                 ))}
               </div>
               <label className="block text-sm font-medium text-gray-700">추가 이미지를 등록해주세요.</label>
@@ -183,10 +197,11 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
                       selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
                     }`}
                   >
-                    <img
+                    <Image
                       src={selectedLanguage === lang.name ? lang.image : lang.darkImage}
                       alt={lang.name}
-                      className="w-[20px] h-[20px]"
+                      width={20}
+                      height={20}
                     />
                     <p className="ml-2 text-sm">{lang.name}</p>
                   </label>

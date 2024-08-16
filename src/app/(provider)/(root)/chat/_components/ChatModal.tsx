@@ -4,20 +4,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Chat, Users } from '@/types/type';
 import Image from 'next/image';
-import DescriptionInput from '../../pro/createCard/_components/DescriptionInput';
-// import '@/css/chatMdstyle.css'
+
 const supabase = createClient();
 
 type ChatModalProps = {
   chatRoomId: string;
   onClose: () => void;
+  onMessagesRead: () => void; // 메시지가 읽혔을 때 호출되는 콜백
 };
 
-const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
+const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRead }) => {
   const [messages, setMessages] = useState<Chat[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
+  const [isRead, setIsRead] = useState<boolean>(false); // 메시지 읽음 상태를 관리하는 state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
   useEffect(() => {
     const markMessagesAsRead = async () => {
-      if (!currentUser) return;
+      if (!currentUser || isRead) return;
 
       const { error } = await supabase
         .from('Chat')
@@ -41,6 +42,9 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
       if (error) {
         console.error('Error marking messages as read:', error.message);
+      } else {
+        setIsRead(true); // 읽음 상태를 true로 설정
+        onMessagesRead(); // 메시지가 읽혔을 때 콜백 호출
       }
     };
 
@@ -97,15 +101,19 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
 
     const chatChannel = supabase
       .channel('realtime:chat')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat', filter: `chat_room_id=eq.${chatRoomId}` }, (payload) => {
-        setMessages((prevMessages) => [...prevMessages, payload.new as Chat]);
-      })
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'Chat', filter: `chat_room_id=eq.${chatRoomId}` },
+        (payload) => {
+          setMessages((prevMessages) => [...prevMessages, payload.new as Chat]);
+        }
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [chatRoomId, currentUser]);
+  }, [chatRoomId, currentUser, isRead, onMessagesRead]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -125,25 +133,34 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
         pro_id: currentUser.id,
         content: newMessage,
         chat_room_id: chatRoomId,
-        is_read: false, // 새로운 메시지는 읽지 않음으로 표시
-      },
+        is_read: false // 새로운 메시지는 읽지 않음으로 표시
+      }
     ]);
 
     if (error) {
       console.error('Error sending message:', error);
     } else {
       setNewMessage('');
+      setIsRead(false); // 새로운 메시지가 추가되면 다시 읽음 상태를 false로 설정
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-0 md:p-0">
       <div className="bg-white md:p-5 md:rounded-xl w-full md:w-1/3 max-w-xl h-full md:h-5/6">
-        <button onClick={onClose} className="text-black float-right mr-2 md:mr-0"><Image src="/closeBtnX.svg" alt="닫기버튼" width={20} height={20} /></button>
+        <button onClick={onClose} className="text-black float-right mr-2 md:mr-0">
+          <Image src="/closeBtnX.svg" alt="닫기버튼" width={20} height={20} />
+        </button>
         <div className="flex items-center mb-6 ml-1 md:ml-0">
           {otherUser && (
             <>
-              <img src={otherUser.profile_img || '/defaultProfileimg.svg'} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
+              <Image
+                src={otherUser.profile_img || '/defaultProfileimg.svg'}
+                alt="상대 프로필"
+                width={48}
+                height={48}
+                className="rounded-full mr-4"
+              />
               <div>
                 <h2 className="text-sm font-semibold">{otherUser.nickname}</h2>
                 <p className="text-sm font-medium text-gray-500">연락 가능 시간: AM 9 - PM 6</p>
@@ -159,7 +176,13 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
                 key={message.id}
                 className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`p-3 rounded-lg text-xs max-w-xs font-medium ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-100 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
+                <div
+                  className={`p-3 rounded-lg text-xs max-w-xs font-medium ${
+                    message.consumer_id === currentUser?.id
+                      ? 'bg-primary-50 border border-primary-100 text-black'
+                      : 'bg-gray-50 border border-grey-200 text-black'
+                  } break-words`}
+                >
                   {message.content}
                 </div>
               </div>
@@ -174,10 +197,9 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose }) => {
               className="flex-1 p-3 border border-gray-300 rounded-lg mr-2 text-sm font-normal py-3"
               placeholder="메시지를 입력하세요"
             />
-            {/* <DescriptionInput /> */}
             <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
-              <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
-              <div className='hidden md:block'>보내기</div>
+              <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className="text-white" />
+              <div className="hidden md:block">보내기</div>
             </button>
           </form>
         </div>
