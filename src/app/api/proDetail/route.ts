@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     if (userError) {
       throw userError;
     }
-
+    
     const { data : portfolioData, error : portfolioError } = await supabase
       .from('Portfolio')
       .select('*')

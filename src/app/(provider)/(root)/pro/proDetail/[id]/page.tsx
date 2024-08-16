@@ -36,6 +36,8 @@ interface UserData {
   id: string;
   nickname: string;
   profile_img: string;
+  possible_time : string;
+  introduction : string
 }
 
 export interface PortfolioData {
@@ -157,8 +159,8 @@ export default function ProDetail() {
       <div className="flex md:flex-row flex-col-reverse justify-between items-center">
         <div className="md:h-[470px] md:w-[380px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
-            <UserProfile profile={user.profile_img} nickname={user.nickname} />
-            <UserDescription />
+            <UserProfile profile={user.profile_img} nickname={user.nickname} possibleTime={user.possible_time} />
+            <UserDescription introduction={user.introduction}/>
             <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price} />
             <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-evenly items-center mt-[15px]">
               <InquireBtn handleInquiry={handleInquiry} />
