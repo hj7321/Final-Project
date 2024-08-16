@@ -1,6 +1,7 @@
 'use client';
 
 import DeleteAlarmModal from '@/app/(provider)/(root)/mypage/[id]/_components/DeleteAlarmModal';
+import useProfile from '@/hooks/useProfile';
 import useAuthStore from '@/zustand/authStore';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -11,7 +12,8 @@ import { FormEvent, useState } from 'react';
 export default function DeleteUserInMobile() {
   const [throttling, setThrottling] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const { userId, userData, logout } = useAuthStore();
+  const { userId, logout } = useAuthStore();
+  const { userData } = useProfile(userId);
   const router = useRouter();
 
   const handleUserDelete = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -51,7 +53,6 @@ export default function DeleteUserInMobile() {
       return;
     }
 
-    console.log('회원 탈퇴 완료');
     setOpenModal(true);
     logout();
   };
