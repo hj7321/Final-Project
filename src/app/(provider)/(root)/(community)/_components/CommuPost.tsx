@@ -1,20 +1,27 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { CommunityPosts } from '@/types/type';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { BookMark, CommunityPosts } from '@/types/type';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import useProfile from '@/hooks/useProfile';
+import useAuthStore from '@/zustand/authStore';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
 
+type BookmarkData = {
+  data: BookMark[];
+  count: number;
+};
+
 export default function CommuPost() {
-  const [bookmarkCount, setBookmarkCount] = useState<number>(0);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const { id } = useParams();
+  const { id: postId } = useParams();
+  const { userId } = useAuthStore();
+  console.log(postId);
+
+  const queryClient = useQueryClient();
 
   const getPost = async (): Promise<CommunityPosts> => {
     const response = await fetch('/api/communityRead');
@@ -22,7 +29,7 @@ export default function CommuPost() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    const filteredData = data.filter((post) => post.id === id) || null;
+    const filteredData = data.filter((post) => post.id === postId) || null;
     return filteredData[0];
   };
   //  const [filteredData, setFilteredData] = useState<CommunityPosts | null>(null);
@@ -39,12 +46,11 @@ export default function CommuPost() {
     isLoading,
     error
   } = useQuery<CommunityPosts>({
-    queryKey: ['post', id],
+    queryKey: ['post', postId],
     queryFn: getPost,
-    enabled: !!id
+    enabled: !!postId
   });
   const userIdFromPost = postData?.user_id;
-  const postId = postData?.id;
 
   // 리팩토링 전
   // const getUserData = async (userId: string) => {
@@ -61,29 +67,90 @@ export default function CommuPost() {
   // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
 
-  const getBookmarkData = async (): Promise<void> => {
-    const data = await fetch('/api/bookmark', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ postId })
-    }).then((res) => res.json());
-
+  const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
+    const { data, count } = await fetch(`/api/bookmark/${postId}`).then((res) => res.json());
     if (data.errorMsg) {
       console.log(data.errorMsg);
       return;
     }
-    console.log(data.data);
-    return data.data;
+    return { data, count };
   };
 
-  const { data: bookmarkData } = useQuery({
-    queryKey: ['bookmarkCount'],
-    queryFn: () => getBookmarkData()
+  const { data: bookmarkData } = useQuery<BookmarkData | undefined>({
+    queryKey: ['bookmark', postId],
+    queryFn: handleGetBookmarkData
   });
 
-  console.log(bookmarkData);
+  console.log({ bookmarkData });
+
+  const handlePostBookmark = async () => {
+    const data = await fetch(`/api/bookmark/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ postId, userId })
+    }).then((res) => res.json());
+
+    return data;
+  };
+
+  const { mutate: addBookmark } = useMutation({
+    mutationFn: handlePostBookmark,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
+      const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
+      queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number }) => {
+        return { ...prev, count: prev.count + 1 };
+      });
+      return [previousData];
+    },
+    onError: (error, _, context) => {
+      console.log(error.message);
+      // queryClient.setQueryData(['bookmark', postId], context?.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmark', postId] });
+    }
+  });
+
+  const handleDeleteBookmark = async () => {
+    const data = await fetch(`/api/bookmark/${postId}?userId=${userId}`, {
+      method: 'DELETE'
+    }).then((res) => res.json());
+
+    return data;
+  };
+
+  const { mutate: deleteBookmark } = useMutation({
+    mutationFn: handleDeleteBookmark,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
+      const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
+      queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number } | undefined) => {
+        console.log(prev);
+        if (!prev) return { data: [], count: 0 };
+        const updatedData = prev.data.filter((item) => item.posts_id !== postId && item.user_id !== userId);
+        return { data: updatedData, count: updatedData.length };
+      });
+      return { previousData };
+    },
+    onError: (error, _, context) => {
+      console.log(error.message);
+      queryClient.setQueryData(['bookmark', postId], context?.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmark', postId] });
+    }
+  });
+
+  const handleToggleBookmark = () => {
+    if (bookmarkData?.data.find((item) => item.user_id === userId)) {
+      deleteBookmark();
+    } else {
+      addBookmark();
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -100,13 +167,15 @@ export default function CommuPost() {
           {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
           <p>{postData?.created_at.split('T')[0]}</p>
           <div className="flex gap-[8px]">
-            {isClicked ? (
+            {/* 내가 이 게시물을 찜하기한 적이 있는가? */}
+            {/* bookmarkData.data.find(() => userId랑 bookmark에 있는 userId랑 같은 게 있는지)  */}
+            {bookmarkData?.data.find((item) => item.user_id === userId) ? (
               <Image
                 src="/bookmark.svg"
                 alt="글 찜한 후 북마크 아이콘"
                 width={16}
                 height={16}
-                onClick={() => setIsClicked((prev) => !prev)}
+                onClick={handleToggleBookmark}
               />
             ) : (
               <Image
@@ -114,11 +183,10 @@ export default function CommuPost() {
                 alt="글 찜하기 전 북마크 아이콘"
                 width={16}
                 height={16}
-                onClick={() => setIsClicked((prev) => !prev)}
+                onClick={handleToggleBookmark}
               />
             )}
-            {/* 찜 횟수 요청하려면 post의 id를 라우트 핸들러에 보내야 함 */}
-            <p>{6}</p>
+            <p>{bookmarkData?.count}</p>
           </div>
         </div>
       </div>
@@ -126,7 +194,6 @@ export default function CommuPost() {
       {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
 
       <MDEditor.Markdown source={postData?.content} />
-      {/* <p className="py-6">{data?.content}</p> */}
     </div>
   );
 }
