@@ -141,7 +141,6 @@ export default function CommuCommentList() {
                     onChange={(e) => setEditContent(e.target.value)}
                     className="flex p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
                   /> */}
-
                   <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
                   <button onClick={() => handleSaveClick(comment.id)}>저장</button>
                   <button onClick={handleCancelClick}>취소</button>
