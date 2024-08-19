@@ -7,6 +7,7 @@ import EditPortfolio from './EditPortfolio';
 import { CodeCategories } from '@/components/dumy';
 import Image from 'next/image';
 import useProfile from '@/hooks/useProfile';
+import MDEditor from '@uiw/react-md-editor';
 
 interface DetailModalfolioProps {
   clickModal: () => void;
@@ -111,9 +112,9 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
               </div>
               <div className="mt-8 mb-5">{title}</div>
               <div className="border-t border-gray-300 my-10"></div>
-              <div>
+              <div data-color-mode='light'>
                 <label className="block text-xl font-bold my-5 text-black">프로젝트 설명</label>
-                <div className="text-lg font-semibold text-gray-500">{content}</div>
+                <MDEditor.Markdown source={content} className='font-semibold text-gray-500 line-clamp-5'/>
               </div>
               <div>
                 <label className="block text-xl font-bold my-5 text-black">참여기간</label>

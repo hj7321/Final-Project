@@ -6,11 +6,13 @@ import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts, RequestPosts } from '@/types/type';
 import Image from 'next/image';
+import SkeletonLoader from '@/components/SkeletonLoader';  // Import SkeletonLoader
 
 export default function Home() {
   const [qnaPosts, setQnaPosts] = useState<CommunityPosts[]>([]);
   const [insightPosts, setInsightPosts] = useState<CommunityPosts[]>([]);
   const [expertPosts, setExpertPosts] = useState<RequestPosts[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Loading state 추가
   const supabase = createClient();
 
   useEffect(() => {
@@ -38,6 +40,8 @@ export default function Home() {
       } else {
         setExpertPosts(requestPosts);
       }
+
+      setIsLoading(false); // 데이터가 로드되면 로딩 상태를 false로 변경
     };
 
     fetchPosts();
@@ -45,12 +49,18 @@ export default function Home() {
 
   const getCategoryImage = (categoryName: string) => {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
-    return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
+    return category ? category.image : '/default_image.svg';
   };
+
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
+
+  // 로딩 중일 때 스켈레톤 UI를 보여줍니다.
+  if (isLoading) {
+    return <SkeletonLoader />;
+  }
 
   return (
     <main className="snap-y scroll-smooth">

@@ -3,12 +3,49 @@ import { createClient } from '@/utils/supabase/server';
 export async function GET(request: Request, { params }: { params: { commentId: string } }) {
   const supabase = createClient();
   const { commentId } = params;
+
   const { data, count, error } = await supabase
-    .from('Bookmark')
+    .from('Community Likes')
     .select('*', { count: 'exact', head: false })
     .eq('comment_id', commentId);
+
+  console.log(data);
+
   if (error) {
-    console.log('북마크 GET 에러: ', error.message);
+    console.log('GET 에러: ', error.message);
     return Response.json({ errorMsg: error.message });
   } else return Response.json({ data, count });
+}
+
+export async function POST(request: Request) {
+  const supabase = createClient();
+  const { commentId, userId } = await request.json();
+
+  const { data, error } = await supabase.from('Community Likes').insert({ comment_id: commentId, user_id: userId });
+
+  if (error) {
+    console.log('POST 에러: ', error.message);
+    return Response.json({ errorMsg: error.message });
+  } else return Response.json({ data });
+}
+
+export async function DELETE(request: Request, { params }: { params: { commentId: string } }) {
+  const supabase = createClient();
+
+  const { commentId } = params;
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId');
+
+  console.log(commentId, userId);
+
+  const { data, error } = await supabase
+    .from('Community Likes')
+    .delete()
+    .eq('comment_id', commentId)
+    .eq('user_id', userId!);
+
+  if (error) {
+    console.log('DELETE 에러: ', error.message);
+    return Response.json({ errorMsg: error.message });
+  } else return Response.json({ data });
 }
