@@ -39,8 +39,13 @@
 💁‍♂️ [기능 소개](#-기능-소개)
 <br>
 📄 [페이지 소개](#-페이지-소개)
-
 <br>
+📋 [ERD Diagram](#-erd-diagram)
+<br>
+🗂️ [파일 구조](#️-파일-구조)
+<br>
+🚨 [트러블 슈팅](#-트러블-슈팅)
+
 <br>
 
 # 👨‍👩‍👧‍👦 팀원 소개
@@ -189,7 +194,10 @@
 
 <img src="https://img.shields.io/badge/-JavaScript-eed718?style=flat&logo=javascript&logoColor=ffffff">
 <img src="https://img.shields.io/badge/-React-000000?style=flat&logo=react&logoColor=00c8ff">
-
+<img src="https://camo.githubusercontent.com/59c11b79ccd316716ab405f3df7b56d2bd4f37371c7b7fc4ad3d3449c94382a7/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d4769742d4631353032463f7374796c653d666c6174266c6f676f3d676974266c6f676f436f6c6f723d464646464646">
+<img src="https://camo.githubusercontent.com/98654f0013feff2701a684d816098e7bb9daa7b34a3855f31aa3781d5229a6f6/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d4769746875622d3030303030303f7374796c653d666c6174266c6f676f3d676974687562266c6f676f436f6c6f723d464646464646">
+<img src="https://camo.githubusercontent.com/cd4f3e5c3bece145ac8e12c9a516e65a43fb7fa35c59b3e1fa00712419b01d59/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d5653253230436f64652d3030374143433f7374796c653d666c6174266c6f676f3d76697375616c25323073747564696f253230636f6465266c6f676f436f6c6f723d7768697465">
+<img src="https://camo.githubusercontent.com/af84ec2a35b4862a9d6362df8ade2e1a34cfbd652ef02060c1703a957afe63f5/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d56657263656c2d626c61636b3f7374796c653d666c6174266c6f676f3d76657263656c266c6f676f436f6c6f723d7768697465">
 <br>
 <br>
 
@@ -204,22 +212,57 @@
 
 ### 2. 채팅 기능 💬
 
+- 전문가 의뢰 페이지의 **문의하기** 버튼을 클릭하거나, 마이페이지의 **내 채팅 목록** 카테고리에서 특정 채팅 목록을 클릭하면 채팅 모달이 뜹니다.
+- 채팅은 실시간으로 이루어지며, 1:1 형식입니다.
+
 <p style="margin-bottom: 30px;"></p>
 
 ### 3. 검색 기능 🔍
+
+- 헤더의 검색창에 검색어를 입력하거나, 홈페이지의 **언어별 카테고리**에서 특정 언어를 클릭하면 검색 페이지로 이동합니다.
+- 검색어가 다른 색으로 표시되어 있고
 
 <p style="margin-bottom: 30px;"></p>
 
 ### 4. 페이지네이션 🔢
 
-- Q&A 페이지, Insight 페이지에서 사용되었습니다.
+- Q&A 페이지, 인사이트 페이지에서 사용되었습니다.
 
 <p style="margin-bottom: 30px;"></p>
 
 ### 5. 무한 스크롤 ♾️
 
 - 전문가 의뢰 페이지에서 사용되었습니다.
--
+
+<p style="margin-bottom: 30px;"></p>
+
+### 6. 결제 기능 💸
+
+- 전문가 의뢰 페이지의 **구매하기** 버튼을 클릭하면 결제 모달이 뜹니다.
+
+<p style="margin-bottom: 30px;"></p>
+
+### 7. 비밀번호 재설정 기능 🔑
+
+<p style="margin-bottom: 30px;"></p>
+
+### 8. 회원 탈퇴 기능 👋
+
+<p style="margin-bottom: 30px;"></p>
+
+### 9. 게시물 북마크(찜하기) 기능 🔖
+
+- 마이페이지에서
+
+<p style="margin-bottom: 30px;"></p>
+
+### 10. 댓글 좋아요 기능 ❤️
+
+- Q&A 페이지, 인사이트 페이지
+
+<p style="margin-bottom: 30px;"></p>
+
+### 11. 알림 기능 🔔
 
 <br>
 <br>
@@ -230,7 +273,9 @@
 
 <details>
   <summary style="padding-left: 20px; margin-bottom: 10px">미리보기</summary>
-  <img src="./public/images/main_page.jpg" alt="메인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <img src="./public/images/main_page1.jpg" alt="메인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <img src="./public/images/main_page2.jpg" alt="메인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <img src="./public/images/main_page3.jpg" alt="메인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
 </details>
 
 <details>
@@ -278,8 +323,8 @@
 ### 2. 회원가입 페이지
 
 <details>
-  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기 (사진 수정해야 함)</summary>
-  <img src="./public/images/main_page.jpg" alt="회원가입 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기</summary>
+  <img src="./public/images/signup_page.jpg" alt="회원가입 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
 </details>
 
 <details>
@@ -291,13 +336,17 @@
       </blockquote>
 </details>
 
+- **화면을 100% 채우는 큰 이미지**가 있고, 스크롤을 내리면 메인 내용이 나옵니다.
+
+- 메인 내용에는 **언어별 카테고리**, **커뮤니티 섹션**, **전문가 의뢰 섹션**이 있습니다.
+
 <p style="margin-bottom: 30px;"></p>
 
 ### 3. 로그인 페이지
 
 <details>
-  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기 (사진 수정해야 함)</summary>
-  <img src="./public/images/main_page.jpg" alt="로그인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기</summary>
+  <img src="./public/images/login_page.jpg" alt="로그인 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
 </details>
 
 <details>
@@ -358,8 +407,8 @@
 ### 6. 전문가 의뢰 페이지
 
 <details>
-  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기 (사진 수정해야 함)</summary>
-  <img src="./public/images/main_page.jpg" alt="전문가 의뢰 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기</summary>
+  <img src="./public/images/pro_page.jpg" alt="전문가 의뢰 페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
 </details>
 
 <details>
@@ -386,3 +435,193 @@
       ✅ <b>로그인 상태</b>에서, 공통 헤더에 있는 닉네임을 클릭합니다.
       </blockquote>
 </details>
+
+### 8. 검색 페이지
+
+<details>
+  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기 (사진 수정해야 함)</summary>
+  <img src="./public/images/main_page.jpg" alt="마이페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+</details>
+
+<details>
+  <summary style="padding-left: 20px; margin-bottom: 10px">마이페이지로 이동하는 방법</summary>
+      <blockquote style="margin-left: 35px; margin-bottom: 20px">
+      ✅ <b>로그인 상태</b>에서, 공통 헤더에 있는 닉네임을 클릭합니다.
+      </blockquote>
+</details>
+
+### 9. 비밀번호 찾기 페이지
+
+<details>
+  <summary style="padding-left: 20px; margin-bottom: 10px">미리보기 (사진 수정해야 함)</summary>
+  <img src="./public/images/main_page.jpg" alt="마이페이지 이미지" style="display: block; margin-left: 35px; margin-bottom: 20px">
+</details>
+
+<details>
+  <summary style="padding-left: 20px; margin-bottom: 10px">마이페이지로 이동하는 방법</summary>
+      <blockquote style="margin-left: 35px; margin-bottom: 20px">
+      ✅ <b>로그인 상태</b>에서, 공통 헤더에 있는 닉네임을 클릭합니다.
+      </blockquote>
+</details>
+
+<br>
+<br>
+
+# 📋 ERD Diagram
+
+(사진 첨부 예정)
+
+<br>
+<br>
+
+# 🗂️ 파일 구조 (작성 중)
+
+```
+src ┌─ 📁app
+    │     ├─ 📁(provider)
+    │     │     ├─ Provider.tsx
+    │     │     └─ 📁(root)
+    │     │           ├─ layout.tsx
+    │     │           ├─ 📄page.tsx
+    │     │           ├─ not-found.tsx
+    │     │           ├─ 📁signup
+    │     │           │     ├─ 📄page.tsx
+    │     │           │     ├─ 📁_components
+    │     │           │     │     ├─ SignUpForm.tsx
+    │     │           │     │     ├─ Validate.tsx
+    │     │           │     │     ├─ SignUpComplete.tsx
+    │     │           │     │     ├─ Modal.tsx
+    │     │           │     │     ├─ TermsOfService.tsx
+    │     │           │     │     ├─ PersonalInfo.tsx
+    │     │           │     │     └─ Marketing.tsx
+    │     │           │     │
+    │     │           │     └─ 📁signUpComplete
+    │     │           │           └─ 📄page.tsx
+    │     │           │
+    │     │           ├─ 📁login
+    │     │           │     ├─ 📄page.tsx
+    │     │           │     ├─ 📁confirmEmail
+    │     │           │     │     └─ 📄page.tsx
+    │     │           │     ├─ 📁sendLink
+    │     │           │     │     └─ 📄page.tsx
+    │     │           │     ├─ 📁resetPassword
+    │     │           │     │     └─ 📄page.tsx
+    │     │           │     └─ 📁loginError
+    │     │           │           └─ 📄page.tsx
+    │     │           │
+    │     │           ├─ 📁search
+    │     │           │     └─ 📄page.tsx
+    │     │           │
+    │     │           ├─ 📁(community)
+    │     │           │     ├─ layout.tsx
+    │     │           │     ├─ 📁_components
+    │     │           │     │     ├─ CompletePostList.tsx
+    │     │           │     │     ├─ CommuPost.tsx
+    │     │           │     │     ├─ CommuCommentList.tsx
+    │     │           │     │     ├─ CommuComment.tsx
+    │     │           │     │     ├─ Comment.tsx
+    │     │           │     │     ├─ Languages.tsx
+    │     │           │     │     ├─ Latest.tsx
+    │     │           │     │     └─ Popularity.tsx
+    │     │           │     │
+    │     │           │     ├─ 📁createPost
+    │     │           │     │     └─ 📄page.tsx
+    │     │           │     │
+    │     │           │     ├─ 📁qna
+    │     │           │     │     ├─ 📄page.tsx
+    │     │           │     │     └─ 📁[id]
+    │     │           │     │           └─ 📄page.tsx
+    │     │           │     │
+    │     │           │     └─ 📁insight
+    │     │           │           ├─ 📄page.tsx
+    │     │           │           └─ 📁[id]
+    │     │           │                 └─ 📄page.tsx
+    │     │           │
+    │     │           ├─ 📁pro
+    │     │           │     ├─ 📄page.tsx
+    │     │           │
+    │     │           ├─ 📁mypage
+    │     │           │
+    │     │           ├─ 📁chat
+    │     │           │
+    │     │           ├─ 📁completedAccount
+    │     │           │
+    │     │           ├─ 📁personalInfo
+    │     │           │
+    │     │           ├─ 📁serviceInfo
+    │     │           │
+    │     │           ├─ 📁resetPassword
+    │     │           │
+    │     │           └─ 📁deleteUser
+    │     │
+    │     ├─ 📁api
+    │     │     ├─
+    │     ├─ favicon.ico
+    │     └─ globals.css
+    │
+    ├─ 📁components
+    │     ├─ 📁desktop
+    │     │     ├─ DesktopHeader.tsx
+    │     │     ├─ LoginHeader.tsx
+    │     │     └─ LogoutHeader.tsx
+    │     │
+    │     ├─ 📁mobile
+    │     │     ├─ MobileHeader.tsx
+    │     │     ├─ Sidebar.tsx
+    │     │     ├─ SearchBar.tsx
+    │     │     ├─ AppInfoSidebar.tsx
+    │     │     ├─ DetailInfo.tsx
+    │     │     ├─ ResetPasswordInMobile.tsx
+    │     │     └─ DeleteUserInMobile.tsx
+    │     │
+    │     ├─ ServerHeader.tsx
+    │     ├─ header.tsx
+    │     ├─ footer.tsx
+    │     ├─ TopButton.tsx
+    │     ├─ ChatNotification.tsx
+    │     └─ dumy.ts
+    │
+    ├─ 📁css
+    │     ├─ carousel.css
+    │     ├─ chatMdstyle.css
+    │     ├─ commentMdStyle.css
+    │     ├─ loader.css
+    │     ├─ mdStyle.css
+    │     └─ proMain.css
+    │
+    ├─ 📁hooks
+    │     ├─ useChatNotification.ts
+    │     ├─ useChatRoom.tsx
+    │     ├─ useCreateCard.tsx
+    │     ├─ useFetchData.ts
+    │     ├─ useProfile.ts
+    │     ├─ useProMain.tsx
+    │     ├─ useResetPassword.ts
+    │     ├─ useSearchPosts.ts
+    │     └─ useSession.ts
+    │
+    ├─ 📁types
+    │     ├─ supabase.ts
+    │     ├─ form.type.ts
+    │     └─ type.ts
+    │
+    ├─ 📁utils
+    │     └─📁supabase
+    │          ├─ client.ts
+    │          ├─ server.ts
+    │          └─ middleware.ts
+    │
+    ├─ 📁zustand
+    │     ├─ authStore.ts
+    │     ├─ indexStore.ts
+    │     └─ sidebarStore.ts
+    │
+    └─ middleware.ts
+```
+
+<br>
+<br>
+
+# 🚨 트러블 슈팅
+
+(노션에서 가져올 예정)
