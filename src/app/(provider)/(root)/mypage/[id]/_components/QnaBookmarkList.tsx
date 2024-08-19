@@ -1,57 +1,45 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { BookmarkCount } from './BookmarkCount';
 
 /**
- * 1. 내가 북마크한 QnA 게시물을 가져온다
- * 2. QnA 게시물에 posts_id로 e
+ * 1. URL에 있는 userId를 이용해서 bookmark 목록을 가져온다
+ * 2. bookmark 목록에서 postId를 이용해서 게시물 데이터를 가져온다
+ * 3. 뿌려준다
  */
 
 export default function QnaBookmarkList() {
   const { id: userId } = useParams();
 
-  // postId에 해당하는 북마크 개수를 가져오는 함수
-  const getBookmarkCount = async (postId: string): Promise<{ postId: string | null; count: number }> => {
-    const {
-      data: BookmarkData,
-      count,
-      error
-    } = await fetch(`/api/bookmarkCount?postId=${postId}`).then((res) => res.json());
-    if (error) {
-      console.log(error.errorMsg);
-      return { postId: null, count: -1 };
-    }
-
-    return { postId, count };
-  };
-
-  const getQnaBookmark = async () => {
+  const getQnaBookmarkPosts = async () => {
     // (1) Bookmark 테이블의 데이터 중, 해당 사용자가 북마크한 Q&A 카테고리에 해당하는 게시물들을 가져옴
     const response = await fetch(`/api/bookmark?userId=${userId}&category=qna`).then((res) => res.json());
+    // [{ posts_id: 1 }, { posts_id: 2 }, ... ]
     if (response.errorMsg) {
-      console.log(response.errorMsg);
-      return { countData: [], filteredData: [] };
+      return null;
     }
-    const postIdData = response.data;
 
-    const countData = await Promise.all(postIdData.map((postId) => getBookmarkCount(postId.posts_id)));
+    const postIds = response.data.map((bookmark: { posts_id: string }) => bookmark.posts_id)
+    // [ {posts_id: ~~ } , { posts_id: ~~~  } ]
+    const { data, error } = await createClient().from("Community Posts").select("*").in("id", postIds);
 
-    return countData;
+    if (error) {
+      return null;
+    }
+
+    return data;
   };
 
   const { data, isPending, error } = useQuery({
     queryKey: ['bookmark', userId],
-    queryFn: getQnaBookmark,
+    queryFn: getQnaBookmarkPosts,
     enabled: !!userId
   });
-
-  // data
-  // [ { postId: ~~~ , count: 1 }  ,
-  //   { postId: ~~~~, count: 2 }
-  // ]
 
   if (isPending) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
@@ -104,10 +92,7 @@ export default function QnaBookmarkList() {
                 </p>
                 <p className="ml-8 mb-3">
                   <span className="text-gray-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
-                  <span className="text-gray-500 text-[14px]">
-                    {' '}
-                    like:{data?.find((item) => item.postId === post.id).count}
-                  </span>
+                  <BookmarkCount postId={post.id} />
                 </p>
               </div>
             </div>
