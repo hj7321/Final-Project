@@ -7,6 +7,7 @@ import ChatModal from '../../../chat/_components/ChatModal'; // 채팅모달컴�
 import PortfolioModal from './_components/PortfolioModal';
 import Cookies from 'js-cookie';
 import ProDetailSkeleton from './_components/ProDetailSkeleton';
+import DetailAccount from './_components/AccountDetail';
 import useProMain from '@/hooks/useProMain';
 import PostDescription from './_components/PostDescription';
 import UserPortfolio from './_components/UserPortfolio';
@@ -20,9 +21,6 @@ import ServiceMobileView from './_components/ServiceMobileView';
 import UserDescription from './_components/UserDescription';
 import UserProfile from './_components/UserProfile';
 import PageBackBtn from './_components/PageBackBtn';
-import useProfile from '@/hooks/useProfile';
-import PortOne from '@portone/browser-sdk/v2';
-import { Notify } from 'notiflix';
 
 export interface PostData {
   post_img: string[];
@@ -38,6 +36,8 @@ interface UserData {
   id: string;
   nickname: string;
   profile_img: string;
+  possible_time: string;
+  introduction: string;
 }
 
 export interface PortfolioData {
@@ -51,24 +51,37 @@ export interface PortfolioData {
   end_date: string;
 }
 
+interface ReviewData {
+  id: string;
+  created_at: string;
+  stars: number;
+  contents: string;
+  request_post_id: string;
+  user: {
+    nickname: string;
+  };
+}
+
 export default function ProDetail() {
   const [post, setPost] = useState<PostData | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData[]>([]);
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [activeTab, setActiveTab] = useState('service');
   const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioData | null>(null); // 선택된 포트폴리오
+  const [isDetailAccountOpen, setIsDetailAccountOpen] = useState(false); // 추가: DetailAccount 모달 열림 상태 관리
 
   const { id: paramId } = useParams();
   const id = paramId as string;
   const router = useRouter();
   const { currentUserId } = useSession();
-  const { userData } = useProfile(currentUserId);
   const { chatRoomId, isChatOpen, toggleChat, createOrFetchChatRoom } = useChatRoom(
     currentUserId,
     user?.id || null,
     id
   );
   const { getCategoryImage } = useProMain();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,6 +93,7 @@ export default function ProDetail() {
         setPost(data.postData);
         setUser(data.userData);
         setPortfolio(data.portfolioData);
+        setReviews(data.reviewData);
       } catch (error) {
         console.error('Fetch data error:', error);
       }
@@ -113,58 +127,13 @@ export default function ProDetail() {
 
   // 여기까지 //
 
-  // 추가(수정-동규) //
-
-  const handleAccount = async () => {
-    if (!post || !userData) {
-      console.error('Post data or user data is not available');
-      return;
-    }
-
-    const paymentId = `payment-${crypto.randomUUID().slice(0, 20)}`;
-
-    try {
-      await PortOne.requestPayment({
-        storeId: 'store-ffd570b5-f558-4f58-abc1-12d5db5a33e0',
-        channelKey: 'channel-key-584a8128-bbef-438f-8d11-7d7ab2d8c1d9',
-        paymentId: paymentId,
-        orderName: post.title,
-        totalAmount: post.price,
-        currency: 'CURRENCY_KRW',
-        payMethod: 'CARD',
-        customer: {
-          fullName: userData.nickname,
-          phoneNumber: '010-0000-1234',
-          email: userData.email
-        }
-      });
-
-      await fetch(`/api/account`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          paymentId: paymentId,
-          orderId: post.id,
-          buyerId: currentUserId,
-          proId: post.user_id
-        })
-      });
-
-      Notify.success('결제가 완료되었습니다.');
-      router.push(`/CompletedAccount/${paymentId}`);
-    } catch (error) {
-      console.log(
-        JSON.stringify({
-          paymentId: paymentId,
-          orderId: post.id
-        })
-      );
-      console.error('Payment failed:', error);
-      alert('결제에 실패했습니다. 다시 시도해주세요.');
-    }
+  const handleAccount = () => {
+    setIsDetailAccountOpen(true); // DetailAccount 모달 열기
   };
 
-  // 여기까지 //
+  const handleCloseDetailAccount = () => {
+    setIsDetailAccountOpen(false); // DetailAccount 모달 닫기
+  };
 
   if (!post || !user) {
     return <ProDetailSkeleton />;
@@ -183,16 +152,14 @@ export default function ProDetail() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-
-  console.log(post.post_img);
   return (
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
       <PageBackBtn />
       <div className="flex md:flex-row flex-col-reverse justify-between items-center">
         <div className="md:h-[470px] md:w-[380px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
-            <UserProfile profile={user.profile_img} nickname={user.nickname} />
-            <UserDescription />
+            <UserProfile profile={user.profile_img} nickname={user.nickname} possibleTime={user.possible_time} />
+            <UserDescription introduction={user.introduction} />
             <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price} />
             <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-evenly items-center mt-[15px]">
               <InquireBtn handleInquiry={handleInquiry} />
@@ -206,18 +173,28 @@ export default function ProDetail() {
         </div>
       </div>
       <div className="md:mt-8 md:mt-[60px] mt-[240px]">
-        <TabBar activeTab={activeTab} handleTabClick={handleTabClick} portfolioCount={portfolio.length} />
+        <TabBar
+          activeTab={activeTab}
+          handleTabClick={handleTabClick}
+          portfolioCount={portfolio.length}
+          reviewCount={reviews.length}
+        />
         <div>
           <PostDescription content={post.content} />
           <UserPortfolio portfolio={portfolio} handlePortfolioClick={handlePortfolioClick} />
-          <Reviews />
+          <Reviews reviews={reviews} />
         </div>
       </div>
       {/* 채팅모달 */}
       {chatRoomId && isChatOpen && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}} />}
+
       {/* 포트폴리오 모달 */}
       {selectedPortfolio && (
         <PortfolioModal portfolio={selectedPortfolio} onClose={handlePortfolioModalClose} user={user} />
+      )}
+      {/* DetailAccount 모달 */}
+      {isDetailAccountOpen && (
+        <DetailAccount onClose={handleCloseDetailAccount} post={post} user={user} portfolio={portfolio} />
       )}
     </div>
   );

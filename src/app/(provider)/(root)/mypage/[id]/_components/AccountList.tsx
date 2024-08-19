@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { postDumy } from './DumyData';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Accounts, Portfolio } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -32,6 +32,7 @@ interface Review {
 }
 export default function AccountList() {
   const { id } = useParams();
+  const router = useRouter();
 
   const [isDetailReviewOpen, setIsDetailReviewOpen] = useState(false);
   const [selectedPortfolio, setSelectedPortfolio] = useState<Account | null>(null);
@@ -127,7 +128,12 @@ export default function AccountList() {
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl  text-grey-900 font-bold">{post.title}</h3>
+                      <h3
+                        className="text-xl text-grey-900 font-bold cursor-pointer "
+                        onClick={() => router.push(`/pro/proDetail/${post.id}`)}
+                      >
+                        {post.title}
+                      </h3>
                     </div>
                     <div className="flex flex-col md:flex-row justify-between">
                       <p className="mb-[50px]">{post.price}원</p>
