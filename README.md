@@ -95,7 +95,7 @@
 <br>
 <br>
 
-# <img src="./public/codeu.svg" alt="코듀 캐릭터" width="43" height="43" style="vertical-align: -13px;"> 프로젝트 개요
+# <img src="./public/codeu.svg" alt="코듀 캐릭터" width="43" height="43" style="vertical-align: -17px;"> 프로젝트 개요
 
 - 프로젝트명 : **코듀(CodeU)**
 
@@ -192,12 +192,14 @@
 
 # 🛠️ 기술 스택
 
+<div style="display: flex gap: 5px">
 <img src="https://img.shields.io/badge/-JavaScript-eed718?style=flat&logo=javascript&logoColor=ffffff">
 <img src="https://img.shields.io/badge/-React-000000?style=flat&logo=react&logoColor=00c8ff">
 <img src="https://camo.githubusercontent.com/59c11b79ccd316716ab405f3df7b56d2bd4f37371c7b7fc4ad3d3449c94382a7/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d4769742d4631353032463f7374796c653d666c6174266c6f676f3d676974266c6f676f436f6c6f723d464646464646">
 <img src="https://camo.githubusercontent.com/98654f0013feff2701a684d816098e7bb9daa7b34a3855f31aa3781d5229a6f6/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d4769746875622d3030303030303f7374796c653d666c6174266c6f676f3d676974687562266c6f676f436f6c6f723d464646464646">
 <img src="https://camo.githubusercontent.com/cd4f3e5c3bece145ac8e12c9a516e65a43fb7fa35c59b3e1fa00712419b01d59/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d5653253230436f64652d3030374143433f7374796c653d666c6174266c6f676f3d76697375616c25323073747564696f253230636f6465266c6f676f436f6c6f723d7768697465">
 <img src="https://camo.githubusercontent.com/af84ec2a35b4862a9d6362df8ade2e1a34cfbd652ef02060c1703a957afe63f5/687474703a2f2f696d672e736869656c64732e696f2f62616467652f2d56657263656c2d626c61636b3f7374796c653d666c6174266c6f676f3d76657263656c266c6f676f436f6c6f723d7768697465">
+</div>
 <br>
 <br>
 
@@ -539,20 +541,98 @@ src ┌─ 📁app
     │     │           │
     │     │           ├─ 📁pro
     │     │           │     ├─ 📄page.tsx
+    │     │           │     ├─ 📁createCard
+    │     │           │     │     ├─ 📄page.tsx
+    │     │           │     │     └─ 📁_components
+    │     │           │     │           ├─ TitleInput.tsx
+    │     │           │     │           ├─ DescriptionInput.tsx
+    │     │           │     │           ├─ PriceInput.tsx
+    │     │           │     │           ├─ LanguageSelect.tsx
+    │     │           │     │           ├─ ImageUpload.tsx
+    │     │           │     │           └─ SubmitButton.tsx
+    │     │           │     │
+    │     │           │     ├─ 📁proDetail
+    │     │           │     │     ├─ 📄page.tsx
+    │     │           │     │     └─ 📁[id]
+    │     │           │     │           ├─ 📄page.tsx
+    │     │           │     │           └─ 📁_components
+    │     │           │     │                 ├─ ProDetailSkeleton.tsx
+    │     │           │     │                 ├─ PageBackBtn.tsx
+    │     │           │     │                 ├─ InquireBtn.tsx
+    │     │           │     │                 ├─ PurchaseBtn.tsx
+    │     │           │     │                 ├─ PostImage.tsx
+    │     │           │     │                 ├─ PostDescription.tsx
+    │     │           │     │                 ├─ AccountDetail.tsx
+    │     │           │     │                 ├─ PortfolioModal.tsx
+    │     │           │     │                 ├─ Review.tsx
+    │     │           │     │                 ├─ ServiceDeskTopView.tsx
+    │     │           │     │                 ├─ ServiceMobileView.tsx
+    │     │           │     │                 ├─ TabBar.tsx
+    │     │           │     │                 ├─ UserDescription.tsx
+    │     │           │     │                 ├─ UserPortfolio.tsx
+    │     │           │     │                 └─ UserProfile.tsx
+    │     │           │     │
+    │     │           │     └─ 📁_components
+    │     │           │           ├─ PostSkeleton.tsx
+    │     │           │           ├─ Categories.tsx
+    │     │           │           ├─ DesktopButton.tsx
+    │     │           │           ├─ MobileButton.tsx
+    │     │           │           └─ ProPosts.tsx
     │     │           │
     │     │           ├─ 📁mypage
+    │     │           │     └─ 📁[id]
+    │     │           │           ├─ 📄page.tsx
+    │     │           │           └─ 📁_components
+    │     │           │                 ├─ DumyData.ts
+    │     │           │                 ├─ AllMypage.tsx
+    │     │           │                 ├─ AccountList.tsx
+    │     │           │                 ├─ AddPortFolio.tsx
+    │     │           │                 ├─ AddReview.tsx
+    │     │           │                 ├─ BookmarkCount.tsx
+    │     │           │                 ├─ DeleteUser.tsx
+    │     │           │                 ├─ DetailPortfolio.tsx
+    │     │           │                 ├─ DetailReview.tsx
+    │     │           │                 ├─ EditPortfolio.tsx
+    │     │           │                 ├─ EditProfile.tsx
+    │     │           │                 ├─ EditReview.tsx
+    │     │           │                 ├─ InsightBookmarkList.tsx
+    │     │           │                 ├─ InsightPostList.tsx
+    │     │           │                 ├─ MobileAddPortfolio.tsx
+    │     │           │                 ├─ MobileDetailPortfolio.tsx
+    │     │           │                 ├─ MobileEditPortfolio.tsx
+    │     │           │                 ├─ MyBookmarkList.tsx
+    │     │           │                 ├─ MyCommentList.tsx
+    │     │           │                 ├─ MyPostList.tsx
+    │     │           │                 ├─ Portfolio.tsx
+    │     │           │                 ├─ QnaBookmarkList.tsx
+    │     │           │                 ├─ QnaPostList.tsx
+    │     │           │                 ├─ ReceiveReview.tsx
+    │     │           │                 ├─ RequestBookmarkList.tsx
+    │     │           │                 ├─ RequestPostList.tsx
+    │     │           │                 ├─ ResetPassword.tsx
+    │     │           │                 ├─ SendReview.tsx
+    │     │           │                 └─ StarRating.tsx
     │     │           │
     │     │           ├─ 📁chat
+    │     │           │     ├─ 📄page.tsx
+    │     │           │     └─ 📁_components
+    │     │           │           ├─ ChatList.tsx
+    │     │           │           └─ ChatModal.tsx
     │     │           │
     │     │           ├─ 📁completedAccount
+    │     │           │     └─ 📄page.tsx
     │     │           │
     │     │           ├─ 📁personalInfo
+    │     │           │     └─ 📄page.tsx
     │     │           │
     │     │           ├─ 📁serviceInfo
+    │     │           │     └─ 📄page.tsx
     │     │           │
     │     │           ├─ 📁resetPassword
+    │     │           │     └─ 📄page.tsx
     │     │           │
     │     │           └─ 📁deleteUser
+    │     │                 └─ 📄page.tsx
     │     │
     │     ├─ 📁api
     │     │     ├─
