@@ -1,60 +1,43 @@
 'use client';
 
-import { BookMark, CommunityPosts } from '@/types/type';
+import { createClient } from '@/utils/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { BookmarkCount } from './BookmarkCount';
 
-type BookmarkData = {
-  countData: number[];
-  filteredData: CommunityPosts[];
-};
+/**
+ * 1. URL에 있는 userId를 이용해서 bookmark 목록을 가져온다
+ * 2. bookmark 목록에서 postId를 이용해서 게시물 데이터를 가져온다
+ * 3. 뿌려준다
+ */
 
-export default function InsightBookmarkList() {
+export default function QnaBookmarkList() {
   const { id: userId } = useParams();
 
-  // postId에 해당하는 북마크 개수를 가져오는 함수
-  const getBookmarkCount = async (postId: string): Promise<number> => {
-    const response = await fetch(`/api/bookmarkCount?postId=${postId}`).then((res) => res.json());
-    if (response.errorMsg) {
-      console.log(response.errorMsg);
-      return -1;
-    }
-    return response.count;
-  };
-
-  const getRequestBookmark = async (): Promise<BookmarkData> => {
+  const getQnaBookmarkPosts = async () => {
     // (1) Bookmark 테이블의 데이터 중, 해당 사용자가 북마크한 인사이트 카테고리에 해당하는 게시물들을 가져옴
-    const response1 = await fetch(`/api/bookmark?userId=${userId}&category=insight`).then((res) => res.json());
-    if (response1.errorMsg) {
-      console.log(response1.errorMsg);
-      return { countData: [], filteredData: [] };
+    const response = await fetch(`/api/bookmark?userId=${userId}&category=insight`).then((res) => res.json());
+    // [{ posts_id: 1 }, { posts_id: 2 }, ... ]
+    if (response.errorMsg) {
+      return null;
     }
-    const data1: BookMark[] = response1.data;
 
-    // (2) 위에서 가져온 북마크 데이터 중 게시물의 고유 아이디(posts_id)만 추출
-    const filteredPostId: string[] = data1.map((data) => data.posts_id);
+    const postIds = response.data.map((bookmark: { posts_id: string }) => bookmark.posts_id);
+    // [ {posts_id: ~~ } , { posts_id: ~~~  } ]
+    const { data, error } = await createClient().from('Community Posts').select('*').in('id', postIds);
 
-    // (3) filteredPostId 배열을 순회하면서 그 게시물에 해당하는 북마크 개수를 배열 형태로 가져옴
-    const countData: number[] = await Promise.all(filteredPostId.map((postId) => getBookmarkCount(postId)));
-
-    // (3) Community Posts 테이블의 데이터를 가져옴
-    const response3 = await fetch('/api/communityRead');
-    if (!response3.ok) {
-      throw new Error(`HTTP error! status: ${response3.status}`);
+    if (error) {
+      return null;
     }
-    const data3: CommunityPosts[] = await response3.json();
 
-    // (4) 커뮤니티 게시글 데이터 중 filteredPostId 배열에 id가 포함되어 있는 데이터만 추출
-    const filteredData = data3?.filter((post) => filteredPostId.includes(post.id));
-
-    return { countData, filteredData };
+    return data;
   };
 
   const { data, isPending, error } = useQuery({
     queryKey: ['bookmark', userId],
-    queryFn: getRequestBookmark,
+    queryFn: getQnaBookmarkPosts,
     enabled: !!userId
   });
 
@@ -64,11 +47,11 @@ export default function InsightBookmarkList() {
     return <div className="h-screen flex items-center justify-center">Error: {error.message}</div>;
   }
 
-  if (data?.filteredData && data.filteredData.length === 0) {
+  if (data?.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
         <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />
-        <div className="text-lg font-semibold mb-2">아직 찜을 한 전문가 의뢰 게시글이 없어요</div>
+        <div className="text-lg font-semibold mb-2">아직 찜을 한 인사이트 게시글이 없어요</div>
         <div className="text-sm text-gray-600 mb-4">코듀를 둘러보면서 마음에 드는 게시글을 찾아보세요!</div>
       </div>
     );
@@ -77,7 +60,7 @@ export default function InsightBookmarkList() {
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
       <div className="space-y-4">
-        {data?.filteredData.slice(0, 10).map((post, index) => (
+        {data?.slice(0, 10).map((post, index) => (
           <div key={post.id} className="bg-white rounded-2xl">
             <div className="flex flex-col md:flex-row">
               {post.post_img && post.post_img.length > 0 && (
@@ -109,7 +92,7 @@ export default function InsightBookmarkList() {
                 </p>
                 <p className="ml-8 mb-3">
                   <span className="text-gray-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
-                  <span className="text-gray-500 text-[14px]"> like:{data?.countData[index]}</span>
+                  <BookmarkCount postId={post.id} />
                 </p>
               </div>
             </div>
