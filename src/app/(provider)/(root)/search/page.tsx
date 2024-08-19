@@ -169,7 +169,7 @@ function SearchContent() {
                     <h2 className="text-lg font-medium mb-2">{highlightIfMatch(result.title, query)}</h2>
                     <p className="text-md text-grey-500 mb-2">{highlightIfMatch(truncateText(result.content, isMobile() ? 25 : 180), query)}</p>
                     <div className="flex justify-between items-center">
-                      <p className="text-gray-400">{userMap[result.user_id] || "알수없음"}</p>
+                      <p className="text-gray-400"> {highlightIfMatch(userMap[result.user_id] || "알수없음", query)}</p>
                     </div>
                     <div className="flex mt-4">
                       <div className="flex items-center">

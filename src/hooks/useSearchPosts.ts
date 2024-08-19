@@ -34,6 +34,14 @@ const useSearchPosts = (query: string) => {
       }
 
       if (communityPosts && requestPosts) {
+        // 사용자 맵핑 생성
+        const userMap = users.reduce((acc: { [key: string]: string }, user: { id: string; nickname: string }) => {
+          acc[user.id] = user.nickname;
+          return acc;
+        }, {});
+
+        setUserMap(userMap);
+
         const combinedPosts: CombinedPost[] = [
           ...communityPosts.map((post) => ({ ...post, category: 'Community' } as CombinedPost)),
           ...requestPosts.map((post) => ({ ...post, category: 'Request' } as CombinedPost))
@@ -44,7 +52,8 @@ const useSearchPosts = (query: string) => {
           (item) =>
             item.title.toLowerCase().includes(lowerQuery) ||
             item.content.toLowerCase().includes(lowerQuery) ||
-            (item.lang_category && item.lang_category.some((lang) => lang.toLowerCase().includes(lowerQuery)))
+            (item.lang_category && item.lang_category.some((lang) => lang.toLowerCase().includes(lowerQuery))) ||
+            (userMap[item.user_id] && userMap[item.user_id].toLowerCase().includes(lowerQuery)) // 닉네임 검색 추가
         );
 
         const counts = {
@@ -58,13 +67,6 @@ const useSearchPosts = (query: string) => {
         setResults(filteredResults);
         setFilteredResults(filteredResults);
         setCounts(counts);
-
-        const userMap = users.reduce((acc: { [key: string]: string }, user: { id: string; nickname: string }) => {
-          acc[user.id] = user.nickname;
-          return acc;
-        }, {});
-
-        setUserMap(userMap);
       }
     };
 
