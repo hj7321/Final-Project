@@ -2,11 +2,13 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BookMark, CommunityPosts } from '@/types/type';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import useProfile from '@/hooks/useProfile';
 import useAuthStore from '@/zustand/authStore';
+import Cookies from 'js-cookie';
+import { Notify } from 'notiflix';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -18,8 +20,10 @@ type BookmarkData = {
 
 export default function CommuPost() {
   const { id: postId } = useParams();
-  const { userId } = useAuthStore();
-  console.log(postId);
+  const { userId, isLogin } = useAuthStore();
+  const pathname = usePathname();
+  const category = pathname.split('/')[1];
+  const router = useRouter();
 
   const queryClient = useQueryClient();
 
@@ -32,14 +36,6 @@ export default function CommuPost() {
     const filteredData = data.filter((post) => post.id === postId) || null;
     return filteredData[0];
   };
-  //  const [filteredData, setFilteredData] = useState<CommunityPosts | null>(null);
-  //   const filtered: CommunityPosts | null = data.find((post) => post.id === id)|| null;
-  //   setFilteredData(filtered);
-  // } catch (error) {
-  //   console.error('Fetch data error:', error);
-  //   setFilteredData(null);
-  // };
-  // 추후 return문 안에서 filteredData 이용
 
   const {
     data: postData,
@@ -52,19 +48,6 @@ export default function CommuPost() {
   });
   const userIdFromPost = postData?.user_id;
 
-  // 리팩토링 전
-  // const getUserData = async (userId: string) => {
-  //   const supabase = createClient();
-  //   const { data } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
-  //   return data;
-  // };
-  // const { data: userData } = useQuery({
-  //   queryKey: [userIdFromPost],
-  //   queryFn: () => getUserData(userIdFromPost!),
-  //   enabled: !!userIdFromPost
-  // });
-
-  // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
 
   const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
@@ -81,15 +64,13 @@ export default function CommuPost() {
     queryFn: handleGetBookmarkData
   });
 
-  console.log({ bookmarkData });
-
   const handlePostBookmark = async () => {
     const data = await fetch(`/api/bookmark/${postId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ postId, userId })
+      body: JSON.stringify({ postId, userId, category })
     }).then((res) => res.json());
 
     return data;
@@ -101,13 +82,17 @@ export default function CommuPost() {
       await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
       const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
       queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number }) => {
-        return { ...prev, count: prev.count + 1 };
+        const newData = {
+          posts_id: postId,
+          user_id: userId
+        };
+        return { data: [...prev.data, newData], count: prev.count + 1 };
       });
-      return [previousData];
+      return { previousData };
     },
     onError: (error, _, context) => {
       console.log(error.message);
-      // queryClient.setQueryData(['bookmark', postId], context?.previousData);
+      queryClient.setQueryData(['bookmark', postId], context?.previousData);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['bookmark', postId] });
@@ -130,7 +115,7 @@ export default function CommuPost() {
       queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number } | undefined) => {
         console.log(prev);
         if (!prev) return { data: [], count: 0 };
-        const updatedData = prev.data.filter((item) => item.posts_id !== postId && item.user_id !== userId);
+        const updatedData = prev.data.filter((item) => item.user_id !== userId);
         return { data: updatedData, count: updatedData.length };
       });
       return { previousData };
@@ -145,10 +130,18 @@ export default function CommuPost() {
   });
 
   const handleToggleBookmark = () => {
-    if (bookmarkData?.data.find((item) => item.user_id === userId)) {
-      deleteBookmark();
+    if (!isLogin) {
+      Notify.failure('로그인 후 이용해주세요.');
+      const presentPage = window.location.href;
+      const pagePathname = new URL(presentPage).pathname;
+      Cookies.set('returnPage', pagePathname);
+      router.push('/login');
     } else {
-      addBookmark();
+      if (bookmarkData?.data.find((item) => item.user_id === userId)) {
+        deleteBookmark();
+      } else {
+        addBookmark();
+      }
     }
   };
 
@@ -195,7 +188,6 @@ export default function CommuPost() {
       <div data-color-mode="light">
         <MDEditor.Markdown source={postData?.content} />
       </div>
-      {/* <p className="py-6">{data?.content}</p> */}
     </div>
   );
 }

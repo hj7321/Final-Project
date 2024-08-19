@@ -62,36 +62,25 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          posts_id: string | null
-          user_id: string | null
+          post_category: string
+          posts_id: string
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          posts_id?: string | null
-          user_id?: string | null
+          post_category: string
+          posts_id?: string
+          user_id?: string
         }
         Update: {
           created_at?: string
           id?: string
-          posts_id?: string | null
-          user_id?: string | null
+          post_category?: string
+          posts_id?: string
+          user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "Bookmark_posts_id_fkey"
-            columns: ["posts_id"]
-            isOneToOne: false
-            referencedRelation: "Request Posts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Bookmark_posts_id_fkey1"
-            columns: ["posts_id"]
-            isOneToOne: false
-            referencedRelation: "Community Posts"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "Bookmark_user_id_fkey"
             columns: ["user_id"]
