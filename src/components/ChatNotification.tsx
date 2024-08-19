@@ -69,13 +69,13 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="fixed md:absolute md:right-0 md:mt-2 md:w-80 md:bg-white md:shadow-lg md:rounded-lg md:border md:border-grey-100 top-25 left-0 md:top-auto md:left-auto w-[252px] md:w-auto h-full md:h-auto bg-white z-50"
+          className="fixed md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:mt-2 md:w-80 md:bg-white md:shadow-lg md:rounded-lg md:border md:border-grey-100 top-25 left-0 w-[252px] md:min-w-[320px] h-full md:h-auto bg-white z-50"
         >
           <div className="relative md:static">
             {/* 말풍선 꼬리 */}
             <div className="hidden md:block absolute top-[-10px] left-[50%] transform -translate-x-1/2">
-              <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-grey-100 relative">
-                <div className="absolute top-[2px] left-[-10px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-white"></div>
+              <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-grey-200 relative">
+                <div className="absolute top-[1px] left-[-10px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-white"></div>
               </div>
             </div>
           </div>

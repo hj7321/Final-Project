@@ -11,15 +11,13 @@ import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import '../../../../../css/commentMdStyle.css';
-
-const langSt = 'text-[14px] flex items-center gap-[12px] ';
-const iconSt = 'w-[24px] h-[24px]';
+import Image from 'next/image';
 
 export default function CommuComment() {
   const [value, setValue] = useState<string | undefined>('');
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
-  const { id } = useParams<{id: string}>();
+  const { id } = useParams<{ id: string }>();
 
   const handleCheckLogin = () => {
     if (!isLogin) {
@@ -79,14 +77,14 @@ export default function CommuComment() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-[24px]">
-        <div className={langSt}>댓글 개수 {commentCount}</div>
+      <div className="flex gap-[8px]">
+        <Image src="/comment.svg" alt="댓글" width={24} height={24} />
+        <p className="text-[16px] text-gray-400 font-bold">{commentCount}</p>
       </div>
       <div className="flex gap-[32px] mt-[32px]">
-        <div data-color-mode="light" className="w-[995px]">
+        <div data-color-mode="light" className="w-[995px] rounded-[8px]">
           <MDEditor
             onClick={handleCheckLogin}
-            // className="w-[995px] h-[101px] rounded-[8px] border border-black text-[16px] px-2 py-1 resize-none"
             height={100}
             value={value}
             onChange={setValue}
@@ -104,14 +102,13 @@ export default function CommuComment() {
             handleCheckLogin();
             await handleSubmit();
           }}
-          className="w-[173px] h-[101px] rounded-lg bg-black text-white font-bold text-base flex items-center justify-center"
+          className="w-[173px] h-[101px] rounded-lg bg-primary-500 text-white font-bold text-base flex items-center justify-center hover:bg-primary-700 hover:cursor-pointer"
         >
           <span className="hidden sm:block">댓글 등록</span>
           <span className="block sm:hidden">등록</span>
         </button>
+        {/* 댓글 등록 부분 색이 회색인데 이게 맞는건지? 버튼 컬러는 보통 다른 걸로 알고 있어서... */}
       </div>
     </div>
   );
 }
-
-// 페이지네이션 - 무한 스크롤 구현 필요

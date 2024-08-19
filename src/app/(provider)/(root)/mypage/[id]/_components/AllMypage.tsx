@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import BookMark from './BookMark';
+import MyBookmarkList from './MyBookmarkList';
 import AccountList from './AccountList';
 import MyCommentList from './MyCommentList';
 import MyPostList from './MyPostList';
@@ -21,7 +21,7 @@ import clsx from 'clsx';
 import useProfile from '@/hooks/useProfile';
 
 const myActivities = [
-  { name: '찜한 목록', component: 'BookMark' },
+  { name: '찜한 목록', component: 'MyBookmarkList' },
   { name: '내가 쓴 글', component: 'MyPostList' },
   { name: '내가 쓴 댓글', component: 'MyCommentList' },
   { name: '거래 내역', component: 'AccountList' },
@@ -37,7 +37,7 @@ export default function AllMypage() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
 
-  const [activeComponent, setActiveComponent] = useState('BookMark');
+  const [activeComponent, setActiveComponent] = useState('MyBookmarkList');
 
   // const renderComponent = () => {
   //   switch (activeComponent) {
@@ -67,7 +67,7 @@ export default function AllMypage() {
   // };
 
   const componentMapping: { [key: string]: JSX.Element } = {
-    BookMark: <BookMark />,
+    MyBookmarkList: <MyBookmarkList />,
     AccountList: <AccountList />,
     MyCommentList: <MyCommentList />,
     MyPostList: <MyPostList />,

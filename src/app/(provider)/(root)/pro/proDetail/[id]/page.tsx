@@ -80,7 +80,6 @@ export default function ProDetail() {
     user?.id || null,
     id
   );
-  const { getCategoryImage } = useProMain();
 
   useEffect(() => {
     const fetchData = async () => {
