@@ -34,7 +34,7 @@ export default function LoginHeader({ isLogin, nickname }: LoginHeaderProp) {
 
   return (
     <div className="flex items-center gap-[24px]">
-      <div className="flex gap-[12px] flex-shrink-0">
+      <div className="flex flex-shrink-0 pt-1">
         {/* 채팅알림 */}
         {isLogin && <ChatNotification userId={userId!} />}
       </div>

@@ -58,9 +58,9 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
   return (
     <div className="relative">
       <button onClick={toggleDropdown} className="relative">
-        <Image src="/alarm_comment.svg" alt="채팅 알림 아이콘" width={24} height={24} />
+        <Image src="/alarm_comment.svg" alt="채팅 알림 아이콘" width={24} height={24}/>
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+          <span className="absolute top-0 bottom-4 right-0 left-3 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
             {unreadCount}
           </span>
         )}
