@@ -205,7 +205,7 @@ export default function AllMypage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <li className="hidden md:flex text-[20px] font-bold">나의 활동</li>
-            <div className="hidden md:flex border-t w-[225px] border-gray-300 my-10"></div>
+            <div className="hidden md:flex border-t w-[225px] border-grey-300 my-10"></div>
 
             {myActivities.map((item) => (
               <li

@@ -36,7 +36,7 @@ export default function MyBookmarkList() {
                 'mx-2',
                 activeBookmarkList === page.component
                   ? 'text-primary-500 border-b-2 border-primary-500'
-                  : 'text-gray-400'
+                  : 'text-grey-400'
               )}
               onClick={() => setActiveBookmarkList(page.component)}
             >

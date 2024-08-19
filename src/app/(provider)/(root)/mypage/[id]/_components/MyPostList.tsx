@@ -19,7 +19,7 @@ export default function MyPostList() {
     }
   };
   const isClicked = (postList: string) =>
-    activePostList === postList ? 'text-primary-500 border-b-2 border-primary-500' : 'text-gray-400';
+    activePostList === postList ? 'text-primary-500 border-b-2 border-primary-500' : 'text-grey-400';
 
   return (
     <div className="w-full">

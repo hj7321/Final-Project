@@ -24,9 +24,9 @@ export default function QnaBookmarkList() {
       return null;
     }
 
-    const postIds = response.data.map((bookmark: { posts_id: string }) => bookmark.posts_id)
+    const postIds = response.data.map((bookmark: { posts_id: string }) => bookmark.posts_id);
     // [ {posts_id: ~~ } , { posts_id: ~~~  } ]
-    const { data, error } = await createClient().from("Community Posts").select("*").in("id", postIds);
+    const { data, error } = await createClient().from('Community Posts').select('*').in('id', postIds);
 
     if (error) {
       return null;
@@ -49,10 +49,10 @@ export default function QnaBookmarkList() {
 
   if (data?.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
+      <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">
         <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />
         <div className="text-lg font-semibold mb-2">아직 찜을 한 QnA 게시글이 없어요</div>
-        <div className="text-sm text-gray-600 mb-4">코듀를 둘러보면서 마음에 드는 게시글을 찾아보세요!</div>
+        <div className="text-sm text-grey-600 mb-4">코듀를 둘러보면서 마음에 드는 게시글을 찾아보세요!</div>
       </div>
     );
   }
@@ -91,7 +91,8 @@ export default function QnaBookmarkList() {
                   {post.content}
                 </p>
                 <p className="ml-8 mb-3">
-                  <span className="text-gray-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
+                  <span className="text-grey-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
+                  <Image src="/bookmark.svg" alt="글 찜한 후 북마크 아이콘" width={16} height={16} />
                   <BookmarkCount postId={post.id} />
                 </p>
               </div>

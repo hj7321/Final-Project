@@ -72,7 +72,7 @@ const AddReview: React.FC<AddReviewProps> = ({ onClose, portfolio, userId, addMu
 
       <div className="flex mt-5">
         <StarRating totalStars={5} size={40} onRatingChange={(newRating) => setRating(newRating)} />
-        <div className="mt-3 text-gray-400 text-sm">({rating})</div>
+        <div className="mt-3 text-grey-400 text-sm">({rating})</div>
       </div>
       <div>
         <textarea
