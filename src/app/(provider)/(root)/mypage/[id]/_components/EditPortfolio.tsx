@@ -7,7 +7,8 @@ import { createClient } from '@/utils/supabase/client';
 import { Notify } from 'notiflix';
 import Image from 'next/image';
 import useProfile from '@/hooks/useProfile';
-
+import MDEditor from '@uiw/react-md-editor';
+import '@/css/mdStyle.css';
 interface EditPortfolioProps {
   clickModal: () => void;
   portfolioId: string | null;
@@ -54,7 +55,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   });
 
   const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string | undefined>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [images, setImages] = useState<File[]>([]);
@@ -153,12 +154,15 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
-                <textarea
+                <div data-color-mode='light'>
+                  <MDEditor value={content} onChange={setContent} height={200} />
+                </div>
+                {/* <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   style={{ height: '200px' }}
-                />
+                /> */}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">참여 기간</label>

@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import { PortfolioData } from "../page"
-
+import cryingLogo from '../../../../../../../../public/cryingLogo.svg'
 interface PortfolioListProps {
   portfolio: PortfolioData[];
   handlePortfolioClick: (portfolio: PortfolioData) => void;
@@ -12,8 +12,9 @@ export default function UserPortfolio({portfolio, handlePortfolioClick} : Portfo
     <h1 className="md:text-2xl text-base my-3">포트폴리오</h1>
     <div className="mt-4 flex flex-row md:justify-start justify-center flex-wrap">
       {portfolio.length === 0 ? (
-        <div>
-          <p>아직 등록된 포트폴리오가 없습니다</p>
+        <div className="flex flex-row justify-start items-center">
+          <Image src={cryingLogo} width={30} height={30} alt="crying logo" className="md:mx-3" />
+          <p className="ml-3 md:ml-0 text-xs md:text-sm">아직 등록된 포트폴리오가 없습니다</p>
         </div>
       ) : (
         portfolio.map((item) => (
