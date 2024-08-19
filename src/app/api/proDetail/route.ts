@@ -23,7 +23,6 @@ export async function GET(req: Request) {
 
     const userId = postData.user_id;
 
-
     const { data: userData, error: userError } = await supabase
       .from('Users')
       .select('*')
@@ -33,7 +32,7 @@ export async function GET(req: Request) {
     if (userError) {
       throw userError;
     }
-
+    
     const { data : portfolioData, error : portfolioError } = await supabase
       .from('Portfolio')
       .select('*')
@@ -43,7 +42,30 @@ export async function GET(req: Request) {
       throw portfolioError
     }
 
-    return NextResponse.json({ postData, userData, portfolioData });
+    const { data : reviewData, error : reviewError } = await supabase
+      .from('Request Reviews')
+      .select('*')
+      .eq('request_post_id', id)
+
+    if(reviewError) {
+      throw reviewError
+    }
+
+    const reviewDataAndUser = await Promise.all(reviewData.map(async(review) => {
+      const reviewUserId = review.user_id
+      const { data : reviewUserData , error : reviewUserError} = await supabase
+        .from('Users')
+        .select('nickname')
+        .eq('id', reviewUserId)
+        .single()
+        if(reviewUserError) {
+          throw reviewError
+        } else {
+          return {...review, user : reviewUserData}
+        }
+    }))
+
+    return NextResponse.json({ postData, userData, portfolioData, reviewData : reviewDataAndUser  });
   } catch (error) {
     console.error('Error fetching data:', error);
     return NextResponse.json({ error: '데이터 가져오기 실패' }, { status: 500 });

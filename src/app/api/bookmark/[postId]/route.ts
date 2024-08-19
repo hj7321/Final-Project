@@ -17,9 +17,11 @@ export async function GET(request: Request, { params }: { params: { postId: stri
 
 export async function POST(request: Request) {
   const supabase = createClient();
-  const { postId, userId } = await request.json();
+  const { postId, userId, category } = await request.json();
 
-  const { data, error } = await supabase.from('Bookmark').insert({ posts_id: postId, user_id: userId });
+  const { data, error } = await supabase
+    .from('Bookmark')
+    .insert({ posts_id: postId, user_id: userId, post_category: category });
 
   if (error) {
     console.log('북마크 POST 에러: ', error.message);

@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BookMark, CommunityPosts } from '@/types/type';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import useProfile from '@/hooks/useProfile';
@@ -21,6 +21,8 @@ type BookmarkData = {
 export default function CommuPost() {
   const { id: postId } = useParams();
   const { userId, isLogin } = useAuthStore();
+  const pathname = usePathname();
+  const category = pathname.split('/')[1];
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -34,14 +36,6 @@ export default function CommuPost() {
     const filteredData = data.filter((post) => post.id === postId) || null;
     return filteredData[0];
   };
-  //  const [filteredData, setFilteredData] = useState<CommunityPosts | null>(null);
-  //   const filtered: CommunityPosts | null = data.find((post) => post.id === id)|| null;
-  //   setFilteredData(filtered);
-  // } catch (error) {
-  //   console.error('Fetch data error:', error);
-  //   setFilteredData(null);
-  // };
-  // 추후 return문 안에서 filteredData 이용
 
   const {
     data: postData,
@@ -76,7 +70,7 @@ export default function CommuPost() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ postId, userId })
+      body: JSON.stringify({ postId, userId, category })
     }).then((res) => res.json());
 
     return data;

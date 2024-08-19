@@ -60,7 +60,7 @@ export default function ResetPassword() {
                   className={clsx(
                     (idx === selectedIdx || inputValues[idx]!.length > 0) &&
                       'w-[878px] outline-none border-none p-0 mt-[5px]',
-                    'placeholder-grey-300 text-[16px]'
+                    'placeholder-grey-300 text-[16px] w-[310px]'
                   )}
                   type={showPassword[idx] ? 'text' : input.type}
                   id={input.id}

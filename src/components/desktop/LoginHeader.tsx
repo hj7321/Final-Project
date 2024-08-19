@@ -8,13 +8,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import ChatNotification from '../ChatNotification';
 
-const buttonStyle = 'w-[100px] h-[40px] px-[16px] py-[8px] rounded-[8px] text-center';
-
 interface LoginHeaderProp {
+  isLogin: boolean;
   nickname: string | null | undefined;
 }
 
-export default function LoginHeader({ nickname }: LoginHeaderProp) {
+export default function LoginHeader({ isLogin, nickname }: LoginHeaderProp) {
   const router = useRouter();
   const { logout, userId, initializeAuthState } = useAuthStore();
 
@@ -42,13 +41,18 @@ export default function LoginHeader({ nickname }: LoginHeaderProp) {
           className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
         />
         {/* 채팅알림 */}
-        {userId && <ChatNotification userId={userId} />}
+        {isLogin && <ChatNotification userId={userId!} />}
       </div>
-      <div className="flex items-center gap-[24px] break-keep">
+      <div className="flex items-center gap-[10px] lg:gap-[24px] break-keep">
         <Link href={`/mypage/${userId}`} className="text-grey-500 hover:text-grey-700 text-[14px] lg:text-[16px]">
           <b className="text-primary-500 hover:text-primary-700">{nickname}</b>님
         </Link>
-        <button onClick={handleLogout} className={clsx(buttonStyle, 'bg-grey-200 hover:bg-grey-300 text-white')}>
+        <button
+          onClick={handleLogout}
+          className={clsx(
+            'w-[75px] h-[30px] text-[12px] p-[4px] lg:w-[100px] lg:h-[40px] lg:text-[16px] lg:px-[16px] lg:py-[8px] rounded-[8px] text-center bg-grey-200 hover:bg-grey-300 text-white'
+          )}
+        >
           로그아웃
         </button>
       </div>
