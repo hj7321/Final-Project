@@ -122,7 +122,7 @@ export default function SendLinkPage() {
               <input
                 className={clsx(
                   (isSelected || inputValue!.length > 0) && 'w-[312px] outline-none border-none p-0 mt-[5px]',
-                  'placeholder-grey-300 text-[14px] md:text-[16px]'
+                  'placeholder-grey-300 text-[14px] md:text-[16px] w-[310px]'
                 )}
                 type="text"
                 id="email"
