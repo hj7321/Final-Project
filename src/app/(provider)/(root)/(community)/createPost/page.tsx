@@ -9,6 +9,7 @@ import { CodeCategories } from '@/components/dumy';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@/css/mdStyle.css';
+import Image from 'next/image';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -26,7 +27,7 @@ const CreatePost = () => {
   const id = params.id as string;
   const queryClient = useQueryClient();
   const contentRef = useRef<HTMLTextAreaElement>(null);
-  const user = useAuthStore((state) => state.userId) as string | null;
+  const user = useAuthStore((state) => state.userId) as string | null; // ??
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string | undefined>('');
@@ -187,10 +188,11 @@ const CreatePost = () => {
                       selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
                     }`}
                   >
-                    <img
+                    <Image
                       src={selectedLanguage.includes(lang.name) ? lang.image : lang.darkImage}
                       alt={lang.name}
-                      className="w-[20px] h-[20px]"
+                      width={20}
+                      height={20}
                     />
                     <p className="ml-2 text-sm">{lang.name}</p>
                   </label>
@@ -201,7 +203,13 @@ const CreatePost = () => {
           <div className="flex space-x-4 border border-grey-100 rounded-xl md:w-[38%] w-full mt-4 md:mt-[0]">
             <div className="w-1/2">
               {thumbnailPreview && (
-                <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-2 w-full h-auto" />
+                <Image
+                  src={thumbnailPreview}
+                  alt="Thumbnail Preview"
+                  width={300}
+                  height={300}
+                  className="mt-2 w-full h-auto"
+                />
               )}
               <label className="block text-sm font-medium text-gray-700"> 이미지를 등록해주세요.</label>
               <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />

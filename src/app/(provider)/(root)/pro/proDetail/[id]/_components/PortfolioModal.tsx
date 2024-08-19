@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import defaultProfileImg from  '../../../../../../../../public/defaultProfileimg.svg'
+import MDEditor from '@uiw/react-md-editor';
 
 interface PortfolioModalProps {
   portfolio: {
@@ -50,9 +51,9 @@ const PortfolioModal: React.FC<PortfolioModalProps> = ({ portfolio, user, onClos
             <div className='md:hidden mt-[30px]'>
               <Image src={portfolio.portfolio_img[0]} width={300} height={300} alt="포스트이미지" quality={90} className=' w-[330px] h-[330px] rounded-xl'/>
             </div>
-            <div className='mt-[30px] order-5'>
+            <div className='mt-[30px] order-5' data-color-mode='light'>
               <h2 className='md:text-xl text-lg'>프로젝트 설명</h2>
-              <p className='mt-[20px] px-2 font-thin line-clamp-4 md:w-[400px] w-full md:text-base text-sm'>{portfolio.content}</p>
+              <MDEditor.Markdown source={portfolio.content} line-clamp-4 className='mt-[20px] px-2 w-full font-thin md:w-400px line-clamp-6'/>
             </div>
             <div className='mt-[30px] order-6'>
               <h2 className='md:text-xl text-lg'>참여 기간</h2>

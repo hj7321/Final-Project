@@ -1,6 +1,7 @@
 
 import { createClient } from "@/utils/supabase/client";
 import useAuthStore from "@/zustand/authStore";
+import { Notify } from "notiflix";
 import { useState } from "react";
 
 const supabase = createClient()
@@ -76,8 +77,7 @@ const handleSubmit = async (): Promise<number | null> => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Data received from server:', data); // 디버깅 로그
-      alert('게시글이 작성되었습니다!');
+      Notify.success('게시글 작성이 완료되었습니다 !')
       setTitle('');
       setLanguage([]);
       setImages([]);

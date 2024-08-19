@@ -3,9 +3,10 @@ interface TabBarProps {
   activeTab :string
   handleTabClick : (tabId : string, sectionId : string) => void
   portfolioCount : number
+  reviewCount : number
 }
 
-export default function TagBar({ activeTab, handleTabClick, portfolioCount} : TabBarProps) {
+export default function TagBar({ activeTab, handleTabClick, portfolioCount, reviewCount} : TabBarProps) {
   return (
     <div className="flex md:justify-start justify-start space-x-4 border-gray-300 md:p-4 p-3 sticky md:top-[71px] top-[55px] bg-white ">
     <ul className="w-[85%] md:w-auto flex justify-between md:space-x-4">
@@ -45,7 +46,7 @@ export default function TagBar({ activeTab, handleTabClick, portfolioCount} : Ta
           handleTabClick('reviews', 'section3');
         }}
       >
-        <a href="#section3">리뷰 2</a>
+        <a href="#section3">리뷰 {reviewCount}</a>
       </li>
     </ul>
   </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { ChatRoomInfo } from '@/types/type';
 
@@ -9,10 +9,9 @@ export const useChatNotifications = (userId: string) => {
   const [chatRooms, setChatRooms] = useState<ChatRoomInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchChatNotifications = async () => {
+  const fetchChatNotifications = useCallback(async () => {
     if (!userId) return;
 
-    // 채팅방 ID 목록을 가져오기
     const { data: chatRoomsData, error: chatRoomsError } = await supabase
       .from('Chat')
       .select('chat_room_id')
@@ -24,7 +23,6 @@ export const useChatNotifications = (userId: string) => {
       return;
     }
 
-    // 중복된 채팅방 ID를 제거하기 위해 Set을 사용
     const uniqueChatRoomIds = Array.from(new Set(chatRoomsData.map((room) => room.chat_room_id)));
 
     const chatRoomPromises = uniqueChatRoomIds.map(async (chatRoomId) => {
@@ -41,10 +39,7 @@ export const useChatNotifications = (userId: string) => {
         return null;
       }
 
-      // 현재 사용자가 보낸 메시지인지 확인하기
-      const isUserMessage = latestMessageData.consumer_id === userId;
-
-      const otherUserId = isUserMessage ? latestMessageData.pro_id : latestMessageData.consumer_id;
+      const otherUserId = latestMessageData.consumer_id === userId ? latestMessageData.pro_id : latestMessageData.consumer_id;
 
       const { data: userData, error: userError } = await supabase
         .from('Users')
@@ -76,8 +71,8 @@ export const useChatNotifications = (userId: string) => {
         latest_message: latestMessageData.content,
         latest_message_time: latestMessageData.created_at || '',
         unread_count: unreadCount || 0,
-        post_lang_category: [],  // 기본값으로 빈 배열 제공
-        post_title: '제목 없음', // 기본값으로 '제목 없음' 제공
+        post_lang_category: [], // 기본값으로 빈 배열 제공
+        post_title: '제목 없음' // 기본값으로 '제목 없음' 제공
       } as ChatRoomInfo;
     });
 
@@ -91,7 +86,7 @@ export const useChatNotifications = (userId: string) => {
     setChatRooms(resolvedChatRooms);
     setUnreadCount(resolvedChatRooms.reduce((sum, room) => sum + room.unread_count, 0));
     setLoading(false);
-  };
+  }, [userId]);
 
   const markMessagesAsRead = async (chatRoomId: string) => {
     const updatedChatRooms = chatRooms.map((room) =>
@@ -118,14 +113,14 @@ export const useChatNotifications = (userId: string) => {
     const chatChannel = supabase
       .channel('realtime:chat')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Chat' }, () => {
-        fetchChatNotifications(); // 새 메시지가 추가될 때마다 알림 상태를 다시 가져옴.
+        fetchChatNotifications(); 
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(chatChannel);
     };
-  }, [userId]);
+  }, [userId, fetchChatNotifications]);
 
   return { unreadCount, chatRooms, loading, fetchChatNotifications, markMessagesAsRead };
 };

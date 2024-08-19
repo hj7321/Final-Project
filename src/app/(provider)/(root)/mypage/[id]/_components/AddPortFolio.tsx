@@ -7,7 +7,9 @@ import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { Notify } from 'notiflix';
-
+import Image from 'next/image';
+import MDEditor from '@uiw/react-md-editor';
+import '../../../../../../css/mdStyle.css'
 interface AddPortfolioProps {
   clickModal: () => void;
 }
@@ -24,7 +26,7 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string | undefined>('');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
@@ -151,7 +153,13 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
           <div className="flex space-x-4">
             <div className="w-1/2">
               {thumbnailPreview && (
-                <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-2 w-full h-auto" />
+                <Image
+                  src={thumbnailPreview}
+                  alt="Thumbnail Preview"
+                  width={600}
+                  height={600}
+                  className="mt-2 w-full h-auto"
+                />
               )}
               <label className="block text-sm font-medium text-gray-700">썸네일 이미지를 등록해주세요.</label>
               <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
@@ -159,7 +167,14 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
             <div className="w-1/2">
               <div className="mt-2 grid grid-cols-3 gap-2">
                 {additionalPreviews.map((preview, index) => (
-                  <img key={index} src={preview} alt={`Preview ${index}`} className="w-full h-auto" />
+                  <Image
+                    key={index}
+                    src={preview}
+                    alt={`Preview ${index}`}
+                    width={200}
+                    height={200}
+                    className="w-full h-auto"
+                  />
                 ))}
               </div>
               <label className="block text-sm font-medium text-gray-700">추가 이미지를 등록해주세요.</label>
@@ -185,10 +200,11 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
                       selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
                     }`}
                   >
-                    <img
+                    <Image
                       src={selectedLanguage === lang.name ? lang.image : lang.darkImage}
                       alt={lang.name}
-                      className="w-[20px] h-[20px]"
+                      width={20}
+                      height={20}
                     />
                     <p className="ml-2 text-sm">{lang.name}</p>
                   </label>
@@ -214,15 +230,16 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
               />
             </div>
           </div>
-          <div>
+          <div data-color-mode='light'>
             <label className="block text-sm font-medium text-gray-700">내용</label>
-            <textarea
+            <MDEditor value={content} onChange={setContent} height={200} className='mt-1 w-full block p-2' textareaProps={{ placeholder : '내용을 입력해주세요. (마크다운 형식)'}} />
+            {/* <textarea
               placeholder="내용을 입력해주세요."
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               rows={6}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-            ></textarea>
+            ></textarea> */}
           </div>
           <div className="flex justify-end">
             <button

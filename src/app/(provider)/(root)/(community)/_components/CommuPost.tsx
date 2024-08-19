@@ -1,23 +1,31 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import favicon from '../../../../../../public/vercel.svg';
-import { CommunityPosts } from '@/types/type';
-import { useParams } from 'next/navigation';
-import useAuthStore from '@/zustand/authStore';
-import { createClient } from '@/utils/supabase/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { BookMark, CommunityPosts } from '@/types/type';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import useProfile from '@/hooks/useProfile';
+import useAuthStore from '@/zustand/authStore';
+import Cookies from 'js-cookie';
+import { Notify } from 'notiflix';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
 
+type BookmarkData = {
+  data: BookMark[];
+  count: number;
+};
+
 export default function CommuPost() {
-  const [bookmarkCount, setBookmarkCount] = useState<number>(0);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const { userId } = useAuthStore();
-  const { id } = useParams();
+  const { id: postId } = useParams();
+  const { userId, isLogin } = useAuthStore();
+  const pathname = usePathname();
+  const category = pathname.split('/')[1];
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
 
   const getPost = async (): Promise<CommunityPosts> => {
     const response = await fetch('/api/communityRead');
@@ -25,86 +33,142 @@ export default function CommuPost() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: CommunityPosts[] = await response.json();
-    const filteredData = data.filter((post) => post.id === id) || null;
+    const filteredData = data.filter((post) => post.id === postId) || null;
     return filteredData[0];
   };
-  //  const [filteredData, setFilteredData] = useState<CommunityPosts | null>(null);
-  //   const filtered: CommunityPosts | null = data.find((post) => post.id === id)|| null;
-  //   setFilteredData(filtered);
-  // } catch (error) {
-  //   console.error('Fetch data error:', error);
-  //   setFilteredData(null);
-  // };
-  // 추후 return문 안에서 filteredData 이용
 
-  const { data, isLoading, error } = useQuery<CommunityPosts>({
-    queryKey: ['post', id],
+  const {
+    data: postData,
+    isLoading,
+    error
+  } = useQuery<CommunityPosts>({
+    queryKey: ['post', postId],
     queryFn: getPost,
-    enabled: !!id
+    enabled: !!postId
   });
+  const userIdFromPost = postData?.user_id;
 
-  const getUserData = async (userId: string) => {
-    const supabase = createClient();
-    const { data } = await supabase.from('Users').select('*').eq('id', userId).maybeSingle();
-    return data;
-  };
+  const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
 
-  const userIdFromPost = data?.user_id;
-
-  const { data: userData } = useQuery({
-    queryKey: [userIdFromPost],
-    queryFn: () => getUserData(userIdFromPost!),
-    enabled: !!userIdFromPost
-  });
-
-  const postId = data?.id;
-
-  const getBookmarkData = async (): Promise<void> => {
-    const data = await fetch('/api/bookmark', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ postId })
-    }).then((res) => res.json());
-
+  const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
+    const { data, count } = await fetch(`/api/bookmark/${postId}`).then((res) => res.json());
     if (data.errorMsg) {
       console.log(data.errorMsg);
       return;
     }
-    console.log(data.data);
-    return data.data;
+    return { data, count };
   };
 
-  const { data: bookmarkData } = useQuery({
-    queryKey: ['bookmarkCount'],
-    queryFn: () => getBookmarkData()
+  const { data: bookmarkData } = useQuery<BookmarkData | undefined>({
+    queryKey: ['bookmark', postId],
+    queryFn: handleGetBookmarkData
   });
 
-  console.log(bookmarkData);
+  const handlePostBookmark = async () => {
+    const data = await fetch(`/api/bookmark/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ postId, userId, category })
+    }).then((res) => res.json());
+
+    return data;
+  };
+
+  const { mutate: addBookmark } = useMutation({
+    mutationFn: handlePostBookmark,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
+      const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
+      queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number }) => {
+        const newData = {
+          posts_id: postId,
+          user_id: userId
+        };
+        return { data: [...prev.data, newData], count: prev.count + 1 };
+      });
+      return { previousData };
+    },
+    onError: (error, _, context) => {
+      console.log(error.message);
+      queryClient.setQueryData(['bookmark', postId], context?.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmark', postId] });
+    }
+  });
+
+  const handleDeleteBookmark = async () => {
+    const data = await fetch(`/api/bookmark/${postId}?userId=${userId}`, {
+      method: 'DELETE'
+    }).then((res) => res.json());
+
+    return data;
+  };
+
+  const { mutate: deleteBookmark } = useMutation({
+    mutationFn: handleDeleteBookmark,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
+      const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
+      queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number } | undefined) => {
+        console.log(prev);
+        if (!prev) return { data: [], count: 0 };
+        const updatedData = prev.data.filter((item) => item.user_id !== userId);
+        return { data: updatedData, count: updatedData.length };
+      });
+      return { previousData };
+    },
+    onError: (error, _, context) => {
+      console.log(error.message);
+      queryClient.setQueryData(['bookmark', postId], context?.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmark', postId] });
+    }
+  });
+
+  const handleToggleBookmark = () => {
+    if (!isLogin) {
+      Notify.failure('로그인 후 이용해주세요.');
+      const presentPage = window.location.href;
+      const pagePathname = new URL(presentPage).pathname;
+      Cookies.set('returnPage', pagePathname);
+      router.push('/login');
+    } else {
+      if (bookmarkData?.data.find((item) => item.user_id === userId)) {
+        deleteBookmark();
+      } else {
+        addBookmark();
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-6 py-6">
         <ul className="flex gap-[24px]">
-          {data?.lang_category?.map((lang, index) => (
+          {postData?.lang_category?.map((lang, index) => (
             <li key={index} className={langSt}>
               {lang}
             </li>
           ))}
         </ul>
-        <h1 className="text-2xl font-bold">{data?.title}</h1>
+        <h1 className="text-2xl font-bold">{postData?.title}</h1>
         <div className="text-base flex gap-[24px]">
           {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
-          <p>{data?.created_at.split('T')[0]}</p>
+          <p>{postData?.created_at.split('T')[0]}</p>
           <div className="flex gap-[8px]">
-            {isClicked ? (
+            {/* 내가 이 게시물을 찜하기한 적이 있는가? */}
+            {/* bookmarkData.data.find(() => userId랑 bookmark에 있는 userId랑 같은 게 있는지)  */}
+            {bookmarkData?.data.find((item) => item.user_id === userId) ? (
               <Image
                 src="/bookmark.svg"
                 alt="글 찜한 후 북마크 아이콘"
                 width={16}
                 height={16}
-                onClick={() => setIsClicked((prev) => !prev)}
+                onClick={handleToggleBookmark}
               />
             ) : (
               <Image
@@ -112,19 +176,18 @@ export default function CommuPost() {
                 alt="글 찜하기 전 북마크 아이콘"
                 width={16}
                 height={16}
-                onClick={() => setIsClicked((prev) => !prev)}
+                onClick={handleToggleBookmark}
               />
             )}
-            {/* 찜 횟수 요청하려면 post의 id를 라우트 핸들러에 보내야 함 */}
-            <p>{6}</p>
+            <p>{bookmarkData?.count}</p>
           </div>
         </div>
       </div>
       <hr className="w-full border-t border-black my-8" />
-      {data?.post_img?.[0] && <Image src={data.post_img[0]} alt="Post Image" width={800} height={500} />}
-
-      <MDEditor.Markdown source={data?.content} />
-      {/* <p className="py-6">{data?.content}</p> */}
+      {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
+      <div data-color-mode="light">
+        <MDEditor.Markdown source={postData?.content} />
+      </div>
     </div>
   );
 }

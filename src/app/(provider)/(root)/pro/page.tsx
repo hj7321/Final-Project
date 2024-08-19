@@ -10,6 +10,7 @@ import ProPosts from './_components/ProPosts';
 import { useInfiniteQuery, QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 import '@/css/proMain.css';
 import useProMain from '@/hooks/useProMain';
+import useProfile from '@/hooks/useProfile';
 
 export interface Posts {
   id: string;
@@ -23,11 +24,16 @@ export interface Posts {
 
 export default function ProMainPage() {
   const { selectedLanguages, handleLanguageFilter, handleNavigation, getCategoryImage } = useProMain();
-  const { isPro, initializeAuthState } = useAuthStore();
 
-  useEffect(() => {
-    initializeAuthState();
-  }, [initializeAuthState]);
+  // 리팩토링 전 (이제 authStore에 isPro 없음)
+  // const { isPro, initializeAuthState } = useAuthStore();
+  // useEffect(() => {
+  //   initializeAuthState();
+  // }, [initializeAuthState]);
+
+  // 리팩토링 후
+  const { userId } = useAuthStore();
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const fetchPosts = useCallback(async ({ queryKey, pageParam = 0 }: QueryFunctionContext<QueryKey>) => {
     const [, selectedLanguages] = queryKey as readonly [string, string[]];
@@ -70,7 +76,7 @@ export default function ProMainPage() {
     <div className="mx-auto flex-col justify-center items-center">
       <div className="hidden md:block flex flex-row justify-end mt-[15px] md:w-auto items-end mx-auto w-full 2xl:w-[85%]">
         {/* 게시글 등록버튼 - 데스크탑 사이즈 */}
-        {!isPro === true ? (
+        {!userData?.is_pro === true ? (
           <div className="w-full mt-mt-3 h-[48px]"></div>
         ) : (
           <DesktopButton handleNavigation={handleNavigation} />
@@ -81,7 +87,7 @@ export default function ProMainPage() {
 
       {/* 게시글 등록 버튼 - 모바일 사이즈 */}
       <div className="md:hidden flex flex-row justify-end mt-[15px] md:w-[85%] w-[330px] mx-auto items-center">
-        {!isPro === true ? <></> : <MobileButton handleNavigation={handleNavigation} />}
+        {!userData?.is_pro === true ? <></> : <MobileButton handleNavigation={handleNavigation} />}
       </div>
 
       {/* 의뢰 서비스 리스트 */}

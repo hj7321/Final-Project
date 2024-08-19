@@ -38,14 +38,14 @@ export default function Languages() {
 
   useEffect(() => {
     fetchData(selectedLanguages);
-  }, [selectedLanguages]);
+  }, [selectedLanguages, fetchData]);
 
   return (
     <div>
       {/* 모바일 화면 */}
       <div className="container mx-auto px-4  h-full sm:hidden">
         <div className="flex items-center gap-6 overflow-x-auto">
-          {CodeCategories.slice(0, 10).map((category) => (
+          {CodeCategories.map((category) => (
             <div key={category.id} className="flex flex-col items-center mb-4  ">
               <div className="w-[52px] h-[52px] flex rounded-[8px] items-center justify-center overflow-hidden">
                 <Image src={category.image} alt={category.name} width={64} height={64} className="min-w-16 min-h-16 " />
@@ -57,13 +57,15 @@ export default function Languages() {
       </div>
 
       {/* 데스크탑 화면 */}
-      <div className="w-[175px] px-[16px] py-[24px] flex-col items-start gap-[24px] border border-gray-400 rounded-[24px] mt-1 hidden sm:flex">
-        <p className="font-bold text-[16px] text-gray-400">언어 선택</p>
+      <div className="px-[16px] py-[24px] flex-col items-start gap-[24px] border border-gray-200 rounded-[16px] mt-1 hidden sm:flex">
+        <p className="font-bold text-[16px] text-gray-400 mx-auto">언어 선택</p>
         <div className="flex flex-col gap-[16px]">
           {CodeCategories.map((lang) => (
             <div
-              className={`flex justify-start items-center hover:cursor-pointer gap-[6px] rounded-[20px] px-[8px] py-[5px]  border border-solid ${
-                selectedLanguages.includes(lang.name) ? ' bg-primary-50 border-primary-500 ' : 'border-transparent '
+              className={`flex justify-start items-center hover:cursor-pointer gap-[6px] text-[14px] rounded-[20px] px-[8px] py-[5px] border border-solid ${
+                selectedLanguages.includes(lang.name)
+                  ? ' bg-primary-50 border-primary-500 '
+                  : 'border-transparent bg-gray-50 '
               }`}
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
@@ -73,11 +75,11 @@ export default function Languages() {
                 src={selectedLanguages.includes(lang.name) ? lang.image : lang.darkImage}
                 width={24}
                 height={24}
-                className="w-[24px] h-[24px] rounded-full "
+                className="w-[24px] h-[24px] "
               />
               <p
                 className={`text-center ${
-                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-black-500'
+                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-gray-400'
                 }`}
               >
                 {lang.name}

@@ -62,7 +62,9 @@ export default function SendLinkPage() {
 
       if (data.errorMsg) {
         console.log(data.errorMsg);
-        Notify.failure('링크 전송에 실패했습니다.');
+        Notify.failure('링크 전송에 실패했습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   잠시 후에 다시 시도해주세요.', {
+          width: '250px'
+        });
         setThrottling(false); // 다시 버튼 클릭을 허용함
         return;
       }
@@ -73,14 +75,14 @@ export default function SendLinkPage() {
   };
 
   return (
-    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50 md:min-h-[678px]">
+    <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
       <form
         onSubmit={(e) => {
           e.preventDefault(); // 폼 제출 방지
           // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleSendLink 이벤트 핸들러 호출
           if (!throttling) handleSendLink(e);
         }}
-        className="flex flex-col justify-center items-center w-[528px] min-h-[578px] bg-white py-[64px] rounded-[24px] gap-[32px]"
+        className="w-[528px] flex flex-col items-center p-[64px] bg-white gap-[32px]"
       >
         <Image src="/logo_eng.svg" alt="영어 로고" width={180} height={60} className="hidden md:flex mb-[32px]" />
         <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px]">
@@ -120,7 +122,7 @@ export default function SendLinkPage() {
               <input
                 className={clsx(
                   (isSelected || inputValue!.length > 0) && 'w-[312px] outline-none border-none p-0 mt-[5px]',
-                  'placeholder-grey-300 text-[14px] md:text-[16px]'
+                  'placeholder-grey-300 text-[14px] md:text-[16px] w-[310px]'
                 )}
                 type="text"
                 id="email"

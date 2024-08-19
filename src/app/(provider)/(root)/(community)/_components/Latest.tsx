@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
+import { CodeCategories } from '@/components/dumy';
 
 const btnSt = 'w-[32px] h-[32px] text-white text-[16pt] flex items-center justify-center rounded-[4px]';
 
@@ -18,13 +19,12 @@ export default function Latest() {
   const postsPerPage = 7;
 
   useEffect(() => {
-    // 화면 크기에 따라 모바일 여부 판단
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // 768px 이하이면 모바일로 간주
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    handleResize(); // 초기 로드 시 실행
-    window.addEventListener('resize', handleResize); // 화면 크기 변경 시 실행
+    handleResize();
+    window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -60,6 +60,25 @@ export default function Latest() {
     enabled: !!posts
   });
 
+  const getCommentCount = async (postId: string) => {
+    const supabase = createClient();
+    const { count } = await supabase
+      .from('Community Comments')
+      .select('*', { count: 'exact' })
+      .eq('community_post_id', postId);
+    return count;
+  };
+
+  const { data: commentCounts, isLoading: commentsLoading } = useQuery({
+    queryKey: ['commentCounts', posts],
+    queryFn: async () => {
+      if (!posts) return [];
+      const counts = await Promise.all(posts.map((post) => getCommentCount(post.id)));
+      return counts;
+    },
+    enabled: !!posts
+  });
+
   const getUserNickname = (userId: string) => {
     const user = users?.find((user) => user.id === userId);
     return user ? user.nickname : 'Unknown';
@@ -75,32 +94,76 @@ export default function Latest() {
     setCurrentPage(pageNumber);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || commentsLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
-      <div className="flex flex-col gap-[24px] w-full md:w-[944px]">
+      <div className="flex flex-col gap-[24px] w-full">
         {currentPosts &&
-          currentPosts.map((post) => (
+          currentPosts.map((post, index) => (
             <div key={post.id}>
               <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
-                <div className="flex p-[32px] px-[24px] border border-[#D9d9d9] rounded-[16px]  gap-[24px]">
+                <div className="flex px-[32px] py-[24px] border border-[#D9d9d9] rounded-[16px] gap-[24px]">
                   {post?.post_img?.[0] && (
                     <Image
                       src={post.post_img[0]}
                       alt="Post Image"
                       width={186}
-                      height={160}
-                      className="rounded-[8px] w-[186px] h-[160px] sm:w-[72px] sm:h-[72px]"
+                      height={186}
+                      className="rounded-[8px] w-[186px] h-[186px] "
                     />
+                    //모바일 sm:w-[72px] sm:h-[72px]
+                    // 미리보기 이미지 찌그러짐 현상
                   )}
-                  <div className="flex flex-col gap-[24px] ">
-                    <h1 className="font-black text-[20px]">{post.title}</h1>
-                    <div className="font-medium text-[16px] w-full h-[45px] overflow-hidden text-ellipsis line-clamp-2">
-                      <MDEditor.Markdown source={post.content} />
+                  <div className="flex flex-col gap-4 w-full overflow-hidden">
+                    <div className="flex gap-[12px] line-clamp-1">
+                      {post.lang_category?.map((category, index) => {
+                        const categoryData = CodeCategories.find((cat) => cat.name === category);
+                        return (
+                          <div key={index} className="flex gap-[9px]">
+                            {categoryData && (
+                              <Image
+                                src={categoryData.image}
+                                alt={category}
+                                width={24}
+                                height={24}
+                                className="rounded-full "
+                              />
+                            )}
+                            <p className=" text-gray-600">{category}</p>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <p className="font-medium text-[16px]">{getUserNickname(post.user_id)}</p>
+                    <div className="flex flex-col gap-2">
+                      <h1 className="font-black text-gray-800 text-[16px]">{post.title}</h1>
+                      <div className="font-medium text-[16px] text-gray-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2">
+                        <MDEditor.Markdown source={post.content} />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="font-medium text-[12px] text-gray-400">{getUserNickname(post.user_id)}</p>
+                      <div className="flex justify-between	items-center">
+                        <div className="flex gap-6">
+                          <div className="flex items-center gap-2">
+                            <Image src="/comment.svg" alt="" width={16} height={16} className="w-[16px] h-[16px]" />
+                            <p className="font-medium text-[12px] text-gray-400">{commentCounts?.[index] ?? 0}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/bookmark_dark.svg"
+                              alt=""
+                              width={16}
+                              height={16}
+                              className="w-[16px] h-[16px]"
+                            />
+                            <p className="font-medium text-[12px] text-gray-400">N</p>
+                          </div>
+                        </div>
+                        <p className="font-medium text-[12px] text-gray-400">{post?.created_at.split('T')[0]}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -112,7 +175,9 @@ export default function Latest() {
           {[...Array(totalPages)].map((_, index) => (
             <button
               key={index + 1}
-              className={`${btnSt} ${currentPage === index + 1 ? 'bg-[#585858]' : 'bg-[#D2D2D2]'}`}
+              className={`${btnSt} ${
+                currentPage === index + 1 ? 'bg-primary-500' : 'bg-gray-100'
+              } w-[32px] h-[32px] rounded-lg`}
               onClick={() => handleClick(index + 1)}
             >
               {index + 1}

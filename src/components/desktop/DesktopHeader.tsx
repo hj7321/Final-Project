@@ -30,9 +30,9 @@ export default function DesktopHeader({
   const { selectedIdx } = useIndexStore();
 
   return (
-    <div className="w-full hidden md:flex justify-between items-center gap-[32px]">
+    <div className="w-full hidden md:flex justify-between items-center gap-[20px] lg:gap-[32px]">
       {/* 왼쪽: 로고, 카테고리(Q&A, 인사이트, 전문가 의뢰) */}
-      <div className="flex items-center gap-[20px] lg:gap-[32px] flex-shrink-0">
+      <div className="flex items-center gap-[13px] lg:gap-[32px] flex-shrink-0">
         <Link href="/" className="flex-shrink-0 grow-0 w-fit h-fit">
           <div className="flex items-center justify-center">
             {number === 0 ? (
@@ -68,7 +68,7 @@ export default function DesktopHeader({
       </div>
 
       {/* 가운데: 검색창 */}
-      <div className="min-w-[250px] lg:w-[340px] h-[40px] flex items-center justify-between bg-grey-50 rounded-[20px] px-[16px] py-[8px] grow-0">
+      <div className="min-w-[240px] w-[340px] h-[40px] flex items-center justify-between bg-grey-50 rounded-[20px] px-[16px] py-[8px] grow-0">
         <input
           type="text"
           placeholder="도움이 필요한 언어, 주제를 찾아보세요."
@@ -91,7 +91,7 @@ export default function DesktopHeader({
       {/* 오른쪽 */}
       {/* 비로그인 시: 검색창, 로그인 버튼, 로그아웃 버튼 */}
       {/* 로그인 시: 검색창, 알림 아이콘, 닉네임, 로그아웃 버튼 */}
-      {isLogin ? <LoginHeader nickname={nickname} /> : <LogoutHeader />}
+      {isLogin ? <LoginHeader isLogin={isLogin} nickname={nickname} /> : <LogoutHeader />}
     </div>
   );
 }

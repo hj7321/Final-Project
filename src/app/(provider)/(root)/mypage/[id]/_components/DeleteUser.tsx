@@ -5,11 +5,13 @@ import clsx from 'clsx';
 import { FormEvent, useState } from 'react';
 import DeleteAlarmModal from './DeleteAlarmModal';
 import { Notify, Report } from 'notiflix';
+import useProfile from '@/hooks/useProfile';
 
 export default function DeleteUser() {
   const [throttling, setThrottling] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const { userId, userData, logout } = useAuthStore();
+  const { userId, logout } = useAuthStore();
+  const { userData } = useProfile(userId);
 
   const handleUserDelete = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     setThrottling(true);
@@ -36,10 +38,7 @@ export default function DeleteUser() {
     }
 
     const userDeleteData = await fetch(`/api/withdrawal?userId=${userId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      method: 'DELETE'
     }).then((res) => res.json());
 
     if (userDeleteData.errorMsg) {
@@ -48,7 +47,6 @@ export default function DeleteUser() {
       return;
     }
 
-    console.log('회원 탈퇴 완료');
     setOpenModal(true);
     logout();
   };

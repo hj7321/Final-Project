@@ -4,9 +4,11 @@ import defaultProfileImg from '../../../../../../../../public/defaultProfileimg.
 interface UserProfileProps {
   profile : string
   nickname : string
+  possibleTime : string
 }
 
-export default function UserProfile({profile, nickname} : UserProfileProps) {
+export default function UserProfile({profile, nickname, possibleTime} : UserProfileProps) {
+  
   return (
     <div className="flex flex-row md:flex-col">
     <div className="md:h-[150px] md:w-[150px] w-[64px] h-[64px] border-2 rounded-full md:mx-auto mx-2 mt-5">
@@ -35,7 +37,9 @@ export default function UserProfile({profile, nickname} : UserProfileProps) {
               <path d="M12.5 6V12L16.5 13.5" stroke="#687582" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <p className="md:text-base text-xs text-grey-500">연락 가능 시간 : AM 9 - PM 6</p>
+          <p className="md:text-base text-xs text-grey-500">
+            연락 가능 시간 :  {possibleTime ? `${possibleTime.slice(0,2)+ 'AM ~ '+ possibleTime.slice(4,5)+ 'PM'}` : '9 AM ~ 6 PM'}
+          </p>
         </div>
       </div>
     </div>

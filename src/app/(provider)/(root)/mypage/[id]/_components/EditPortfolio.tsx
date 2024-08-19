@@ -5,7 +5,10 @@ import type { Portfolio } from '@/types/type';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Notify } from 'notiflix';
-
+import Image from 'next/image';
+import useProfile from '@/hooks/useProfile';
+import MDEditor from '@uiw/react-md-editor';
+import '@/css/mdStyle.css';
 interface EditPortfolioProps {
   clickModal: () => void;
   portfolioId: string | null;
@@ -15,23 +18,26 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   const params = useParams();
   const userId = params.id as string;
 
-  const getUserData = async () => {
-    const supabase = createClient();
+  // 리팩토링 전
+  // const getUserData = async () => {
+  //   const supabase = createClient();
 
-    const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-    if (error) throw error;
-    return data;
-  };
+  //   const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
+  //   if (error) throw error;
+  //   return data;
+  // };
+  // const {
+  //   data: Users,
+  //   isLoading,
+  //   error
+  // } = useQuery({
+  //   queryKey: ['Users'],
+  //   queryFn: getUserData,
+  //   enabled: !!userId
+  // });
 
-  const {
-    data: Users,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['Users'],
-    queryFn: getUserData,
-    enabled: !!userId 
-  });
+  // 리팩토링 후
+  const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const getsPortfolio = async () => {
     const response = await fetch('/api/portFolio');
@@ -49,7 +55,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   });
 
   const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string | undefined>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [images, setImages] = useState<File[]>([]);
@@ -148,12 +154,15 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
-                <textarea
+                <div data-color-mode='light'>
+                  <MDEditor value={content} onChange={setContent} height={200} />
+                </div>
+                {/* <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   style={{ height: '200px' }}
-                />
+                /> */}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">참여 기간</label>
@@ -192,9 +201,11 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               <div className="mt-4 flex flex-wrap space-y-4">
                 {previewUrls.map((url, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={url}
                       alt={`Uploaded ${index}`}
+                      width={300}
+                      height={300}
                       className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
                     />
                     <button
@@ -209,11 +220,19 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
             </div>
             썸네일
             {previewUrls.length > 0 ? (
-              <img src={previewUrls[0]} alt="Portfolio Image" className="w-96 object-cover mt-1 mb-4 rounded-md" />
+              <Image
+                src={previewUrls[0]}
+                alt="Portfolio Image"
+                width={300}
+                height={300}
+                className="w-96 object-cover mt-1 mb-4 rounded-md"
+              />
             ) : (
-              <img
+              <Image
                 src="https://via.placeholder.com/150?text=No+Image"
                 alt="No Image"
+                width={342.112}
+                height={160}
                 className="w-full h-40 object-cover mt-1 mb-4 rounded-md"
               />
             )}
@@ -221,10 +240,12 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               previewUrls
                 .slice(1)
                 .map((img, index) => (
-                  <img
+                  <Image
                     key={index}
                     src={img}
                     alt={`Portfolio image ${index}`}
+                    width={300}
+                    height={300}
                     className="w-40  object-cover mt-1 mb-4 rounded-md"
                   />
                 ))}

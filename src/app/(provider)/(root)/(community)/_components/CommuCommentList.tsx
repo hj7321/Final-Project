@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
+import Comment from './Comment';
 
 export default function CommuCommentList() {
   const { id: paramsId } = useParams();
@@ -127,51 +128,44 @@ export default function CommuCommentList() {
     return user ? user.nickname : 'Unknown';
   };
 
+  // const getBookmarkData = async () => {
+  //   const { data, count } = await fetch(`/api/commentLike/${id}`).then((res) => res.json());
+  //   if (data.errorMsg) {
+  //     console.log(data.errorMsg);
+  //     return;
+  //   }
+  //   return {
+  //     data,
+  //     count
+  //   };
+  // };
+
+  // const { data: bookmarkData } = useQuery({
+  //   queryKey: ['bookmarkCount', id],
+  //   queryFn: () => getBookmarkData()
+  // });
+
   return (
     <div className="flex flex-col">
       <div className="text-base flex flex-col gap-[24px]">
         {comments &&
           comments.map((comment) => (
-            <div key={comment.id}>
-              {editingCommentId === comment.id ? (
-                <div className="flex space-y-2 p-4 border border-gray-300 rounded-md shadow-sm gap-1">
-                  {/* <input
-                    type="text"
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    className="flex p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
-                  /> */}
-
-                  <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
-                  <button onClick={() => handleSaveClick(comment.id)}>저장</button>
-                  <button onClick={handleCancelClick}>취소</button>
-                </div>
-              ) : (
-                <div>
-                  <p className="font-bold">{getUserNickname(comment.user_id)}</p>
-                  <MDEditor.Markdown source={comment.contents} />
-                  <div className="flex gap-[24px]">
-                    <p>{comment.created_at.split('T')[0]}</p>
-                    <div className="flex gap-[8px] bg-gray-300 px-[8px] py-[4px] rounded-full ">
-                      {/* 여기 패딩 넣으니까 갭 이상해짐 수정 바람 */}
-                      <Image src="/like_logo.svg" alt="like" width={20} height={20} />
-                      <p>3</p>
-                    </div>
-                    <div className="flex gap-1">
-                      {userId === comment.user_id && (
-                        <>
-                          <button onClick={() => handleEditClick(comment)}>수정</button>
-                          <button onClick={() => handleDelete(comment.id, comment.user_id)}>삭제</button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Comment
+              key={comment.id}
+              comment={comment}
+              userId={userId}
+              getUserNickname={getUserNickname}
+              handleDelete={handleDelete}
+              handleEditClick={handleEditClick}
+              handleSaveClick={handleSaveClick}
+              handleCancelClick={handleCancelClick}
+              editingCommentId={editingCommentId}
+              editContent={editContent}
+              setEditContent={setEditContent}
+            />
           ))}
       </div>
-      <hr className="w-full h-[1px] bg-black border-0 my-[32px]" />
+      <hr className="w-full h-[1px] bg-gray-100 border-0 my-[32px]" />
     </div>
   );
 }
