@@ -35,13 +35,6 @@ export default function LoginHeader({ isLogin, nickname }: LoginHeaderProp) {
   return (
     <div className="flex items-center gap-[24px]">
       <div className="flex gap-[12px] flex-shrink-0">
-        <Image
-          src="/alarm_comment.svg"
-          alt="댓글 알림 아이콘"
-          width={24}
-          height={24}
-          className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px]"
-        />
         {/* 채팅알림 */}
         {isLogin && <ChatNotification userId={userId!} />}
       </div>

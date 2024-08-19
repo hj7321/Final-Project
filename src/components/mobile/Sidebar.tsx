@@ -65,7 +65,6 @@ export default function Sidebar({ nickname }: SidebarProp) {
                     <b className="text-primary-500">{nickname}</b>님
                   </button>
                   <div className="flex gap-[12px]">
-                    <Image src="/alarm_comment.svg" alt="댓글 알림 아이콘" width={24} height={24} />
                     {userId && <ChatNotification userId={userId} />}
                   </div>
                 </div>
