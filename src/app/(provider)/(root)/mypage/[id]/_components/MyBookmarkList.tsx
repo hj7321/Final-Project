@@ -27,16 +27,16 @@ export default function MyBookmarkList() {
 
   return (
     <div className="w-full">
-      <div className="hidden md:flex">찜한 목록</div>
-      <div className="flex mt-3 md:mt-12 justify-start font-medium font-grey-700 text-xl">
+      <div className="hidden md:flex font-bold text-[24px]">찜한 목록</div>
+      <div className="flex gap-[8px] px-[16px] py-[8px] md:p-[0px] md:gap-[12px] mt-3 md:mt-12 justify-start font-medium font-grey-700 text-xl">
         {pages.map((page) => (
           <span key={page.name}>
             <button
               className={clsx(
-                'mx-2',
+                'rounded-[20px] md:rounded-[0px] px-[16px] py-[8px] md:px-[12px] text-[12px] md:text-[16px]',
                 activeBookmarkList === page.component
-                  ? 'text-primary-500 border-b-2 border-primary-500'
-                  : 'text-gray-400'
+                  ? 'bg-primary-500 md:bg-white font-bold text-white md:text-primary-500 md:border-b-2 md:border-primary-500'
+                  : 'bg-grey-50 md:bg-white text-grey-400'
               )}
               onClick={() => setActiveBookmarkList(page.component)}
             >

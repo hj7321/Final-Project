@@ -57,15 +57,15 @@ export default function Languages() {
       </div>
 
       {/* 데스크탑 화면 */}
-      <div className="px-[16px] py-[24px] flex-col items-start gap-[24px] border border-gray-200 rounded-[16px] mt-1 hidden sm:flex">
-        <p className="font-bold text-[16px] text-gray-400 mx-auto">언어 선택</p>
+      <div className="px-[16px] py-[24px] flex-col items-start gap-[24px] border border-grey-200 rounded-[16px] mt-1 hidden sm:flex">
+        <p className="font-bold text-[16px] text-grey-400 mx-auto">언어 선택</p>
         <div className="flex flex-col gap-[16px]">
           {CodeCategories.map((lang) => (
             <div
               className={`flex justify-start items-center hover:cursor-pointer gap-[6px] text-[14px] rounded-[20px] px-[8px] py-[5px] border border-solid ${
                 selectedLanguages.includes(lang.name)
                   ? ' bg-primary-50 border-primary-500 '
-                  : 'border-transparent bg-gray-50 '
+                  : 'border-transparent bg-grey-50 '
               }`}
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
@@ -79,7 +79,7 @@ export default function Languages() {
               />
               <p
                 className={`text-center ${
-                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-gray-400'
+                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-grey-400'
                 }`}
               >
                 {lang.name}
