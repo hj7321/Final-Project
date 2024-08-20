@@ -124,9 +124,6 @@ export default function Comment({
     }
   });
 
-  console.log(deleteLike);
-  console.log(addLike);
-
   const handleToggleLike = () => {
     if (!isLogin) {
       Notify.failure('로그인 후 이용해주세요.');
