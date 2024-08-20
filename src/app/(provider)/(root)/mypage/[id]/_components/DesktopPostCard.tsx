@@ -1,5 +1,3 @@
-'use client';
-
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts, RequestPosts } from '@/types/type';
 import Image from 'next/image';
@@ -24,9 +22,9 @@ export default function DesktopPostCard({ data }: DesktopPostCardProp) {
               <Image
                 src={post.post_img[0]}
                 alt="썸네일 이미지"
-                width={288}
+                width={186}
                 height={186}
-                className="h-[186px] mr-[24px] rounded-[8px]"
+                className="h-[186px] w-[186px] mr-[24px] rounded-[8px] object-cover"
               />
             )}
             <div className="w-full flex flex-col gap-[16px]">

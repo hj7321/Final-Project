@@ -1,25 +1,31 @@
 'use client';
 
-import { BookMark } from '@/types/type';
+import { createClient } from '@/utils/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import RequestPostCard from './RequestPostCard';
 
 export default function RequestBookmarkList() {
-  const { id: userId } = useParams();
+  const { id: userId } = useParams<{ id: string }>();
 
   const getRequestBookmark = async () => {
-    const response = await fetch('/api/bookmark').then((res) => res.json());
+    const response = await fetch(`/api/bookmark?userId=${userId}&category=pro`).then((res) => res.json());
     if (response.errorMsg) {
-      console.log(response.errorMsg);
-      return [];
+      return null;
     }
-    const data: BookMark[] = response.data;
 
-    return data.filter((bookmark) => bookmark.user_id === userId);
+    const postIds = response.data.map((bookmark: { posts_id: string }) => bookmark.posts_id);
+
+    const { data, error } = await createClient().from('Request Posts').select('*').in('id', postIds);
+
+    if (error) {
+      return null;
+    }
+    return data;
   };
 
-  const { data, isPending, error } = useQuery<BookMark[]>({
+  const { data, isPending, error } = useQuery({
     queryKey: ['bookmark', userId],
     queryFn: getRequestBookmark,
     enabled: !!userId
@@ -43,7 +49,7 @@ export default function RequestBookmarkList() {
 
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
-      찜한 전문가 의뢰 목록(전문가 의뢰 게시판에 북마크 기능을 만들어야 함)
+      <RequestPostCard data={data!} />
     </section>
   );
 }
