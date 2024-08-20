@@ -6,11 +6,13 @@ import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts, RequestPosts } from '@/types/type';
 import Image from 'next/image';
+import MainSkeletonLoader from '@/components/MainSkeletonLoader';  // Import SkeletonLoader
 
 export default function Home() {
   const [qnaPosts, setQnaPosts] = useState<CommunityPosts[]>([]);
   const [insightPosts, setInsightPosts] = useState<CommunityPosts[]>([]);
   const [expertPosts, setExpertPosts] = useState<RequestPosts[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Loading state 추가
   const supabase = createClient();
 
   useEffect(() => {
@@ -38,6 +40,8 @@ export default function Home() {
       } else {
         setExpertPosts(requestPosts);
       }
+
+      setIsLoading(false); // 데이터가 로드되면 로딩 상태를 false로 변경
     };
 
     fetchPosts();
@@ -45,17 +49,23 @@ export default function Home() {
 
   const getCategoryImage = (categoryName: string) => {
     const category = CodeCategories.find((cat) => cat.name === categoryName);
-    return category ? category.image : '/default_image.svg'; // 기본 이미지는 필요시 변경
+    return category ? category.image : '/default_image.svg';
   };
+
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
 
+  // 로딩 중일 때 스켈레톤 UI를 보여줍니다.
+  if (isLoading) {
+    return <MainSkeletonLoader  />;
+  }
+
   return (
     <main className="snap-y scroll-smooth">
       {/* 메인베너 */}
-      <section className="w-full md:h-[calc(100vh-75px)] mb-2 md:mb-64">
+      <section className="w-full md:h-[calc(100vh-75px)] mb-2 md:mb-16">
         <div className="block md:hidden w-full h-auto bg-cover bg-center">
           <Image
             src="/mobileMainBanner.svg"
@@ -72,7 +82,7 @@ export default function Home() {
       </section>
 
       {/* 언어별 카테고리 및 커뮤니티 섹션 */}
-      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start mb-12 md:mb-64">
+      <section className="w-full flex flex-col min-h-[calc(100vh-75px)] snap-start mb-12 md:mb-16">
         <div className="bg-white py-4 flex-shrink-0">
           <div className="container mx-auto px-4 md:px-16 h-full">
             <h2 className="text-xl font-bold mb-4">언어별 카테고리</h2>

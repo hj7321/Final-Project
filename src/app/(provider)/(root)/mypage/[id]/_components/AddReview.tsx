@@ -4,6 +4,7 @@ import { RequestReviews } from '@/types/type';
 import StarRating from './StarRating';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Notify } from 'notiflix';
 
 interface PortfolioData {
   id: string;
@@ -33,11 +34,11 @@ const AddReview: React.FC<AddReviewProps> = ({ onClose, portfolio, userId, addMu
 
   const handleSubmit = async () => {
     if (!userId || !portfolio.id) {
-      alert('필수 정보가 누락되었습니다.');
+      Notify.failure('필수 정보가 누락되었습니다.');
       return;
     }
     if (!content || rating === 0) {
-      alert('내용과 평점을 입력해주세요.');
+      Notify.failure('내용과 평점을 입력해주세요.');
       return;
     }
 
@@ -56,7 +57,7 @@ const AddReview: React.FC<AddReviewProps> = ({ onClose, portfolio, userId, addMu
   };
 
   return (
-    <div className="bg-white flex flex-col p-6 w-[40%] h-[430px] relative overflow-auto rounded-xl">
+    <div className="bg-white flex flex-col p-6 w-[90%] md:w-[40%] h-[430px] relative overflow-auto rounded-xl">
       <div className="flex flex-col">
         <button onClick={onClose} className="absolute top-2 right-4 text-grey-600 flex font-thin justify-end">
           x

@@ -8,6 +8,7 @@ import StarRating from './StarRating';
 import { useState } from 'react';
 import { Confirm, Notify } from 'notiflix';
 import AddReview from './AddReview';
+import { CodeCategories } from '@/components/dumy';
 
 interface PortfolioData {
   id: string;
@@ -127,7 +128,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
 
   const handleSubmit = async () => {
     if (!userId || !portfolio.id) {
-      alert('필수 정보가 누락되었습니다.');
+      Notify.failure('필수 정보가 누락되었습니다.');
       return;
     }
     if (!content || rating === 0) {
@@ -153,7 +154,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
       {data?.length === 0 ? (
         <AddReview onClose={onClose} portfolio={portfolio} userId={userId} addMutation={addMutation} />
       ) : (
-        <div className="bg-white flex flex-col p-6 w-[40%] h-[350px] relative overflow-auto rounded-xl">
+        <div className="bg-white flex flex-col p-6 w-90% md:w-[40%] h-[350px] relative overflow-auto rounded-xl">
           <div className="flex flex-col">
             <button onClick={onClose} className="absolute top-2 right-4 text-grey-600 flex font-thin justify-end ">
               x
@@ -161,7 +162,20 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
             <div className="flex flex-row mt-[24px] ">
               {imageUrl && <Image src={imageUrl} alt="ds" width={100} height={100} className="w-[100px] h-[100px]" />}
               <div className="flex flex-col ml-[40px]">
-                <h1 className="flex text-sm  text-grey-600  font-bold ">{portfolio.lang_category}</h1>
+                <div className="flex items-center ml-0">
+                  <Image
+                    src={
+                      CodeCategories.find((category) => category.name === portfolio.lang_category[0])?.image ||
+                      '/defaultProfileimg.svg'
+                    }
+                    alt="d"
+                    width={12}
+                    height={12}
+                    className="w-5 h-5 "
+                  />
+                  <p className="flex text-sm ml-1 text-grey-600  font-bold ">{portfolio.lang_category.join(', ')}</p>
+                </div>
+
                 <h1 className="flex text-base  text-grey-800 font-bold ">{portfolio.title}</h1>
               </div>
             </div>
@@ -177,7 +191,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
                 <p className="ml-1 font-semibold mt-3 text-lg text-grey-800">{review.contents}</p>
                 <p className="mt-3 text-sm text-grey-400">작성일: {review.created_at.slice(0, 10)}</p>
                 <div className="flex justify-end">
-                  <button className="bg-primary-500 text-white text-base font-normal mt-2 px-4 py-2 rounded-md shadow-sm mr-0 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button className="hidden bg-primary-500 text-white text-base font-normal mt-2 px-4 py-2 rounded-md shadow-sm mr-0 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     리뷰 수정
                   </button>
                   <button

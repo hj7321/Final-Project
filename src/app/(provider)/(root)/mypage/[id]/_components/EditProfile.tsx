@@ -13,32 +13,21 @@ export default function EditProfile() {
   const [nickname, setNickname] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [birth, setBirth] = useState<string>('');
+  const [time, setTime] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
+  const [isPro, setIsPro] = useState<boolean>(false);
 
   const [previewImage, setPreviewImage] = useState<string>('');
   const [uploadImg, setUploadImg] = useState<File | null>(null);
   const [publicUrl, setPublicUrl] = useState<string>('');
 
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true);
+  const [isBirthValid, setIsBirthValid] = useState<boolean>(true);
+
   const { id } = useParams<{ id: string }>();
 
   const queryClient = useQueryClient();
 
-  // 리팩토링 전
-  // const getUserData = async () => {
-  //   const supabase = createClient();
-  //   const { data, error } = await supabase.from('Users').select('*').eq('id', id).single();
-  //   if (error) throw error;
-  //   return data;
-  // };
-  // const {
-  //   data: userData,
-  //   isPending,
-  //   error
-  // } = useQuery({
-  //   queryKey: ['Users', id],
-  //   queryFn: getUserData
-  // });
-
-  // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(id);
 
   useEffect(() => {
@@ -48,12 +37,33 @@ export default function EditProfile() {
       setBirth(userData.birth || '');
       setPreviewImage(userData.profile_img || '/defaultProfileimg.svg');
       setPublicUrl(userData.profile_img || '');
+      setTime(userData.possible_time || '');
+      setIntroduction(userData.introduction || '');
+      setIsPro(userData.is_pro || false);
     }
   }, [userData]);
 
-  const changeUserType = async (nickname: string, profile_img: string, name: string, birth: string) => {
+  const checkNicknameDuplicate = async (nickname: string) => {
     const supabase = createClient();
-    const { data, error } = await supabase.from('Users').update({ nickname, profile_img, name, birth }).eq('id', id);
+    const { data, error } = await supabase.from('Users').select('id').eq('nickname', nickname);
+
+    if (error) throw error;
+    return data.length === 0;
+  };
+
+  const changeUserType = async (
+    nickname: string,
+    profile_img: string,
+    name: string,
+    birth: string,
+    possible_time: string,
+    introduction: string
+  ) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('Users')
+      .update({ nickname, profile_img, name, birth, possible_time, introduction })
+      .eq('id', id);
     if (error) throw error;
     return data;
   };
@@ -75,14 +85,25 @@ export default function EditProfile() {
       nickname,
       profile_img,
       name,
-      birth
+      birth,
+      possible_time,
+      introduction
     }: {
       nickname: string;
       profile_img: string;
       name: string;
       birth: string;
-    }) => changeUserType(nickname, profile_img, name, birth),
-    onMutate: async (newData: { nickname: string; profile_img: string; name: string; birth: string }) => {
+      possible_time: string;
+      introduction: string;
+    }) => changeUserType(nickname, profile_img, name, birth, possible_time, introduction),
+    onMutate: async (newData: {
+      nickname: string;
+      profile_img: string;
+      name: string;
+      birth: string;
+      possible_time: string;
+      introduction: string;
+    }) => {
       await queryClient.cancelQueries({ queryKey: ['Users', id] });
 
       const previousUserData = queryClient.getQueryData<Users>(['Users', id]);
@@ -92,7 +113,9 @@ export default function EditProfile() {
         nickname: newData.nickname,
         profile_img: newData.profile_img,
         name: newData.name,
-        birth: newData.birth
+        birth: newData.birth,
+        possible_time: newData.possible_time,
+        introduction: newData.introduction
       }));
 
       return { previousUserData };
@@ -125,8 +148,44 @@ export default function EditProfile() {
     setPublicUrl('');
   };
 
+  const handleBirthChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+
+    if (value.length > 6) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+    } else if (value.length > 4) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}`;
+    } else if (value.length > 0) {
+      value = `${value.slice(0, 4)}`;
+    }
+
+    setBirth(value);
+
+    const inputYear = parseInt(value.slice(0, 4));
+    if (inputYear < 2010) {
+      setIsBirthValid(false);
+    } else {
+      setIsBirthValid(true);
+    }
+  };
+
+  const handleNicknameChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNickname(value);
+
+    if (value) {
+      const isValid = await checkNicknameDuplicate(value);
+      setIsNicknameValid(isValid);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isNicknameValid || !isBirthValid) {
+      Notify.failure('입력한 내용을 확인해주세요.');
+      return;
+    }
+
     let imageUrl = publicUrl;
     if (uploadImg) {
       try {
@@ -136,8 +195,7 @@ export default function EditProfile() {
       }
     }
 
-    const formattedBirth = birth.replace(/-/g, '');
-    mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
+    mutation.mutate({ nickname, profile_img: imageUrl, name, birth, possible_time: time, introduction });
   };
 
   const cancleButton = (): void => {
@@ -163,7 +221,7 @@ export default function EditProfile() {
                 alt="프로필 사진"
                 width={144}
                 height={144}
-                className="rounded-full cursor-pointer"
+                className="rounded-[50%] cursor-pointer"
               />
               {previewImage !== '/defaultProfileimg.svg' && (
                 <button
@@ -190,7 +248,7 @@ export default function EditProfile() {
               type="text"
               value={nickname}
               placeholder="닉네임 예시"
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={handleNicknameChange}
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
               maxLength={9}
             />
@@ -198,6 +256,7 @@ export default function EditProfile() {
               {nickname.length}/10
             </span>
           </div>
+          {!isNicknameValid && <div className="text-red-500 text-xs mt-1">중복된 닉네임입니다.</div>}
           <div className="mt-2 text-xs text-grey-500">
             TIP: 한글/영문(대소문자)/숫자만 사용할 수 있으며, 특수문자는 사용 불가해요.
           </div>
@@ -227,14 +286,53 @@ export default function EditProfile() {
               생일
             </span>
             <input
-              type="date"
+              type="text"
               id="birth"
               value={birth}
-              onChange={(e) => setBirth(e.target.value)}
+              onChange={handleBirthChange}
+              placeholder="YYYY-MM-DD"
+              maxLength={11}
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
             />
           </div>
+          {!isBirthValid && <div className="text-red-500 text-xs mt-1">2010년 이후의 생일만 입력 가능합니다.</div>}
         </div>
+
+        {isPro && (
+          <>
+            <div className="mb-6">
+              <div className="relative border  border-gray-300 rounded-md">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  연락 가능 시간
+                </span>
+                <input
+                  type="text"
+                  id="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  placeholder="00시 ~ 00시"
+                  className="w-full h-20 pl-48 pr-4 py-2 rounded-md font-normal"
+                />
+              </div>
+            </div>
+            <div className="mb-20">
+              <div className="relative border  border-gray-300 rounded-md">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  전문가 한 줄 소개
+                </span>
+                <input
+                  type="text"
+                  id="myintroduction"
+                  value={introduction}
+                  onChange={(e) => setIntroduction(e.target.value)}
+                  placeholder="전문가 한 줄 소개를 입력하세요"
+                  className="w-full h-20 pl-48 pr-4 py-2 rounded-md font-normal"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="flex mx-0 justify-between">
           <button
             type="button"

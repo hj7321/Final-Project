@@ -17,6 +17,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLength = useRef<number>(0);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -78,11 +79,14 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
 
     fetchMessages();
     fetchOtherUser();
-
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, [chatRoomId, currentUser, onMessagesRead]);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesLength.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages]);
 
   const handleSendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -131,7 +135,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
             </>
           )}
         </div>
-        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-grey-300 md:rounded-xl bg-grey-100 overflow-hidden">
+        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-grey-200 md:rounded-xl bg-grey-50 overflow-hidden">
           <div className="overflow-y-scroll mb-4 p-4">
             {messages.map((message) => (
               <div
@@ -142,7 +146,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
                   className={`p-3 rounded-lg text-xs max-w-xs font-medium ${
                     message.consumer_id === currentUser?.id
                       ? 'bg-primary-50 border border-primary-100 text-black'
-                      : 'bg-grey-50 border border-grey-200 text-black'
+                      : 'bg-white border border-grey-100 text-black'
                   } break-words`}
                 >
                   {message.content}
