@@ -25,13 +25,6 @@ export interface Posts {
 export default function ProMainPage() {
   const { selectedLanguages, handleLanguageFilter, handleNavigation, getCategoryImage } = useProMain();
 
-  // 리팩토링 전 (이제 authStore에 isPro 없음)
-  // const { isPro, initializeAuthState } = useAuthStore();
-  // useEffect(() => {
-  //   initializeAuthState();
-  // }, [initializeAuthState]);
-
-  // 리팩토링 후
   const { userId } = useAuthStore();
   const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
