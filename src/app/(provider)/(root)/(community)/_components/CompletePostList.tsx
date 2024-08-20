@@ -11,9 +11,9 @@ import Latest from './Latest';
 
 export default function CompletePostList() {
   const pathname = usePathname();
-  console.log(pathname);
   const { isLogin, userId } = useAuthStore();
   const router = useRouter();
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   // const [view, setView] = useState<boolean>(true);
   // const [posts, setPosts] = useState<Post[]>([]);
 
@@ -40,7 +40,7 @@ export default function CompletePostList() {
         height={160}
       />
       <div className="flex flex-col md:flex-row md:gap-[32px] mt-[30px]">
-        <Languages />
+        <Languages selectedLanguages={selectedLanguages} setSelectedLanguages={setSelectedLanguages} />
         <div className="mt-4 md:m-0 max-w-[995px] flex flex-col items-start w-full">
           <Link
             href="/createPost"
@@ -51,7 +51,7 @@ export default function CompletePostList() {
             <Image src="/pencil.svg" alt="pencilLogo" width={24} height={24} className="" />
             {pathname === '/qna' ? '질문 남기기' : '지식 공유하기'}
           </Link>
-          <Latest />
+          <Latest selectedLanguages={selectedLanguages} />
         </div>
       </div>
     </div>

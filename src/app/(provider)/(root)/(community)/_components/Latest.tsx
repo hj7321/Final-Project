@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CommunityPosts } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
@@ -12,7 +12,11 @@ import { BookmarkCount } from '../../mypage/[id]/_components/BookmarkCount';
 
 const btnSt = 'w-[32px] h-[32px] text-white text-[16pt] flex items-center justify-center rounded-[4px]';
 
-export default function Latest() {
+interface LatestProps {
+  selectedLanguages: string[];
+}
+
+export default function Latest({ selectedLanguages }: LatestProps) {
   const { userId } = useAuthStore();
   const pathname = usePathname().split('/')[1];
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,6 +41,12 @@ export default function Latest() {
     }
     const data: CommunityPosts[] = await response.json();
     const filteredData = data.filter((post) => post.post_category.toLowerCase() === pathname);
+
+    // 선택된 언어로 게시물 필터링
+    if (selectedLanguages.length > 0) {
+      return filteredData.filter((post) => post.lang_category?.some((lang) => selectedLanguages.includes(lang)));
+    }
+
     return filteredData;
   };
 
@@ -51,7 +61,7 @@ export default function Latest() {
     isLoading,
     error
   } = useQuery<CommunityPosts[]>({
-    queryKey: ['post', pathname],
+    queryKey: ['post', pathname, selectedLanguages],
     queryFn: getPosts
   });
 
@@ -98,8 +108,6 @@ export default function Latest() {
   if (isLoading || commentsLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  console.log(currentPosts);
-
   return (
     <>
       <div className="flex flex-col gap-[24px] w-full">
@@ -114,14 +122,12 @@ export default function Latest() {
                       alt="Post Image"
                       width={186}
                       height={186}
-                      className="rounded-[8px] w-[186px] h-[186px] "
+                      className="rounded-[8px] w-[186px] h-[186px] object-cover"
                     />
-                    //모바일 sm:w-[72px] sm:h-[72px]
-                    // 미리보기 이미지 찌그러짐 현상
                   )}
                   <div className="flex flex-col gap-4 w-full overflow-hidden">
                     <div className="flex gap-[12px] line-clamp-1">
-                      {post.lang_category?.map((category, index) => {
+                      {post.lang_category?.slice(0, 5).map((category, index) => {
                         const categoryData = CodeCategories.find((cat) => cat.name === category);
                         return (
                           <div key={index} className="flex gap-[9px]">
@@ -134,7 +140,9 @@ export default function Latest() {
                                 className="rounded-full"
                               />
                             )}
-                            <p className=" text-grey-600">{category}</p>
+                            <p className=" text-grey-600">
+                              {index === 4 && category.length > 5 ? `${category} ⋯` : category}
+                            </p>
                           </div>
                         );
                       })}

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import GetNickname from './GetNickname';
 import { BookmarkCount } from './BookmarkCount';
+import { LikeCount } from './LikeCount';
 
 interface DesktopPostCardProp {
   data: CommunityPosts[];
@@ -80,7 +81,7 @@ export default function DesktopPostCard({ data }: DesktopPostCardProp) {
                         height={16}
                         className="w-[16px] h-[16px]"
                       />
-                      <p>-1</p>
+                      <LikeCount postId={post.id} />
                     </div>
                     <div className="flex items-center gap-[4px] text-grey-400 text-[16px]">
                       <Image
