@@ -4,11 +4,12 @@ import { CodeCategories } from '@/components/dumy';
 import { RequestPosts, RequestReviews } from '@/types/type';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import StarRating from './StarRating';
 
 export default function SendReview() {
   const { id } = useParams();
+  const router = useRouter();
 
   const getReview = async () => {
     const response = await fetch('/api/review');
@@ -69,13 +70,13 @@ export default function SendReview() {
   }
 
   return (
-    <section className="container mx-auto py-8 min-h-screen">
-      <div className="space-y-4 ">
+    <section className="container mx-auto py-8 min-h-screen ">
+      <div className="space-y-4">
         {reviews?.slice(0, 10).map((review) => {
           const relatedRequestPost = requestPosts?.find((post) => post.id === review.request_post_id);
           return (
-            <div key={review.id} className="bg-white rounded-2xl">
-              <div className="flex flex-col md:flex-row">
+            <div key={review.id} className="bg-white rounded-2xl border  ">
+              <div className="flex flex-col pt-4 md:flex-row">
                 <div className="flex flex-col">
                   <div className="flex items-center mb-2">
                     <Image
@@ -95,7 +96,8 @@ export default function SendReview() {
                     </p>
                   </div>
                   <p
-                    className="text-[16px] ml-8 mb-1 mr-5"
+                    className="text-[16px] ml-8 mb-1 mr-5 cursor-pointer"
+                    onClick={() => router.push(`/pro/proDetail/${relatedRequestPost?.id}`)}
                     style={{
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
@@ -105,6 +107,7 @@ export default function SendReview() {
                     }}
                   >
                     {relatedRequestPost?.title || '제목 없음'}
+
                     <br />
                     <div className="hidden md:flex border-t w-[225px] border-gray-300 my-5"></div>
 

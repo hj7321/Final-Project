@@ -19,6 +19,7 @@ import ResetPassword from './ResetPassword';
 import Cookies from 'js-cookie';
 import clsx from 'clsx';
 import useProfile from '@/hooks/useProfile';
+import { Notify } from 'notiflix';
 
 const myActivities = [
   { name: '찜한 목록', component: 'MyBookmarkList' },
@@ -149,6 +150,10 @@ export default function AllMypage() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['User', id] });
+    },
+    onSuccess: () => {
+      Notify.success('회원 유형이 변경되었습니다.');
+      window.location.reload();
     }
   });
 

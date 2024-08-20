@@ -141,7 +141,7 @@ export default function AccountList() {
                         {userReview ? (
                           <button
                             onClick={() => handleReview(post)}
-                            className="mr-7 border rounded-lg bg-grey-200 px-5 py-2 font-normal mb-3 text-white text-lg"
+                            className="mr-7 border rounded-lg bg-grey-200 px-5 py-2 font-normal md:mb-3 text-white text-lg"
                           >
                             내가 쓴 리뷰 보기
                           </button>

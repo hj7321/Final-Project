@@ -139,12 +139,14 @@ const CreatePost = () => {
     setSelectedCategory(e.target.value);
   };
 
+  const handleThumbnailRemove = () => {
+    setThumbnail(null);
+    setThumbnailPreview(null);
+  };
+
   return (
-    // <div className="flex flex-col m-auto mt-10 max-w-[80%] justify-center">
     <div className="md:max-w-[1240px] w-full p-2 mx-auto md:my-6 my-2">
-      {/* <h1 className="flex text-2xl font-bold mb-4">게시글 등록하기</h1> */}
       <div className="mt-10">
-        {/* 드랍다운 디자인 수정 필요 ! */}
         <div className="relative rounded-xl border border-grey-100 p-2 mb-4">
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold text-black pointer-events-none">
             게시판 선택
@@ -154,11 +156,12 @@ const CreatePost = () => {
             value={selectedCategory}
             onChange={handleCategoryChange}
           >
-            {/* <option value="">카테고리를 선택해주세요</option> */}
             <option value="QnA">QnA</option>
             <option value="Insight">Insight</option>
           </select>
         </div>
+
+        {/* 제목 입력 */}
         <div className="relative rounded-xl border border-grey-100 mb-4">
           <input
             type="text"
@@ -168,9 +171,11 @@ const CreatePost = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
+
+        {/* 언어 선택 */}
         <div className="flex md:flex-row flex-col justify-between h-[180px] mb-4">
           <div className="border border-grey-100 p-3 rounded-xl md:w-[60%] w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-4">언어 선택 (필수, 중복 선택 가능) </label>
+            <label className="block text-sm font-medium text-gray-700 mb-4">언어 선택 (필수, 중복 선택 가능)</label>
             <div className="flex flex-row flex-wrap justify-center items-center gap-2">
               {CodeCategories.map((lang, index) => (
                 <div className="flex justify-start items-center mx-2 my-3 w-[100px]" key={index}>
@@ -200,22 +205,37 @@ const CreatePost = () => {
               ))}
             </div>
           </div>
+
+          {/* 썸네일 이미지 업로드 */}
           <div className="flex space-x-4 border border-grey-100 rounded-xl md:w-[38%] w-full mt-4 md:mt-[0]">
             <div className="w-1/2">
-              {thumbnailPreview && (
-                <Image
-                  src={thumbnailPreview}
-                  alt="Thumbnail Preview"
-                  width={300}
-                  height={300}
-                  className="mt-2 w-full h-auto"
-                />
+              {thumbnailPreview ? (
+                <div className="relative">
+                  <Image
+                    src={thumbnailPreview}
+                    alt="Thumbnail Preview"
+                    width={300}
+                    height={300}
+                    className="mt-2 w-[150px] h-[150px]"
+                  />
+                  <button
+                    onClick={handleThumbnailRemove}
+                    className="absolute top-1 text-red-600 right-14 rounded-full p-1"
+                  >
+                    X
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <label className="block text-sm font-medium text-gray-700">썸네일 이미지를 등록해주세요.</label>
+                  <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
+                </>
               )}
-              <label className="block text-sm font-medium text-gray-700"> 이미지를 등록해주세요.</label>
-              <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
             </div>
           </div>
         </div>
+
+        {/* 내용 입력 */}
         <div className="mt-[220px] md:mt-[0]">
           <label className="block text-sm font-medium text-gray-700"></label>
           <div data-color-mode="light">
@@ -229,6 +249,8 @@ const CreatePost = () => {
             />
           </div>
         </div>
+
+        {/* 등록 버튼 */}
         <div className="w-full mt-4">
           <button
             onClick={handleSubmit}
