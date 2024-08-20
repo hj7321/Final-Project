@@ -199,6 +199,14 @@ export default function CommuPost() {
     router.back();
   };
 
+  const handleEdit = () => {
+    if (userId === userIdFromPost) {
+      router.push(`/editPost/${postId}`);
+    } else {
+      Notify.failure('수정 권한이 없습니다.');
+    }
+  };
+
   return (
     <div className="flex flex-col relative">
       <div
@@ -245,7 +253,7 @@ export default function CommuPost() {
               }}
             >
               <ul>
-                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleEdit}>
                   <Image
                     src="/pencil_color.svg"
                     alt="수정"
