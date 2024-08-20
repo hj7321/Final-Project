@@ -27,9 +27,13 @@ function SearchContent() {
     } else if (category === '전문가 의뢰') {
       setFilteredResults(results.filter((item) => item.category === 'Request'));
     } else if (category === 'Q&A') {
-      setFilteredResults(results.filter((item) => item.category === 'Community' && (item as any).post_category === 'QnA'));
+      setFilteredResults(
+        results.filter((item) => item.category === 'Community' && (item as any).post_category === 'QnA')
+      );
     } else if (category === '인사이트') {
-      setFilteredResults(results.filter((item) => item.category === 'Community' && (item as any).post_category === 'Insight'));
+      setFilteredResults(
+        results.filter((item) => item.category === 'Community' && (item as any).post_category === 'Insight')
+      );
     }
   };
 
@@ -73,14 +77,11 @@ function SearchContent() {
   };
 
   // 페이지별로 필터링된 결과 가져오기
-  const paginatedResults = filteredResults.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const paginatedResults = filteredResults.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   // 전체 페이지 수 계산
   const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
-  
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -94,8 +95,11 @@ function SearchContent() {
     paginationButtons.push(
       <button
         key={i}
-        onClick={() =>{ setCurrentPage(i); scrollToTop()}}
-        className={`px-4 py-2 rounded-xl ${currentPage === i ? 'bg-primary-500 text-white' : 'bg-gray-200'}`}
+        onClick={() => {
+          setCurrentPage(i);
+          scrollToTop();
+        }}
+        className={`px-4 py-2 rounded-xl ${currentPage === i ? 'bg-primary-500 text-white' : 'bg-grey-200'}`}
       >
         {i}
       </button>
@@ -166,45 +170,48 @@ function SearchContent() {
                   )}
                   <div className="flex flex-col flex-grow">
                     <div className="flex space-x-2 mb-1">
-                      {result.lang_category && result.lang_category.slice(0, isMobile() ? 1 : result.lang_category.length).map((lang, id) => (
-                        <div key={id} className="flex mb-1">
-                          <Image src={getCategoryImage(lang)} alt={lang} width={24} height={24} className="rounded" />
-                          <div>
-                            <span
-                              className={`rounded px-2 py-1 text-sm ${
-                                lang.toLowerCase().includes(query.toLowerCase())
-                                  ? 'text-primary-400'
-                                  : 'bg-white text-grey-500'
-                              }`}
-                            >
-                              {lang}
-                            </span>
+                      {result.lang_category &&
+                        result.lang_category.slice(0, isMobile() ? 1 : result.lang_category.length).map((lang, id) => (
+                          <div key={id} className="flex mb-1">
+                            <Image src={getCategoryImage(lang)} alt={lang} width={24} height={24} className="rounded" />
+                            <div>
+                              <span
+                                className={`rounded px-2 py-1 text-sm ${
+                                  lang.toLowerCase().includes(query.toLowerCase())
+                                    ? 'text-primary-400'
+                                    : 'bg-white text-grey-500'
+                                }`}
+                              >
+                                {lang}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                     <h2 className="text-lg font-medium mb-2">{highlightIfMatch(result.title, query)}</h2>
-                    <p className="text-md text-grey-500 mb-2">{highlightIfMatch(truncateText(result.content, isMobile() ? 25 : 180), query)}</p>
+                    <p className="text-md text-grey-500 mb-2">
+                      {highlightIfMatch(truncateText(result.content, isMobile() ? 25 : 180), query)}
+                    </p>
                     <div className="flex justify-between items-center">
                       <p className="text-gray-400"> {highlightIfMatch(userMap[result.user_id] || "알수없음", query)}</p>
                     </div>
                     <div className="flex mt-4">
                       <div className="flex items-center">
-                        <span className="ml-1 text-gray-500">댓글수</span>
+                        <span className="ml-1 text-grey-500">댓글수</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="ml-1 text-gray-500">좋아요</span>
+                        <span className="ml-1 text-grey-500">좋아요</span>
                       </div>
-                      <p className="text-sm text-gray-400 ml-auto">{new Date(result.created_at).toLocaleDateString()}</p>
+                      <p className="text-sm text-grey-400 ml-auto">
+                        {new Date(result.created_at).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
-          <div className="flex mt-8 gap-2">
-            {paginationButtons}
-          </div>
+          <div className="flex mt-8 gap-2">{paginationButtons}</div>
         </>
       )}
     </div>

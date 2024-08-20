@@ -36,9 +36,9 @@ const StarRating: React.FC<StarRatingProps> = ({
           onMouseEnter={() => (readOnly ? null : setHover(index + 1))}
           onMouseLeave={() => (readOnly ? null : setHover(0))}
           xmlns="http://www.w3.org/2000/svg"
-          fill={index < (hover || rating) ? 'gold' : 'lightgray'}
+          fill={index < (hover || rating) ? 'gold' : 'lightgrey'}
           viewBox="0 0 24 24"
-          stroke={index < (hover || rating) ? 'gold' : 'lightgray'}
+          stroke={index < (hover || rating) ? 'gold' : 'lightgrey'}
           width={size} // 크기 설정
           height={size} // 크기 설정
           style={{ cursor: readOnly ? 'default' : 'pointer', marginRight: '5px' }}

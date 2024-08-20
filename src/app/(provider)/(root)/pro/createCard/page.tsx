@@ -54,11 +54,11 @@ export default function CreateCard() {
             width="63"
             height="63"
             rx="31.5"
-            className="stroke-gray-300 group-hover:stroke-gray-400"
+            className="stroke-grey-300 group-hover:stroke-grey-400"
           />
           <path
             d="M24 24L40 40M40 24L24 40"
-            className="stroke-gray-300 group-hover:stroke-gray-400"
+            className="stroke-grey-300 group-hover:stroke-grey-400"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
