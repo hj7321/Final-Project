@@ -141,18 +141,18 @@ export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditP
           <div className=" pr-4">
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
+                <label className="block text-sm font-medium text-grey-700">프로젝트 이름</label>
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               <div className="">
-                <div className="mt-1 p-2 border items-start w-full border-gray-300 rounded-md shadow-sm">
+                <div className="mt-1 p-2 border items-start w-full border-grey-300 rounded-md shadow-sm">
                   <input
                     type="file"
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                    className="block w-full text-sm text-grey-900 border border-grey-300 rounded-lg cursor-pointer bg-grey-50 focus:outline-none"
                     multiple
                     onChange={handleImageChange}
                   />
@@ -209,26 +209,26 @@ export default function MobileEditPorifolio({ portfolioId, onBack }: MobileEditP
                     ))}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
+                <label className="block text-sm font-medium text-grey-700">프로젝트 설명</label>
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   style={{ height: '200px' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">참여 기간</label>
+                <label className="block text-sm font-medium text-grey-700">참여 기간</label>
                 <input
                   type="date"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
                 ~
                 <input
                   type="date"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />

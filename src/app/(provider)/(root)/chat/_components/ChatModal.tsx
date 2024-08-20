@@ -17,6 +17,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLength = useRef<number>(0);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -78,11 +79,14 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
 
     fetchMessages();
     fetchOtherUser();
-
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, [chatRoomId, currentUser, onMessagesRead]);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesLength.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages]);
 
   const handleSendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -96,8 +100,8 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
         pro_id: currentUser.id,
         content: newMessage,
         chat_room_id: chatRoomId,
-        is_read: false,
-      },
+        is_read: false
+      }
     ]);
 
     if (error) {
@@ -116,23 +120,35 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
         <div className="flex items-center mb-6 ml-1 md:ml-0">
           {otherUser && (
             <>
-              <Image src={otherUser.profile_img || '/defaultProfileimg.svg'} width={40} height={40} alt="상대 프로필" className="w-12 h-12 rounded-full mr-4" />
+              <Image
+                src={otherUser.profile_img || '/defaultProfileimg.svg'}
+                width={40}
+                height={40}
+                alt="상대 프로필"
+                className="w-12 h-12 rounded-full mr-4"
+              />
               <div>
                 <h2 className="text-sm font-semibold">{otherUser.nickname}</h2>
-                <p className="text-sm font-medium text-gray-500">연락 가능 시간: AM 9 - PM 6</p>
-                <p className="text-sm font-medium text-gray-500">평균 응답 속도: 30분 이내</p>
+                <p className="text-sm font-medium text-grey-500">연락 가능 시간: AM 9 - PM 6</p>
+                <p className="text-sm font-medium text-grey-500">평균 응답 속도: 30분 이내</p>
               </div>
             </>
           )}
         </div>
-        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-gray-300 md:rounded-xl bg-gray-100 overflow-hidden">
+        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-grey-200 md:rounded-xl bg-grey-50 overflow-hidden">
           <div className="overflow-y-scroll mb-4 p-4">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`mb-2 flex ${message.consumer_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`p-3 rounded-lg text-xs max-w-xs font-medium ${message.consumer_id === currentUser?.id ? 'bg-primary-50 border border-primary-100 text-black' : 'bg-gray-50 border border-grey-200 text-black'} break-words`}>
+                <div
+                  className={`p-3 rounded-lg text-xs max-w-xs font-medium ${
+                    message.consumer_id === currentUser?.id
+                      ? 'bg-primary-50 border border-primary-100 text-black'
+                      : 'bg-white border border-grey-100 text-black'
+                  } break-words`}
+                >
                   {message.content}
                 </div>
               </div>
@@ -144,12 +160,12 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="flex-1 p-3 border border-gray-300 rounded-lg mr-2 text-sm font-normal py-3"
+              className="flex-1 p-3 border border-grey-300 rounded-lg mr-2 text-sm font-normal py-3"
               placeholder="메시지를 입력하세요"
             />
             <button type="submit" className="p-2 bg-primary-500 text-white text-sm font-normal rounded-lg flex p-3">
-              <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className='text-white'/>
-              <div className='hidden md:block'>보내기</div>
+              <Image src="/sendMessage.svg" alt="메세지버튼" width={20} height={20} className="text-white" />
+              <div className="hidden md:block">보내기</div>
             </button>
           </form>
         </div>

@@ -7,27 +7,31 @@ import { CommunityComments } from '@/types/type';
 import { FormEvent, useState } from 'react';
 // import { comment } from 'postcss';
 import { useParams, useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import '../../../../../css/commentMdStyle.css';
 import Image from 'next/image';
+import { Notify } from 'notiflix';
 
 export default function CommuComment() {
   const [value, setValue] = useState<string | undefined>('');
   const { isLogin, userId } = useAuthStore();
+
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
   const handleCheckLogin = () => {
     if (!isLogin) {
-      alert('로그인 후 이용해주세요.');
+      Notify.failure('로그인 후 이용해주세요.');
       const presentPage = window.location.href;
       const pagePathname = new URL(presentPage).pathname;
       Cookies.set('returnPage', pagePathname);
       router.push('/login');
     }
   };
+
+  const queryClient = useQueryClient();
 
   // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
@@ -43,15 +47,21 @@ export default function CommuComment() {
   // };
 
   const handleSubmit = async () => {
-    const commentData = value;
+    const commentData = value?.trim();
+
+    if (!commentData) {
+      Notify.failure('댓글을 입력해주세요.');
+      return;
+    }
 
     const response = await fetch('/api/communityComments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, commentData, userId })
-    }).then((res) => res.json());
+    });
+    queryClient.invalidateQueries({ queryKey: ['comment', id] });
 
-    // Handle response if necessary
+    setValue('');
   };
 
   const getComments = async (): Promise<CommunityComments[]> => {
@@ -72,6 +82,8 @@ export default function CommuComment() {
     enabled: !!id
   });
 
+  // 뮤테이션 맞춰서 통일하기
+
   // data의 총 개수를 계산
   const commentCount = data ? data.length : 0;
 
@@ -79,7 +91,7 @@ export default function CommuComment() {
     <div className="flex flex-col">
       <div className="flex gap-[8px]">
         <Image src="/comment.svg" alt="댓글" width={24} height={24} />
-        <p className="text-[16px] text-gray-400 font-bold">{commentCount}</p>
+        <p className="text-[16px] text-grey-400 font-bold">{commentCount}</p>
       </div>
       <div className="flex gap-[32px] mt-[32px]">
         <div data-color-mode="light" className="w-[995px] rounded-[8px]">

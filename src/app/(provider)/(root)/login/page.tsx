@@ -159,7 +159,7 @@ export default function LoginPage() {
 
   return (
     <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
-      <div className="w-[528px] flex flex-col items-center p-[64px] bg-white">
+      <div className="md:w-[528px] flex flex-col items-center p-[64px] bg-white">
         <Image src="/logo_eng.svg" alt="영어 로고" width={180} height={60} className="hidden md:flex mb-[32px]" />
         <div className="relative flex justify-center items-center text-center md:hidden w-[328px] h-[48px] mb-[32px]">
           <Link href="/" className="left-0 absolute">

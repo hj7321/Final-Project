@@ -19,6 +19,7 @@ import ResetPassword from './ResetPassword';
 import Cookies from 'js-cookie';
 import clsx from 'clsx';
 import useProfile from '@/hooks/useProfile';
+import { Notify } from 'notiflix';
 
 const myActivities = [
   { name: '찜한 목록', component: 'MyBookmarkList' },
@@ -149,10 +150,23 @@ export default function AllMypage() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['User', id] });
+    },
+    onSuccess: () => {
+      Notify.success('회원 유형이 변경되었습니다.');
+      window.location.reload();
     }
   });
 
-  if (isUserDataPending) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  if (isUserDataPending)
+    return (
+      <div className={clsx('flex flex-col justify-center mt-[300px] mb-[400px]  items-center')}>
+        <div className={clsx('icon', 'flex gap-[3px]')}>
+          <div className="circle"></div>
+          <div className="circle"></div>
+        </div>
+        <div className="text-primary-500 text-2xl font-bold mt-3"> Loading...</div>
+      </div>
+    );
 
   if (userDataError) {
     return <div className="h-screen flex items-center justify-center">Error: {userDataError.message}</div>;
@@ -205,7 +219,7 @@ export default function AllMypage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <li className="hidden md:flex text-[20px] font-bold">나의 활동</li>
-            <div className="hidden md:flex border-t w-[225px] border-gray-300 my-10"></div>
+            <div className="hidden md:flex border-t w-[225px] border-grey-300 my-10"></div>
 
             {myActivities.map((item) => (
               <li
@@ -295,7 +309,7 @@ export default function AllMypage() {
           </ul>
         </div>
         <main className="md:flex-1">
-          <h1 className="flex text-2xl font-bold md:mt-[40px] w-full">{renderComponent(activeComponent)}</h1>
+          <h1 className="flex md:mt-[40px] w-full">{renderComponent(activeComponent)}</h1>
         </main>
       </div>
     </div>

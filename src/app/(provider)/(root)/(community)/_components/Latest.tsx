@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CommunityPosts } from '@/types/type';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
@@ -8,10 +8,15 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import { CodeCategories } from '@/components/dumy';
+import { BookmarkCount } from '../../mypage/[id]/_components/BookmarkCount';
 
 const btnSt = 'w-[32px] h-[32px] text-white text-[16pt] flex items-center justify-center rounded-[4px]';
 
-export default function Latest() {
+interface LatestProps {
+  selectedLanguages: string[];
+}
+
+export default function Latest({ selectedLanguages }: LatestProps) {
   const { userId } = useAuthStore();
   const pathname = usePathname().split('/')[1];
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +41,12 @@ export default function Latest() {
     }
     const data: CommunityPosts[] = await response.json();
     const filteredData = data.filter((post) => post.post_category.toLowerCase() === pathname);
+
+    // 선택된 언어로 게시물 필터링
+    if (selectedLanguages.length > 0) {
+      return filteredData.filter((post) => post.lang_category?.some((lang) => selectedLanguages.includes(lang)));
+    }
+
     return filteredData;
   };
 
@@ -50,7 +61,7 @@ export default function Latest() {
     isLoading,
     error
   } = useQuery<CommunityPosts[]>({
-    queryKey: ['post', pathname],
+    queryKey: ['post', pathname, selectedLanguages],
     queryFn: getPosts
   });
 
@@ -111,14 +122,12 @@ export default function Latest() {
                       alt="Post Image"
                       width={186}
                       height={186}
-                      className="rounded-[8px] w-[186px] h-[186px] "
+                      className="rounded-[8px] w-[186px] h-[186px] object-cover"
                     />
-                    //모바일 sm:w-[72px] sm:h-[72px]
-                    // 미리보기 이미지 찌그러짐 현상
                   )}
                   <div className="flex flex-col gap-4 w-full overflow-hidden">
                     <div className="flex gap-[12px] line-clamp-1">
-                      {post.lang_category?.map((category, index) => {
+                      {post.lang_category?.slice(0, 5).map((category, index) => {
                         const categoryData = CodeCategories.find((cat) => cat.name === category);
                         return (
                           <div key={index} className="flex gap-[9px]">
@@ -128,27 +137,32 @@ export default function Latest() {
                                 alt={category}
                                 width={24}
                                 height={24}
-                                className="rounded-full "
+                                className="rounded-full"
                               />
                             )}
-                            <p className=" text-gray-600">{category}</p>
+                            <p className=" text-grey-600">
+                              {index === 4 && category.length > 5 ? `${category} ⋯` : category}
+                            </p>
                           </div>
                         );
                       })}
                     </div>
                     <div className="flex flex-col gap-2">
                       <h1 className="font-black text-gray-800 text-[16px]">{post.title}</h1>
-                      <div className="font-medium text-[16px] text-gray-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2">
+                      <div
+                        className="font-medium text-[16px] text-gray-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2"
+                        data-color-mode="light"
+                      >
                         <MDEditor.Markdown source={post.content} />
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <p className="font-medium text-[12px] text-gray-400">{getUserNickname(post.user_id)}</p>
+                      <p className="font-medium text-[12px] text-grey-400">{getUserNickname(post.user_id)}</p>
                       <div className="flex justify-between	items-center">
                         <div className="flex gap-6">
                           <div className="flex items-center gap-2">
                             <Image src="/comment.svg" alt="" width={16} height={16} className="w-[16px] h-[16px]" />
-                            <p className="font-medium text-[12px] text-gray-400">{commentCounts?.[index] ?? 0}</p>
+                            <p className="font-medium text-[12px] text-grey-400">{commentCounts?.[index] ?? 0}</p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Image
@@ -158,10 +172,12 @@ export default function Latest() {
                               height={16}
                               className="w-[16px] h-[16px]"
                             />
-                            <p className="font-medium text-[12px] text-gray-400">N</p>
+                            <p className="font-medium text-[12px] text-grey-400">
+                              <BookmarkCount postId={post.id} />
+                            </p>
                           </div>
                         </div>
-                        <p className="font-medium text-[12px] text-gray-400">{post?.created_at.split('T')[0]}</p>
+                        <p className="font-medium text-[12px] text-grey-400">{post?.created_at.split('T')[0]}</p>
                       </div>
                     </div>
                   </div>
@@ -176,7 +192,7 @@ export default function Latest() {
             <button
               key={index + 1}
               className={`${btnSt} ${
-                currentPage === index + 1 ? 'bg-primary-500' : 'bg-gray-100'
+                currentPage === index + 1 ? 'bg-primary-500' : 'bg-grey-100'
               } w-[32px] h-[32px] rounded-lg`}
               onClick={() => handleClick(index + 1)}
             >

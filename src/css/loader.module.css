@@ -1,0 +1,65 @@
+.icon {
+    width: 91px;
+    /* 아이콘 크기 설정 */
+    height: 102px;
+    border-radius: 39%;
+    /* 둥근 사각형 유지 */
+    background: linear-gradient(#253CE5 0 0) bottom/100% 0% no-repeat #ccc;
+    position: relative;
+    animation: l19 2s infinite linear;
+    /* 애니메이션 적용 */
+}
+
+.circle {
+    position: absolute;
+    width: 32px;
+    /* 아이콘 크기에 맞게 조정 */
+    height: 36px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.circle-left {
+    top: 18px;
+    /* 아이콘 크기에 맞게 조정 */
+    left: 20005px;
+}
+
+.circle-right {
+    top: 18px;
+    /* 아이콘 크기에 맞게 조정 */
+    right: 15px;
+}
+
+.inner-circle {
+    position: absolute;
+    width: 17px;
+    /* 아이콘 크기에 맞게 조정 */
+    height: 20px;
+    background-color: #253CE5;
+    border-radius: 50%;
+    background: linear-gradient(#253CE5 0 0)
+}
+
+.inner-circle-left {
+    top: 23px;
+    /* 아이콘 크기에 맞게 조정 */
+    left: 25px;
+}
+
+.inner-circle-right {
+    top: 23px;
+    /* 아이콘 크기에 맞게 조정 */
+    right: 20px;
+}
+
+@keyframes l19 {
+    0% {
+        background-size: 100% 0%;
+    }
+
+    90%,
+    100% {
+        background-size: 100% 100%;
+    }
+}

@@ -56,7 +56,7 @@ const EditReview: React.FC<EditReviewProps> = ({ review, onClose, portfolio, use
 
       <div className="flex flex-col mt-5">
         <StarRating totalStars={5} size={40} selectedStars={rating} onRatingChange={setRating} />
-        <div className="mt-3 text-gray-400 text-sm">({rating})</div>
+        <div className="mt-3 text-grey-400 text-sm">({rating})</div>
       </div>
       <div>
         <textarea

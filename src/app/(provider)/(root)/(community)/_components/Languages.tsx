@@ -1,44 +1,61 @@
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts } from '@/types/type';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function Languages() {
+interface LanguagesProps {
+  selectedLanguages: string[];
+  setSelectedLanguages: (languages: string[]) => void;
+}
+
+export default function Languages({ selectedLanguages, setSelectedLanguages }: LanguagesProps) {
   const [posts, setPosts] = useState<CommunityPosts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<CommunityPosts[]>([]);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
-  const fetchData = useCallback(async (languages: string[] = []) => {
-    try {
-      const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
-      const url = `/api/proMain?${langQuery}`;
-      const response = await fetch(url);
-      const data = await response.json();
+  // const fetchData = useCallback(async (languages: string[] = []) => {
+  //   try {
+  //     const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
+  //     const url = `/api/proMain?${langQuery}`;
+  //     const response = await fetch(url);
+  //     const data = await response.json();
 
-      if (data && Array.isArray(data)) {
-        setPosts(data);
-        setFilteredPosts(data);
-      } else {
-        console.error('data fetch error');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  //     if (data && Array.isArray(data)) {
+  //       setPosts(data);
+  //       setFilteredPosts(data);
+  //     } else {
+  //       console.error('data fetch error');
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, []);
 
-  const handleLanguageFilter = (lang: string) => {
-    const newSelectedLanguages = selectedLanguages.includes(lang)
-      ? selectedLanguages.filter((l) => l !== lang)
-      : [...selectedLanguages, lang];
+  // const handleLanguageFilter = useCallback(
+  //   (lang: string) => {
+  //     const newSelectedLanguages = selectedLanguages.includes(lang)
+  //       ? selectedLanguages.filter((l) => l !== lang)
+  //       : [...selectedLanguages, lang];
 
-    setSelectedLanguages(newSelectedLanguages);
-    fetchData(newSelectedLanguages);
-  };
+  //     setSelectedLanguages(newSelectedLanguages);
+  //   },
+  //   [selectedLanguages]
+  // );
 
-  useEffect(() => {
-    fetchData(selectedLanguages);
-  }, [selectedLanguages, fetchData]);
+  // useEffect(() => {
+  //   fetchData(selectedLanguages);
+  // }, [selectedLanguages, fetchData]);
+
+  const handleLanguageFilter = useCallback(
+    (lang: string) => {
+      if (!selectedLanguages) return; // safeguard against undefined
+      const newSelectedLanguages = selectedLanguages.includes(lang)
+        ? selectedLanguages.filter((l) => l !== lang)
+        : [...selectedLanguages, lang];
+
+      setSelectedLanguages(newSelectedLanguages);
+    },
+    [selectedLanguages, setSelectedLanguages]
+  );
 
   return (
     <div>
@@ -57,15 +74,15 @@ export default function Languages() {
       </div>
 
       {/* 데스크탑 화면 */}
-      <div className="px-[16px] py-[24px] flex-col items-start gap-[24px] border border-gray-200 rounded-[16px] mt-1 hidden sm:flex">
-        <p className="font-bold text-[16px] text-gray-400 mx-auto">언어 선택</p>
+      <div className="px-[16px] py-[24px] flex-col items-start gap-[24px] border border-grey-200 rounded-[16px] mt-1 hidden sm:flex">
+        <p className="font-bold text-[16px] text-grey-400 mx-auto">언어 선택</p>
         <div className="flex flex-col gap-[16px]">
           {CodeCategories.map((lang) => (
             <div
               className={`flex justify-start items-center hover:cursor-pointer gap-[6px] text-[14px] rounded-[20px] px-[8px] py-[5px] border border-solid ${
                 selectedLanguages.includes(lang.name)
                   ? ' bg-primary-50 border-primary-500 '
-                  : 'border-transparent bg-gray-50 '
+                  : 'border-transparent bg-grey-50 '
               }`}
               key={lang.id}
               onClick={() => handleLanguageFilter(lang.name)}
@@ -79,7 +96,7 @@ export default function Languages() {
               />
               <p
                 className={`text-center ${
-                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-gray-400'
+                  selectedLanguages.includes(lang.name) ? 'text-primary-500 font-bold' : ' text-grey-400'
                 }`}
               >
                 {lang.name}
