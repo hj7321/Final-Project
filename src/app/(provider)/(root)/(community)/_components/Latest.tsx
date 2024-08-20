@@ -140,8 +140,11 @@ export default function Latest() {
                       })}
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h1 className="font-black text-grey-800 text-[16px]">{post.title}</h1>
-                      <div className="font-medium text-[16px] text-grey-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2">
+                      <h1 className="font-black text-gray-800 text-[16px]">{post.title}</h1>
+                      <div
+                        className="font-medium text-[16px] text-gray-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2"
+                        data-color-mode="light"
+                      >
                         <MDEditor.Markdown source={post.content} />
                       </div>
                     </div>
