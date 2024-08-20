@@ -1,44 +1,61 @@
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts } from '@/types/type';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function Languages() {
+interface LanguagesProps {
+  selectedLanguages: string[];
+  setSelectedLanguages: (languages: string[]) => void;
+}
+
+export default function Languages({ selectedLanguages, setSelectedLanguages }: LanguagesProps) {
   const [posts, setPosts] = useState<CommunityPosts[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<CommunityPosts[]>([]);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 
-  const fetchData = useCallback(async (languages: string[] = []) => {
-    try {
-      const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
-      const url = `/api/proMain?${langQuery}`;
-      const response = await fetch(url);
-      const data = await response.json();
+  // const fetchData = useCallback(async (languages: string[] = []) => {
+  //   try {
+  //     const langQuery = languages.length > 0 ? `&languages=${encodeURIComponent(JSON.stringify(languages))}` : '';
+  //     const url = `/api/proMain?${langQuery}`;
+  //     const response = await fetch(url);
+  //     const data = await response.json();
 
-      if (data && Array.isArray(data)) {
-        setPosts(data);
-        setFilteredPosts(data);
-      } else {
-        console.error('data fetch error');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  //     if (data && Array.isArray(data)) {
+  //       setPosts(data);
+  //       setFilteredPosts(data);
+  //     } else {
+  //       console.error('data fetch error');
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, []);
 
-  const handleLanguageFilter = (lang: string) => {
-    const newSelectedLanguages = selectedLanguages.includes(lang)
-      ? selectedLanguages.filter((l) => l !== lang)
-      : [...selectedLanguages, lang];
+  // const handleLanguageFilter = useCallback(
+  //   (lang: string) => {
+  //     const newSelectedLanguages = selectedLanguages.includes(lang)
+  //       ? selectedLanguages.filter((l) => l !== lang)
+  //       : [...selectedLanguages, lang];
 
-    setSelectedLanguages(newSelectedLanguages);
-    fetchData(newSelectedLanguages);
-  };
+  //     setSelectedLanguages(newSelectedLanguages);
+  //   },
+  //   [selectedLanguages]
+  // );
 
-  useEffect(() => {
-    fetchData(selectedLanguages);
-  }, [selectedLanguages, fetchData]);
+  // useEffect(() => {
+  //   fetchData(selectedLanguages);
+  // }, [selectedLanguages, fetchData]);
+
+  const handleLanguageFilter = useCallback(
+    (lang: string) => {
+      if (!selectedLanguages) return; // safeguard against undefined
+      const newSelectedLanguages = selectedLanguages.includes(lang)
+        ? selectedLanguages.filter((l) => l !== lang)
+        : [...selectedLanguages, lang];
+
+      setSelectedLanguages(newSelectedLanguages);
+    },
+    [selectedLanguages, setSelectedLanguages]
+  );
 
   return (
     <div>

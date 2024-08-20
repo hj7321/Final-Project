@@ -8,7 +8,7 @@ import MDEditor from '@uiw/react-md-editor';
 import useProfile from '@/hooks/useProfile';
 import useAuthStore from '@/zustand/authStore';
 import Cookies from 'js-cookie';
-import { Notify } from 'notiflix';
+import { Confirm, Notify } from 'notiflix';
 import { useState } from 'react';
 import { CodeCategories } from '@/components/dumy';
 
@@ -51,7 +51,7 @@ export default function CommuPost() {
   });
   const userIdFromPost = postData?.user_id;
 
-  const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
+  const { userData } = useProfile(userIdFromPost);
 
   const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
     const { data, count } = await fetch(`/api/bookmark/${postId}`).then((res) => res.json());
@@ -148,6 +148,49 @@ export default function CommuPost() {
     }
   };
 
+  const deletePost = async () => {
+    const response = await fetch(`/api/communityRead/${postId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  };
+
+  const deleteMutation = useMutation<void, Error, string | string[]>({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      Notify.success('게시글이 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      router.back();
+    },
+    onError: (error) => {
+      Notify.failure('삭제에 실패했습니다.');
+      console.error('삭제에 실패했습니다.', error);
+    }
+  });
+
+  const handleDelete = () => {
+    if (userId === userIdFromPost) {
+      Confirm.show(
+        '게시글 삭제',
+        '정말로 삭제하시겠습니까?',
+        '네',
+        '아니오',
+        () => {
+          deleteMutation.mutate(postId!);
+        },
+        () => {
+          Notify.failure('삭제가 취소되었습니다.');
+        },
+        {}
+      );
+    } else {
+      Notify.failure('삭제 권한이 없습니다.');
+    }
+  };
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -196,13 +239,13 @@ export default function CommuPost() {
             <div
               className="absolute bg-white rounded-[16px] shadow-md w-[150px]"
               style={{
-                top: '40%',
+                top: '20%',
                 right: '0',
                 zIndex: 1000
               }}
             >
               <ul>
-                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
                   <Image
                     src="/pencil_color.svg"
                     alt="수정"
@@ -211,9 +254,9 @@ export default function CommuPost() {
                     className="filter brightness-0 invert-0"
                   />
                   수정하기
-                </li>
+                </div>
                 <hr className="w-full h-[1px] bg-gray-100 border-0" />
-                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleDelete}>
                   <Image
                     src="/trashCan_color.svg"
                     alt="삭제"
@@ -222,7 +265,7 @@ export default function CommuPost() {
                     className="filter brightness-0 invert-0"
                   />
                   삭제하기
-                </li>
+                </div>
               </ul>
             </div>
           )}

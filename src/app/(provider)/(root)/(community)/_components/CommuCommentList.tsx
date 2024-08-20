@@ -9,6 +9,7 @@ import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import Comment from './Comment';
+import { Confirm, Notify } from 'notiflix';
 
 export default function CommuCommentList() {
   const { id: paramsId } = useParams();
@@ -33,10 +34,10 @@ export default function CommuCommentList() {
   };
 
   const deleteComment = async (id: string) => {
-    const response = await fetch('/api/communityComments', {
+    const response = await fetch(`/api/communityComments/${id}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
+      headers: { 'Content-Type': 'application/json' }
+      // body: JSON.stringify({ id })
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -85,12 +86,24 @@ export default function CommuCommentList() {
 
   const handleDelete = (commentId: string, commentUserId: string) => {
     if (userId === commentUserId) {
-      const isConfirmed = window.confirm('정말로 이 댓글을 삭제하시겠습니까?');
-
-      if (isConfirmed) {
-        deleteMutation.mutate(commentId);
-        getComments();
-      }
+      Confirm.show(
+        '댓글 삭제',
+        '정말로 이 댓글을 삭제하시겠습니까?',
+        '네',
+        '아니오',
+        () => {
+          Notify.success('삭제되었습니다.');
+          try {
+            deleteMutation.mutate(commentId);
+          } catch (error) {
+            console.error('삭제에 실패했습니다.', error);
+          }
+        },
+        () => {
+          Notify.failure('삭제가 되지 않았습니다.');
+        },
+        {}
+      );
     } else {
       console.error('삭제 권한이 없습니다.');
     }
