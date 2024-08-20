@@ -154,8 +154,7 @@ export default function ProDetail() {
   };
   return (
     <div className="max-w-[1280px] mx-auto md:p-4 pl-4 pr-4 pb-4">
-      <PageBackBtn />
-      <div className="flex md:flex-row flex-col-reverse justify-between items-center">
+      <div className="flex md:flex-row flex-col-reverse justify-between items-center mt-[20px] md:mt-[40px]">
         <div className="md:h-[470px] md:w-[380px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
             <UserProfile profile={user.profile_img} nickname={user.nickname} possibleTime={user.possible_time} />
