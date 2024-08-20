@@ -181,10 +181,10 @@ export default function Comment({
           <p className="font-bold">{getUserNickname(comment.user_id)}</p>
           <MDEditor.Markdown source={comment.contents} />
           <div className="flex gap-[24px] items-center">
-            <p className="text-[16px] text-gray-400">{comment.created_at.split('T')[0]}</p>
+            <p className="text-[16px] text-grey-400">{comment.created_at.split('T')[0]}</p>
             <div
               onClick={handleToggleLike}
-              className="flex w-[60px] gap-[8px] text-gray-400 bg-gray-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center "
+              className="flex w-[60px] gap-[8px] text-grey-400 bg-grey-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center "
             >
               {likesData?.data.find((item) => item.user_id === userId) ? (
                 <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
@@ -205,7 +205,7 @@ export default function Comment({
                   </button>
                   <button
                     onClick={() => handleDelete(comment.id, comment.user_id)}
-                    className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-gray-300 rounded-[8px]"
+                    className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-grey-300 rounded-[8px]"
                   >
                     <Image src="/trashCan_color.svg" alt="삭제" width={24} height={24} />
                     <p className="text-white">댓글 삭제</p>

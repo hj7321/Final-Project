@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 export default function TopButton() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const toggleVisibility = () => {

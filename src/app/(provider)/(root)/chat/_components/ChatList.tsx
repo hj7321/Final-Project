@@ -170,10 +170,10 @@ const ChatList = () => {
 
   if (!chatRooms || chatRooms.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
+      <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">
         <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
         <div className="text-lg font-semibold mb-2">아직 거래내역이 없어요</div>
-        <div className="text-sm text-gray-600 mb-4">전문가 의뢰를 통해 원하는 결과물을 받아보세요 </div>
+        <div className="text-sm text-grey-600 mb-4">전문가 의뢰를 통해 원하는 결과물을 받아보세요 </div>
       </div>
     );
   }
@@ -185,7 +185,7 @@ const ChatList = () => {
         {chatRooms.map((room) => (
           <div
             key={room.chat_room_id}
-            className="flex flex-col justify-between w-auto md:max-w-52 h-48 md:h-64 p-2 md:py-5 md:px-6 border border-gray-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
+            className="flex flex-col justify-between w-auto md:max-w-52 h-48 md:h-64 p-2 md:py-5 md:px-6 border border-grey-200 rounded-xl cursor-pointer transition-transform transform hover:scale-105 duration-300 hover:shadow-md hover:shadow-primary-100"
             onClick={() => openChatModal(room.chat_room_id)}
           >
             <div>
@@ -208,7 +208,7 @@ const ChatList = () => {
                   alt="상대 프로필"
                   width={20}
                   height={20}
-                  className="w-12 h-12 mt-3 border border-gray-300 rounded-full"
+                  className="w-12 h-12 mt-3 border border-grey-300 rounded-full"
                 />
               </div>
               <div className="text-center">
@@ -221,12 +221,12 @@ const ChatList = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-500 font-normal text-xs mt-1 truncate overflow-hidden">
+                <p className="text-grey-500 font-normal text-xs mt-1 truncate overflow-hidden">
                   {truncateMessage(room.latest_message, 40)}
                 </p>
               </div>
             </div>
-            <p className="text-xs font-normal text-gray-400 md:mt-2 self-center">
+            <p className="text-xs font-normal text-grey-400 md:mt-2 self-center">
               {new Date(room.latest_message_time).toLocaleDateString()}
             </p>
           </div>

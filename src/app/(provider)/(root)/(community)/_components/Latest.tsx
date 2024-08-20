@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import { CodeCategories } from '@/components/dumy';
+import { BookmarkCount } from '../../mypage/[id]/_components/BookmarkCount';
 
 const btnSt = 'w-[32px] h-[32px] text-white text-[16pt] flex items-center justify-center rounded-[4px]';
 
@@ -97,6 +98,8 @@ export default function Latest() {
   if (isLoading || commentsLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  console.log(currentPosts);
+
   return (
     <>
       <div className="flex flex-col gap-[24px] w-full">
@@ -128,10 +131,10 @@ export default function Latest() {
                                 alt={category}
                                 width={24}
                                 height={24}
-                                className="rounded-full "
+                                className="rounded-full"
                               />
                             )}
-                            <p className=" text-gray-600">{category}</p>
+                            <p className=" text-grey-600">{category}</p>
                           </div>
                         );
                       })}
@@ -146,12 +149,12 @@ export default function Latest() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <p className="font-medium text-[12px] text-gray-400">{getUserNickname(post.user_id)}</p>
+                      <p className="font-medium text-[12px] text-grey-400">{getUserNickname(post.user_id)}</p>
                       <div className="flex justify-between	items-center">
                         <div className="flex gap-6">
                           <div className="flex items-center gap-2">
                             <Image src="/comment.svg" alt="" width={16} height={16} className="w-[16px] h-[16px]" />
-                            <p className="font-medium text-[12px] text-gray-400">{commentCounts?.[index] ?? 0}</p>
+                            <p className="font-medium text-[12px] text-grey-400">{commentCounts?.[index] ?? 0}</p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Image
@@ -161,10 +164,12 @@ export default function Latest() {
                               height={16}
                               className="w-[16px] h-[16px]"
                             />
-                            <p className="font-medium text-[12px] text-gray-400">N</p>
+                            <p className="font-medium text-[12px] text-grey-400">
+                              <BookmarkCount postId={post.id} />
+                            </p>
                           </div>
                         </div>
-                        <p className="font-medium text-[12px] text-gray-400">{post?.created_at.split('T')[0]}</p>
+                        <p className="font-medium text-[12px] text-grey-400">{post?.created_at.split('T')[0]}</p>
                       </div>
                     </div>
                   </div>
@@ -179,7 +184,7 @@ export default function Latest() {
             <button
               key={index + 1}
               className={`${btnSt} ${
-                currentPage === index + 1 ? 'bg-primary-500' : 'bg-gray-100'
+                currentPage === index + 1 ? 'bg-primary-500' : 'bg-grey-100'
               } w-[32px] h-[32px] rounded-lg`}
               onClick={() => handleClick(index + 1)}
             >

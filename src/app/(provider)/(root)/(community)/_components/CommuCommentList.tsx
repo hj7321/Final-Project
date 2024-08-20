@@ -168,7 +168,7 @@ export default function CommuCommentList() {
             />
           ))}
       </div>
-      <hr className="w-full h-[1px] bg-gray-100 border-0 my-[32px]" />
+      <hr className="w-full h-[1px] bg-grey-100 border-0 my-[32px]" />
     </div>
   );
 }

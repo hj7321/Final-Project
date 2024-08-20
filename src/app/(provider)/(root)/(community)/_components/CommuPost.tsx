@@ -153,10 +153,8 @@ export default function CommuPost() {
   };
 
   const handleNavigation = () => {
-    router.push('/pna');
+    router.back();
   };
-
-  // 이전 페이지 판별해서 돌아가는 법 물어보기
 
   return (
     <div className="flex flex-col relative">
