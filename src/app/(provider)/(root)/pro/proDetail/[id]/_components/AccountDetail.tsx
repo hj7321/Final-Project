@@ -44,22 +44,6 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
   const paymentId = `payment-${crypto.randomUUID().slice(0, 20)}`;
   const router = useRouter();
 
-  // 리팩토링 전
-  // const getUserData = async () => {
-  //   const supabase = createClient();
-  //   if (!currentUserId) {
-  //     throw new Error('Invalid UUID: id is null or undefined');
-  //   }
-  //   const data = await supabase.from('Users').select('*').eq('id', currentUserId).maybeSingle();
-
-  //   return data;
-  // };
-  // const { data: Users } = useQuery({
-  //   queryKey: ['Users'],
-  //   queryFn: getUserData,
-  //   enabled: !!currentUserId
-  // });
-
   // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(currentUserId);
 
@@ -105,17 +89,11 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
           console.log(err);
         });
 
-      // if (!notified.ok) {
-      //   const errorData = await notified.json();
-      //   throw new Error(`Failed to notify the server: ${errorData.message}`);
-      // }
-
       Notify.success('결제가 완료되었습니다.');
-      //   setIsChatModalOpen(true);
       router.push(`/completedAccount/${paymentId}?post_id=${post.id}`);
     } catch (error) {
       console.error('Payment failed:', error);
-      alert('결제에 실패했습니다. 다시 시도해주세요.');
+      Notify.failure('결제에 실패했습니다. 다시 시도해주세요.');
     }
   }
 

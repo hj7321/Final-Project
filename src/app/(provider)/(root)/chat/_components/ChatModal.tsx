@@ -17,6 +17,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
   const [otherUser, setOtherUser] = useState<Users | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLength = useRef<number>(0);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -78,11 +79,14 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
 
     fetchMessages();
     fetchOtherUser();
-
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, [chatRoomId, currentUser, onMessagesRead]);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesLength.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages]);
 
   const handleSendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
