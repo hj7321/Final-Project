@@ -1,21 +1,73 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatModal from '../../chat/_components/ChatModal';
+import { useSession } from '@/hooks/useSession';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useChatRoom } from '@/hooks/useChatRoom';
 
-export default function ompletedAccount() {
+interface UserData {
+  id: string;
+  nickname: string;
+  profile_img: string;
+}
+
+interface PostData {
+  id: string;
+  post_img: string[];
+  content: string;
+  price: number;
+  title: string;
+  user_id: string;
+}
+
+export default function CompletedAccount() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const { currentUserId } = useSession();
+  const router = useRouter();
+  const { id: paymentId } = useParams(); // 결제 ID를 파라미터로 가져옵니다.
+  const searchParams = useSearchParams();
+  const postId = searchParams.get('post_id'); // post_id 가져오기
 
-  const handleChatOpen = () => {
+  const [user, setUser] = useState(null); // 전문가 유저 정보 저장
+  const [post, setPost] = useState<PostData | null>(null); // 결제된 게시물 정보 저장
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/account?id=${paymentId}`);
+        const data = await response.json();
+        const postData = data.find((item: PostData) => item.id === postId);
+
+        if (postData) {
+          setUser(postData.user_id);
+          setPost(postData);
+        } else {
+          console.error('No matching post found');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, [paymentId]);
+
+  const { chatRoomId, createOrFetchChatRoom, toggleChat } = useChatRoom(currentUserId, user || null, postId);
+
+  console.log('chatRoomId', chatRoomId);
+  console.log('user', user);
+
+  const handleChatOpen = async () => {
+    if (!currentUserId || !user || !post) {
+      alert('필요한 정보가 부족합니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+    await createOrFetchChatRoom();
     setIsChatOpen(true);
-  };
 
-  const handleChatClose = () => {
-    setIsChatOpen(false);
+    toggleChat();
   };
-
-  const handleMessagesRead = () => {};
 
   return (
     <div className="w-full flex flex-col items-center justify-center h-[80vh] ">
@@ -29,13 +81,7 @@ export default function ompletedAccount() {
         전문가 채팅으로 이동
       </button>
 
-      {isChatOpen && (
-        <ChatModal
-          chatRoomId="db927b6c-9ba6-4235-8fcf-e9614ffd003b"
-          onClose={handleChatClose}
-          onMessagesRead={handleMessagesRead}
-        />
-      )}
+      {isChatOpen && chatRoomId && <ChatModal chatRoomId={chatRoomId} onClose={toggleChat} onMessagesRead={() => {}} />}
     </div>
   );
 }

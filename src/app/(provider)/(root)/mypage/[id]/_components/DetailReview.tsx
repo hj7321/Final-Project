@@ -191,7 +191,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
                 <p className="ml-1 font-semibold mt-3 text-lg text-grey-800">{review.contents}</p>
                 <p className="mt-3 text-sm text-gray-400">작성일: {review.created_at.slice(0, 10)}</p>
                 <div className="flex justify-end">
-                  <button className="bg-primary-500 text-white text-base font-normal mt-2 px-4 py-2 rounded-md shadow-sm mr-0 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button className="hidden bg-primary-500 text-white text-base font-normal mt-2 px-4 py-2 rounded-md shadow-sm mr-0 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     리뷰 수정
                   </button>
                   <button
