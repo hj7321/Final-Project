@@ -49,6 +49,7 @@ export default function Comment({
   const handleGetLikesData = async (): Promise<LikesData | undefined> => {
     const { data, count } = await fetch(`/api/commentsLike/${commentId}`).then((res) => res.json());
     if (data.errorMsg) {
+      console.log(data.errorMsg);
       return;
     }
     return { data, count };
@@ -94,6 +95,7 @@ export default function Comment({
       return { previousData };
     },
     onError: (error, _, context) => {
+      console.log(error.message);
       queryClient.setQueryData(['like', commentId], context?.previousData);
     },
     onSettled: () => {
@@ -114,12 +116,16 @@ export default function Comment({
       return { previousData };
     },
     onError: (error, _, context) => {
+      console.log(error.message);
       queryClient.setQueryData(['like', commentId], context?.previousData);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['like', commentId] });
     }
   });
+
+  console.log(deleteLike);
+  console.log(addLike);
 
   const handleToggleLike = () => {
     if (!isLogin) {
