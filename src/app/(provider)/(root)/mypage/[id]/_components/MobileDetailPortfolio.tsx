@@ -107,14 +107,14 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
             <h1 className="text-xl font-bold">{userData?.nickname}</h1>
           </div>
           <div className="flex flex-col mx-auto space-y-4">
-            <div className="flex text-base text-gray-500">
+            <div className="flex text-base text-grey-500">
               {categoryImage && (
                 <Image src={categoryImage} alt={langCategory} width={24} height={24} className="mr-2" />
               )}
               {langCategory}
             </div>
             <div className="mt-8 mb-5">{title}</div>
-            <div className="border-t border-gray-300 my-10"></div>
+            <div className="border-t border-grey-300 my-10"></div>
             <div className="flex flex-col md:flex-row mt-10 mr-2">
               {previewUrls.length > 0 ? (
                 <Image src={previewUrls[0]} alt="썸네일 이미지" width={100} height={100} className="rounded-md" />
@@ -143,11 +143,11 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
             </div>
             <div>
               <label className="block text-xl font-bold my-5 text-black">프로젝트 설명</label>
-              <div className="text-lg font-semibold text-gray-500">{content}</div>
+              <div className="text-lg font-semibold text-grey-500">{content}</div>
             </div>
             <div>
               <label className="block text-xl font-bold my-5 text-black">참여기간</label>
-              <div className="text-lg font-semibold text-gray-500">
+              <div className="text-lg font-semibold text-grey-500">
                 {startDate} ~ {endDate}
               </div>
             </div>

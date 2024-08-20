@@ -99,7 +99,7 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-16 flex-grow">
           <h2 className="text-xl font-bold mb-4 mt-4">커뮤니티</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-            <div className="bg-white p-4 border border-gray-100 rounded-xl">
+            <div className="bg-white p-4 border border-grey-100 rounded-xl">
               <div className="flex justify-between items-center mb-10">
                 <h2 className="text-xl font-bold mx-auto">Q&A</h2>
                 <Link href="/qna" className="text-grey-400 text-sm">
@@ -108,11 +108,11 @@ export default function Home() {
               </div>
               <div>
                 {qnaPosts.slice(0, 5).map((item) => (
-                  <div key={item.id} className="mb-2 flex border-b border-gray-100 p-4">
+                  <div key={item.id} className="mb-2 flex border-b border-grey-100 p-4">
                     <Link href={`/qna/${item.id}`} className="mb-1 text-normal font-light text-normal">
                       {item.title}
                     </Link>
-                    <span className="text-sm font-extralight text-gray-400 ml-auto">
+                    <span className="text-sm font-extralight text-grey-400 ml-auto">
                       {new Date(item.created_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white p-4 border border-gray-100 rounded-xl">
+            <div className="bg-white p-4 border border-grey-100 rounded-xl">
               <div className="flex justify-between items-center mb-10">
                 <h2 className="text-xl font-bold mx-auto">인사이트</h2>
                 <Link href="/insight" className="text-grey-400 text-sm">
@@ -129,11 +129,11 @@ export default function Home() {
               </div>
               <div>
                 {insightPosts.slice(0, 5).map((item) => (
-                  <div key={item.id} className="mb-2 flex border-b border-gray-100 p-4">
+                  <div key={item.id} className="mb-2 flex border-b border-grey-100 p-4">
                     <Link href={`/insight/${item.id}`} className="mb-1 text-normal font-light text-normal">
                       {item.title}
                     </Link>
-                    <span className="text-sm font-extralight text-gray-400 ml-auto">
+                    <span className="text-sm font-extralight text-grey-400 ml-auto">
                       {new Date(item.created_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -175,7 +175,7 @@ export default function Home() {
                       height={20}
                       className="mr-1"
                     />
-                    <span className="text-gray-400 font-extralight text-xs">{expert.lang_category[0]}</span>
+                    <span className="text-grey-400 font-extralight text-xs">{expert.lang_category[0]}</span>
                   </div>
                   <h3 className="font-light text-sm">{truncateText(expert.title, 22)}</h3>
                   <h3 className="text-md font-bold mt-2">{expert.price}원</h3>

@@ -34,7 +34,7 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
   };
 
   // 읽지 않은 채팅방만 필터링
-  const unreadChatRooms = chatRooms.filter(room => room.unread_count > 0);
+  const unreadChatRooms = chatRooms.filter((room) => room.unread_count > 0);
 
   // 드롭다운 외부 클릭 시 닫히게 설정
   useEffect(() => {
@@ -84,7 +84,11 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
               <div className="px-4 py-3">
                 <ul>
                   {unreadChatRooms.map((room) => (
-                    <li key={room.chat_room_id} className="border-b py-2 flex items-center" onClick={() => openChatModal(room.chat_room_id)}>
+                    <li
+                      key={room.chat_room_id}
+                      className="border-b py-2 flex items-center"
+                      onClick={() => openChatModal(room.chat_room_id)}
+                    >
                       <Image
                         src={room.user_profile_img || '/defaultProfileimg.svg'}
                         alt="상대 프로필"
@@ -109,7 +113,7 @@ const ChatNotification: React.FC<ChatNotificationProps> = ({ userId }) => {
               </div>
             ) : (
               <div className="p-4">
-                <p className="text-sm text-gray-500">새로운 메시지가 없습니다.</p>
+                <p className="text-sm text-grey-500">새로운 메시지가 없습니다.</p>
               </div>
             )}
           </div>

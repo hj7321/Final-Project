@@ -88,7 +88,7 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 w-[1200px] h-[80%] relative overflow-auto">
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={clickModal}>
+        <button className="absolute top-2 right-2 text-grey-500 hover:text-grey-700" onClick={clickModal}>
           x
         </button>
         <div className="flex">
@@ -104,21 +104,21 @@ const DetailModal: React.FC<DetailModalfolioProps> = ({ clickModal, portfolioId 
               <h1 className="text-xl font-bold">{userData?.nickname}</h1>
             </div>
             <div className="flex flex-col mx-auto space-y-4">
-              <div className="flex text-base text-gray-500">
+              <div className="flex text-base text-grey-500">
                 {categoryImage && (
                   <Image src={categoryImage} alt={langCategory} width={24} height={24} className="mr-2" />
                 )}
                 {langCategory}
               </div>
               <div className="mt-8 mb-5">{title}</div>
-              <div className="border-t border-gray-300 my-10"></div>
-              <div data-color-mode='light'>
+              <div className="border-t border-grey-300 my-10"></div>
+              <div data-color-mode="light">
                 <label className="block text-xl font-bold my-5 text-black">프로젝트 설명</label>
-                <MDEditor.Markdown source={content} className='font-semibold text-gray-500 line-clamp-5'/>
+                <MDEditor.Markdown source={content} className="font-semibold text-grey-500 line-clamp-5" />
               </div>
               <div>
                 <label className="block text-xl font-bold my-5 text-black">참여기간</label>
-                <div className="text-lg font-semibold text-gray-500">
+                <div className="text-lg font-semibold text-grey-500">
                   {startDate} ~ {endDate}
                 </div>
               </div>

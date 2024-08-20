@@ -138,44 +138,44 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 w-[1200px] h-[80%] relative overflow-auto">
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={clickModal}>
+        <button className="absolute top-2 right-2 text-grey-500 hover:text-grey-700" onClick={clickModal}>
           x
         </button>
         <div className="flex">
           <div className="w-[40%] pr-4">
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">프로젝트 이름</label>
+                <label className="block text-sm font-medium text-grey-700">프로젝트 이름</label>
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">프로젝트 설명</label>
-                <div data-color-mode='light'>
+                <label className="block text-sm font-medium text-grey-700">프로젝트 설명</label>
+                <div data-color-mode="light">
                   <MDEditor value={content} onChange={setContent} height={200} />
                 </div>
                 {/* <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   style={{ height: '200px' }}
                 /> */}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">참여 기간</label>
+                <label className="block text-sm font-medium text-grey-700">참여 기간</label>
                 <input
                   type="date"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
                 ~
                 <input
                   type="date"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -183,7 +183,7 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
               <div className="flex justify-end">
                 <button
                   onClick={handleSave}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="bg-grey-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-grey-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   저장
                 </button>
@@ -191,10 +191,10 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
             </div>
           </div>
           <div className="flex flex-col items-end w-[60%] mt-10 mr-2">
-            <div className="mt-1 p-2 border items-start w-full border-gray-300 rounded-md shadow-sm">
+            <div className="mt-1 p-2 border items-start w-full border-grey-300 rounded-md shadow-sm">
               <input
                 type="file"
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                className="block w-full text-sm text-grey-900 border border-grey-300 rounded-lg cursor-pointer bg-grey-50 focus:outline-none"
                 multiple
                 onChange={handleImageChange}
               />

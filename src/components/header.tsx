@@ -18,7 +18,7 @@ interface HeaderProps {
 export default function Header({ isLogin, nickname }: HeaderProps) {
   const [searchInput, setSearchInput] = useState<string>('');
   const [number, setNumber] = useState<number>(0);
-
+  const [headerChange, setHeaderChange] = useState<boolean>(true);
   const { setSelectedIdx } = useIndexStore();
   const { isSidebarOpened, sidebarClose, isSearchBarOpened, searchBarClose } = useSidebarStore();
 
@@ -42,6 +42,18 @@ export default function Header({ isLogin, nickname }: HeaderProps) {
     setNumber(num);
   }, []);
 
+  // 스크롤이 690px 이상 내려가면 headerChange 상태를 바꿔서 헤더 스타일 바꾸도록 함
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 690) setHeaderChange(false);
+      else setHeaderChange(true);
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, [headerChange]);
+
   const handleSearch = () => {
     setSelectedIdx(null);
     if (searchInput.trim()) {
@@ -50,14 +62,12 @@ export default function Header({ isLogin, nickname }: HeaderProps) {
     }
   };
 
-  console.log(hideLayout);
-  console.log(isSidebarOpened);
-
   return (
     <>
       <header
         className={clsx(
           'sticky top-0 z-10 flex h-[56px] md:h-[72px] px-[16px] py-[16px] border-b border-grey-100 bg-white',
+          pathname === '/' && headerChange && 'md:bg-transparent md:border-none',
           hideLayout && 'hidden md:flex',
           isSidebarOpened && 'bg-grey-900 bg-opacity-50'
         )}
