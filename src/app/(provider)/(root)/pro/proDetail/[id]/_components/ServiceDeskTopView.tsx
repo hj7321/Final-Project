@@ -1,6 +1,7 @@
 import { CodeCategories } from "@/components/dumy"
 import Image from "next/image"
 import React from "react"
+import bookmark_dark from '../../../../../../../../public/bookmark_dark.svg'
 interface ServiceDeskTopViewProps {
   title : string
   langCategory : string[]
@@ -22,7 +23,10 @@ export default function ServiceDeskTopView({title, langCategory, price} : Servic
           ) : null;
         })}
       </p>
-      <p className="text-base md:text-xl mt-2">{price}원</p>
+      <div className="flex-row flex items-center">
+        <p className="text-base md:text-xl mt-2">{price}원</p>
+        <span className="mt-2 ml-2"><Image src={bookmark_dark} width={15} height={15} alt="북마크 이미지" /></span>
+      </div>
     </div>
   )
 }
