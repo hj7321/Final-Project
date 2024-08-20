@@ -21,6 +21,9 @@ export default function EditProfile() {
   const [uploadImg, setUploadImg] = useState<File | null>(null);
   const [publicUrl, setPublicUrl] = useState<string>('');
 
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean>(true);
+  const [isBirthValid, setIsBirthValid] = useState<boolean>(true);
+
   const { id } = useParams<{ id: string }>();
 
   const queryClient = useQueryClient();
@@ -39,6 +42,14 @@ export default function EditProfile() {
       setIsPro(userData.is_pro || false);
     }
   }, [userData]);
+
+  const checkNicknameDuplicate = async (nickname: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase.from('Users').select('id').eq('nickname', nickname);
+
+    if (error) throw error;
+    return data.length === 0;
+  };
 
   const changeUserType = async (
     nickname: string,
@@ -149,10 +160,32 @@ export default function EditProfile() {
     }
 
     setBirth(value);
+
+    const inputYear = parseInt(value.slice(0, 4));
+    if (inputYear < 2010) {
+      setIsBirthValid(false);
+    } else {
+      setIsBirthValid(true);
+    }
+  };
+
+  const handleNicknameChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNickname(value);
+
+    if (value) {
+      const isValid = await checkNicknameDuplicate(value);
+      setIsNicknameValid(isValid);
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isNicknameValid || !isBirthValid) {
+      Notify.failure('입력한 내용을 확인해주세요.');
+      return;
+    }
+
     let imageUrl = publicUrl;
     if (uploadImg) {
       try {
@@ -215,7 +248,7 @@ export default function EditProfile() {
               type="text"
               value={nickname}
               placeholder="닉네임 예시"
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={handleNicknameChange}
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
               maxLength={9}
             />
@@ -223,6 +256,7 @@ export default function EditProfile() {
               {nickname.length}/10
             </span>
           </div>
+          {!isNicknameValid && <div className="text-red-500 text-xs mt-1">중복된 닉네임입니다.</div>}
           <div className="mt-2 text-xs text-grey-500">
             TIP: 한글/영문(대소문자)/숫자만 사용할 수 있으며, 특수문자는 사용 불가해요.
           </div>
@@ -261,6 +295,7 @@ export default function EditProfile() {
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
             />
           </div>
+          {!isBirthValid && <div className="text-red-500 text-xs mt-1">2010년 이후의 생일만 입력 가능합니다.</div>}
         </div>
 
         {isPro && (

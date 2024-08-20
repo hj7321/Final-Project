@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
-import { Notify } from 'notiflix';
+import Notiflix, { Notify } from 'notiflix';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import '../../../../../../css/mdStyle.css';
@@ -72,15 +72,15 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
 
   const handleSubmit = async () => {
     if (!title || !content) {
-      alert('제목과 내용을 입력해주세요.');
+      Notify.failure('제목과 내용을 입력해주세요.');
       return;
     }
     if (selectedLanguage === '') {
-      alert('언어를 선택해주세요.');
+      Notify.failure('언어를 선택해주세요.');
       return;
     }
     if (!startDate || !endDate) {
-      alert('참여 기간을 선택해주세요.');
+      Notify.failure('참여 기간을 선택해주세요.');
       return;
     }
 

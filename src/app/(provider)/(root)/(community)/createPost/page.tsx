@@ -10,6 +10,7 @@ import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@/css/mdStyle.css';
 import Image from 'next/image';
+import { Notify } from 'notiflix';
 
 interface AddPortfolioProps {
   clickModal: () => void;
@@ -66,26 +67,26 @@ const CreatePost = () => {
       if (contentRef.current) {
         contentRef.current.value = '';
       }
-      alert('게시글 등록이 완료되었습니다.');
+      Notify.success('게시글 등록이 완료되었습니다.');
       router.push(`/${selectedCategory.toLowerCase()}`);
     }
   });
 
   const handleSubmit = async () => {
     if (!title) {
-      alert('제목을 입력해주세요.');
+      Notify.failure('제목을 입력해주세요.');
       return;
     }
     if (!selectedCategory) {
-      alert('카테고리를 선택해주세요.');
+      Notify.failure('카테고리를 선택해주세요.');
       return;
     }
     if (selectedLanguage.length === 0) {
-      alert('언어를 선택해주세요.');
+      Notify.failure('언어를 선택해주세요.');
       return;
     }
     if (!content) {
-      alert('내용을 입력해주세요.');
+      Notify.failure('내용을 입력해주세요.');
       return;
     }
 
@@ -100,7 +101,7 @@ const CreatePost = () => {
       setImageUrls(uploadedUrls);
 
       if (!user) {
-        alert('유저 정보가 없습니다.');
+        Notify.failure('유저 정보가 없습니다.');
         return;
       }
 

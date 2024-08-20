@@ -74,8 +74,6 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
     }
   }, [data, portfolioId]);
 
-  console.log(portfolioId);
-
   const editHandle = () => {
     setIsEditing(true);
   };

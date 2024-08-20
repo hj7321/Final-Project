@@ -108,8 +108,8 @@ export default function AccountList() {
               );
 
               return (
-                <div key={post.id} className="border rounded-lg mb-[32px] flex h-[226px]">
-                  <div className="flex flex-col ml-[32px] justify-between w-[892px]">
+                <div key={post.id} className="border  rounded-lg mb-[32px] md:w-[892px] flex  h-[226px]">
+                  <div className="flex flex-col ml-[32px] justify-between pr-2 w-full">
                     <div className="flex mt-[20px]">
                       <p className="mt-[20px] text-grey-600 text-base">거래일자: {post.created_at.slice(0, 10)}</p>
                       <div className="flex items-center ml-auto">
@@ -156,19 +156,30 @@ export default function AccountList() {
                         {userReview ? (
                           <button
                             onClick={() => handleReview(post)}
-                            className="mr-7 border rounded-lg bg-grey-200 px-5 py-2 font-normal md:mb-3 text-white text-lg"
+                            className="mr-7 border rounded-lg  bg-grey-200 px-5 py-2 font-normal md:mb-3 text-white text-lg"
                           >
-                            내가 쓴 리뷰 보기
+                            <div className="flex">
+                              <Image src="/review.svg" alt="수정" width={24} height={24} />
+                              내가 쓴 리뷰 보기
+                            </div>
                           </button>
                         ) : (
                           <button
                             onClick={() => handleReview(post)}
-                            className="mr-7 border rounded-lg border-primary-500 px-5 py-2 font-semibold mb-3 text-primary-500 text-lg"
+                            className="mr-7 border rounded-lg border-primary-500  px-5 py-2 font-semibold mb-3 text-primary-500 text-lg"
                           >
-                            리뷰 쓰기
+                            <div className="flex">
+                              <Image src="/pencil_color.svg" alt="수정" width={24} height={24} />
+                              리뷰 쓰기
+                            </div>
                           </button>
                         )}
-                        <button className="font-normal mb-3 text-lg">채팅 내역</button>
+                        <button className="font-normal mb-3 text-lg">
+                          <div className="flex">
+                            <Image src="/chat.svg" alt="수정" width={24} height={24} />
+                            채팅 내역
+                          </div>
+                        </button>
                       </div>
                     </div>
                   </div>
