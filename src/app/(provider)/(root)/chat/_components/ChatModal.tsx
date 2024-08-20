@@ -131,7 +131,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
             </>
           )}
         </div>
-        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-grey-300 md:rounded-xl bg-grey-100 overflow-hidden">
+        <div className="flex flex-col h-5/6 w-full md:w-auto justify-between md:border border-grey-200 md:rounded-xl bg-grey-50 overflow-hidden">
           <div className="overflow-y-scroll mb-4 p-4">
             {messages.map((message) => (
               <div
@@ -142,7 +142,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ chatRoomId, onClose, onMessagesRe
                   className={`p-3 rounded-lg text-xs max-w-xs font-medium ${
                     message.consumer_id === currentUser?.id
                       ? 'bg-primary-50 border border-primary-100 text-black'
-                      : 'bg-grey-50 border border-grey-200 text-black'
+                      : 'bg-white border border-grey-100 text-black'
                   } break-words`}
                 >
                   {message.content}

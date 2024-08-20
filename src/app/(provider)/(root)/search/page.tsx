@@ -112,7 +112,7 @@ function SearchContent() {
           setCurrentPage(i);
           scrollToTop();
         }}
-        className={`px-4 py-2 rounded-xl ${currentPage === i ? 'bg-primary-500 text-white' : 'bg-grey-200'}`}
+        className={`px-4 py-2 rounded-xl ${currentPage === i ? 'bg-primary-500 text-white' : 'bg-grey-100'}`}
       >
         {i}
       </button>

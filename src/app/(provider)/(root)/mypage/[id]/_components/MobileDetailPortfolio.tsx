@@ -102,7 +102,7 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
               alt="유저 이미지"
               width={36}
               height={36}
-              className="rounded-[50%] mr-4 overflow-hidden w-20 h-20 "
+              className="rounded-[50%] mr-4overflow-hidden w-20 h-20 "
             />
             <h1 className="text-xl font-bold">{userData?.nickname}</h1>
           </div>

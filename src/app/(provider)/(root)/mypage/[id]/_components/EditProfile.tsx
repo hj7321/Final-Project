@@ -13,6 +13,9 @@ export default function EditProfile() {
   const [nickname, setNickname] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [birth, setBirth] = useState<string>('');
+  const [time, setTime] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
+  const [isPro, setIsPro] = useState<boolean>(false);
 
   const [previewImage, setPreviewImage] = useState<string>('');
   const [uploadImg, setUploadImg] = useState<File | null>(null);
@@ -22,23 +25,6 @@ export default function EditProfile() {
 
   const queryClient = useQueryClient();
 
-  // 리팩토링 전
-  // const getUserData = async () => {
-  //   const supabase = createClient();
-  //   const { data, error } = await supabase.from('Users').select('*').eq('id', id).single();
-  //   if (error) throw error;
-  //   return data;
-  // };
-  // const {
-  //   data: userData,
-  //   isPending,
-  //   error
-  // } = useQuery({
-  //   queryKey: ['Users', id],
-  //   queryFn: getUserData
-  // });
-
-  // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(id);
 
   useEffect(() => {
@@ -48,12 +34,25 @@ export default function EditProfile() {
       setBirth(userData.birth || '');
       setPreviewImage(userData.profile_img || '/defaultProfileimg.svg');
       setPublicUrl(userData.profile_img || '');
+      setTime(userData.possible_time || '');
+      setIntroduction(userData.introduction || '');
+      setIsPro(userData.is_pro || false);
     }
   }, [userData]);
 
-  const changeUserType = async (nickname: string, profile_img: string, name: string, birth: string) => {
+  const changeUserType = async (
+    nickname: string,
+    profile_img: string,
+    name: string,
+    birth: string,
+    possible_time: string,
+    introduction: string
+  ) => {
     const supabase = createClient();
-    const { data, error } = await supabase.from('Users').update({ nickname, profile_img, name, birth }).eq('id', id);
+    const { data, error } = await supabase
+      .from('Users')
+      .update({ nickname, profile_img, name, birth, possible_time, introduction })
+      .eq('id', id);
     if (error) throw error;
     return data;
   };
@@ -75,14 +74,25 @@ export default function EditProfile() {
       nickname,
       profile_img,
       name,
-      birth
+      birth,
+      possible_time,
+      introduction
     }: {
       nickname: string;
       profile_img: string;
       name: string;
       birth: string;
-    }) => changeUserType(nickname, profile_img, name, birth),
-    onMutate: async (newData: { nickname: string; profile_img: string; name: string; birth: string }) => {
+      possible_time: string;
+      introduction: string;
+    }) => changeUserType(nickname, profile_img, name, birth, possible_time, introduction),
+    onMutate: async (newData: {
+      nickname: string;
+      profile_img: string;
+      name: string;
+      birth: string;
+      possible_time: string;
+      introduction: string;
+    }) => {
       await queryClient.cancelQueries({ queryKey: ['Users', id] });
 
       const previousUserData = queryClient.getQueryData<Users>(['Users', id]);
@@ -92,7 +102,9 @@ export default function EditProfile() {
         nickname: newData.nickname,
         profile_img: newData.profile_img,
         name: newData.name,
-        birth: newData.birth
+        birth: newData.birth,
+        possible_time: newData.possible_time,
+        introduction: newData.introduction
       }));
 
       return { previousUserData };
@@ -125,6 +137,20 @@ export default function EditProfile() {
     setPublicUrl('');
   };
 
+  const handleBirthChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+
+    if (value.length > 6) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+    } else if (value.length > 4) {
+      value = `${value.slice(0, 4)}-${value.slice(4, 6)}`;
+    } else if (value.length > 0) {
+      value = `${value.slice(0, 4)}`;
+    }
+
+    setBirth(value);
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let imageUrl = publicUrl;
@@ -136,8 +162,7 @@ export default function EditProfile() {
       }
     }
 
-    const formattedBirth = birth.replace(/-/g, '');
-    mutation.mutate({ nickname, profile_img: imageUrl, name, birth: formattedBirth });
+    mutation.mutate({ nickname, profile_img: imageUrl, name, birth, possible_time: time, introduction });
   };
 
   const cancleButton = (): void => {
@@ -163,7 +188,7 @@ export default function EditProfile() {
                 alt="프로필 사진"
                 width={144}
                 height={144}
-                className="rounded-full cursor-pointer"
+                className="rounded-[50%] cursor-pointer"
               />
               {previewImage !== '/defaultProfileimg.svg' && (
                 <button
@@ -227,14 +252,52 @@ export default function EditProfile() {
               생일
             </span>
             <input
-              type="date"
+              type="text"
               id="birth"
               value={birth}
-              onChange={(e) => setBirth(e.target.value)}
+              onChange={handleBirthChange}
+              placeholder="YYYY-MM-DD"
+              maxLength={11}
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
             />
           </div>
         </div>
+
+        {isPro && (
+          <>
+            <div className="mb-6">
+              <div className="relative border  border-gray-300 rounded-md">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  연락 가능 시간
+                </span>
+                <input
+                  type="text"
+                  id="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  placeholder="00시 ~ 00시"
+                  className="w-full h-20 pl-48 pr-4 py-2 rounded-md font-normal"
+                />
+              </div>
+            </div>
+            <div className="mb-20">
+              <div className="relative border  border-gray-300 rounded-md">
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  전문가 한 줄 소개
+                </span>
+                <input
+                  type="text"
+                  id="myintroduction"
+                  value={introduction}
+                  onChange={(e) => setIntroduction(e.target.value)}
+                  placeholder="전문가 한 줄 소개를 입력하세요"
+                  className="w-full h-20 pl-48 pr-4 py-2 rounded-md font-normal"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="flex mx-0 justify-between">
           <button
             type="button"

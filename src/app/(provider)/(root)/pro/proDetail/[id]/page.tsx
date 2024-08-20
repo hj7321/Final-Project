@@ -36,8 +36,8 @@ interface UserData {
   id: string;
   nickname: string;
   profile_img: string;
-  possible_time : string;
-  introduction : string
+  possible_time: string;
+  introduction: string;
 }
 
 export interface PortfolioData {
@@ -57,9 +57,9 @@ interface ReviewData {
   stars: number;
   contents: string;
   request_post_id: string;
-  user : {
-    nickname : string
-  }
+  user: {
+    nickname: string;
+  };
 }
 
 export default function ProDetail() {
@@ -93,7 +93,6 @@ export default function ProDetail() {
         setUser(data.userData);
         setPortfolio(data.portfolioData);
         setReviews(data.reviewData);
-
       } catch (error) {
         console.error('Fetch data error:', error);
       }
@@ -158,7 +157,7 @@ export default function ProDetail() {
         <div className="md:h-[470px] md:w-[380px] w-[330px] h-[80px] md:border-2 rounded-xl flex flex-col items-center">
           <div className="flex-col flex md:flex-col">
             <UserProfile profile={user.profile_img} nickname={user.nickname} possibleTime={user.possible_time} />
-            <UserDescription introduction={user.introduction}/>
+            <UserDescription introduction={user.introduction} />
             <ServiceMobileView title={post.title} langCategory={post.lang_category} price={post.price} />
             <div className="mx-auto w-full md:mt-5 my-2 flex flex-row justify-evenly items-center mt-[15px]">
               <InquireBtn handleInquiry={handleInquiry} />
@@ -172,11 +171,16 @@ export default function ProDetail() {
         </div>
       </div>
       <div className="md:mt-8 md:mt-[60px] mt-[240px]">
-        <TabBar activeTab={activeTab} handleTabClick={handleTabClick} portfolioCount={portfolio.length} reviewCount={reviews.length} />
+        <TabBar
+          activeTab={activeTab}
+          handleTabClick={handleTabClick}
+          portfolioCount={portfolio.length}
+          reviewCount={reviews.length}
+        />
         <div>
           <PostDescription content={post.content} />
           <UserPortfolio portfolio={portfolio} handlePortfolioClick={handlePortfolioClick} />
-          <Reviews  reviews={reviews}/>
+          <Reviews reviews={reviews} />
         </div>
       </div>
       {/* 채팅모달 */}

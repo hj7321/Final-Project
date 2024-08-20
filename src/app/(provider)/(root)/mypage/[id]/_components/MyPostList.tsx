@@ -36,7 +36,7 @@ export default function MyPostList() {
             className={`mx-2  ${isClicked('InsightPostList')}`}
             onClick={() => setActivePostList('InsightPostList')}
           >
-            Insight
+            인사이트
           </button>
         </span>
         <span>
@@ -44,7 +44,7 @@ export default function MyPostList() {
             className={`mx-2  ${isClicked('RequestPostList')}`}
             onClick={() => setActivePostList('RequestPostList')}
           >
-            Request
+            전문가 의뢰
           </button>
         </span>
       </div>
