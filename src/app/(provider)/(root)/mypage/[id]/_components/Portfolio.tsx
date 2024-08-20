@@ -172,7 +172,7 @@ export default function Portfolio() {
       <div className=" self-start hidden md:flex font-bold text-[24px] mb-4"> 포트폴리오</div>
 
       {data?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">
+        <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-100 rounded-md p-6 text-center h-96">
           <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />
           <div className="text-lg font-semibold mb-2">아직 등록된 포트폴리오가 없어요!</div>
           <div className="text-sm text-grey-600 mb-4">

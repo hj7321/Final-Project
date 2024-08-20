@@ -4,6 +4,7 @@ import { useSession } from '@/hooks/useSession';
 import { useRouter } from 'next/navigation';
 import * as PortOne from '@portone/browser-sdk/v2';
 import useProfile from '@/hooks/useProfile';
+import { Notify } from 'notiflix';
 
 interface PostData {
   id: string;
@@ -109,16 +110,10 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
       //   throw new Error(`Failed to notify the server: ${errorData.message}`);
       // }
 
-      alert('결제가 완료되었습니다.');
+      Notify.success('결제가 완료되었습니다.');
       //   setIsChatModalOpen(true);
-      router.push(`/completedAccount/${paymentId}`);
+      router.push(`/completedAccount/${paymentId}?post_id=${post.id}`);
     } catch (error) {
-      console.log(
-        JSON.stringify({
-          paymentId: paymentId,
-          orderId: post.id
-        })
-      );
       console.error('Payment failed:', error);
       alert('결제에 실패했습니다. 다시 시도해주세요.');
     }
