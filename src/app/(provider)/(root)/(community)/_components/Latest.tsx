@@ -114,7 +114,7 @@ export default function Latest() {
                       alt="Post Image"
                       width={186}
                       height={186}
-                      className="rounded-[8px] w-[186px] h-[186px] "
+                      className="rounded-[8px] w-[186px] h-[186px] object-cover"
                     />
                     //모바일 sm:w-[72px] sm:h-[72px]
                     // 미리보기 이미지 찌그러짐 현상
