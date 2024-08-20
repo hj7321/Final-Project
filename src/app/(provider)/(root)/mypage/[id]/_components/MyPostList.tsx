@@ -23,7 +23,7 @@ export default function MyPostList() {
 
   return (
     <div className="w-full">
-      <div className="hidden md:flex">내가 쓴 글</div>
+      <div className="hidden md:flex font-bold text-[24px]">내가 쓴 글</div>
       <div className="flex mt-3 md:mt-12 justify-start font-medium font-grey-700 text-xl">
         <span>
           <button className={`mx-2  ${isClicked('QnaPostList')}`} onClick={() => setActivePostList('QnaPostList')}>

@@ -4,7 +4,7 @@ export default function ReceiveReview() {
   return (
     <div className="flex flex-col w-full ">
       <div className="mb-10">
-        <h2 className="hidden md:flex text-2xl font-bold">내가 받은 리뷰</h2>
+        <h2 className="hidden md:flex font-bold text-[24px]">내가 받은 리뷰</h2>
       </div>
       <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">
         <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />

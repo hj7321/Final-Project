@@ -15,5 +15,5 @@ export const BookmarkCount = ({ postId }: BookmarkCountProps) => {
     }
   });
 
-  return <span className="text-grey-400 text-[12px]"> {data}</span>;
+  return <span>{data}</span>;
 };

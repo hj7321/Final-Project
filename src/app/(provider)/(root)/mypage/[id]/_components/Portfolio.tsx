@@ -169,7 +169,7 @@ export default function Portfolio() {
 
   return (
     <div className="flex flex-col items-center justify-center  w-full ">
-      <div className=" self-start hidden md:flex text-2xl font-bold mb-4"> 포트폴리오</div>
+      <div className=" self-start hidden md:flex font-bold text-[24px] mb-4"> 포트폴리오</div>
 
       {data?.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">

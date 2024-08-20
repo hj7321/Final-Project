@@ -295,7 +295,7 @@ export default function AllMypage() {
           </ul>
         </div>
         <main className="md:flex-1">
-          <h1 className="flex text-2xl font-bold md:mt-[40px] w-full">{renderComponent(activeComponent)}</h1>
+          <h1 className="flex md:mt-[40px] w-full">{renderComponent(activeComponent)}</h1>
         </main>
       </div>
     </div>

@@ -131,7 +131,7 @@ export default function Latest() {
                                 alt={category}
                                 width={24}
                                 height={24}
-                                className="rounded-full "
+                                className="rounded-full"
                               />
                             )}
                             <p className=" text-grey-600">{category}</p>

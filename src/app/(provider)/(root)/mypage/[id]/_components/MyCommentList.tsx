@@ -92,7 +92,7 @@ export default function MyCommentList() {
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
       <div className="mb-10">
-        <h2 className="hidden md:flex text-2xl font-bold">내가 쓴 댓글</h2>
+        <h2 className="hidden md:flex font-bold text-[24px]">내가 쓴 댓글</h2>
       </div>
       <div className="space-y-4">
         {commentWithPosts.map((comment) => (
