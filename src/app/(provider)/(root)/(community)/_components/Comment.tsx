@@ -49,10 +49,8 @@ export default function Comment({
   const handleGetLikesData = async (): Promise<LikesData | undefined> => {
     const { data, count } = await fetch(`/api/commentsLike/${commentId}`).then((res) => res.json());
     if (data.errorMsg) {
-      console.log(data.errorMsg);
       return;
     }
-    console.log(data);
     return { data, count };
   };
 
