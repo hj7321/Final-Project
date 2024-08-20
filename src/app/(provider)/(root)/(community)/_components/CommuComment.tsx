@@ -72,7 +72,6 @@ export default function CommuComment() {
     const data: CommunityComments[] = await response.json();
 
     const filteredData = data.filter((comment) => comment.community_post_id === id);
-    console.log(filteredData);
     return filteredData;
   };
 

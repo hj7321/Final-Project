@@ -1,20 +1,5 @@
 import { createClient } from '@/utils/supabase/client';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
-
-// export const portfolio = (id: string, title: string, content: string) => {
-//   const eddPortfolio = async () => {
-//     const supabase = createClient();
-//     const { id } = useParams();
-//     const data = await supabase.from('Portfolio').update({ title, content }).eq('id', id).maybeSingle();
-//     return data;
-//   };
-//   return useQuery({
-//     queryKey: ['Portfolio', id],
-//     queryFn: eddPortfolio
-//   });
-// };
 
 export async function POST(request: NextRequest) {
   try {

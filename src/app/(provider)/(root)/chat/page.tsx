@@ -6,7 +6,6 @@ const ChatPage = () => {
     <div className="flex">
       <ChatList />
       <div className="flex-grow">
-        {/* <Chat /> */}
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ export async function DELETE(request: Request) {
   const url = new URL(request.url);
   const userId = url.searchParams.get('userId');
 
-  console.log(userId);
   const { data, error } = await supabase.auth.admin.deleteUser(userId!);
 
   if (error) {

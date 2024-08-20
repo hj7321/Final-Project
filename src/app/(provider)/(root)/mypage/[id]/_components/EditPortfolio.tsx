@@ -157,12 +157,6 @@ const EditPortfolio: React.FC<EditPortfolioProps> = ({ clickModal, portfolioId }
                 <div data-color-mode="light">
                   <MDEditor value={content} onChange={setContent} height={200} />
                 </div>
-                {/* <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  style={{ height: '200px' }}
-                /> */}
               </div>
               <div>
                 <label className="block text-sm font-medium text-grey-700">참여 기간</label>

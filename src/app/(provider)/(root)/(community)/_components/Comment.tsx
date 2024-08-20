@@ -94,7 +94,6 @@ export default function Comment({
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['like', commentId], context?.previousData);
     },
     onSettled: () => {
@@ -115,7 +114,6 @@ export default function Comment({
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['like', commentId], context?.previousData);
     },
     onSettled: () => {
