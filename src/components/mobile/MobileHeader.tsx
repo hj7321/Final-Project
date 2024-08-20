@@ -12,11 +12,16 @@ interface MobileHeaderProp {
 export default function MobileHeader({ number }: MobileHeaderProp) {
   const { sidebarOpen, searchBarOpen } = useSidebarStore();
   const pathname = usePathname()
-  const isProDetailPage = pathname.startsWith('/pro/proDetail')
-  const insightDetailPage = pathname.startsWith('/insight')
+
+  const showBackIcon =
+    pathname !== '/insight' &&
+    pathname !== '/qna' &&
+    pathname !== '/pro' &&
+    pathname !== '/' &&
+    !pathname.startsWith('/mypage');
   return (
     <div className="w-full flex justify-between items-center md:hidden">
-    {isProDetailPage || insightDetailPage ? (
+    { showBackIcon ? (
       <Image
         src="/backIcon.svg" 
         alt="뒤로가기 아이콘"
