@@ -121,22 +121,37 @@ export default function AccountList() {
                           alt="d"
                           width={12}
                           height={12}
-                          className="w-5 h-5 "
+                          className="w-5 h-5 hidden md:flex"
                         />
-                        <p className="text-base ml-2">{post.lang_category.join(', ')}</p>
+                        <p className="text-base hidden md:flex ml-2">{post.lang_category.join(', ')}</p>
                       </div>
                     </div>
 
                     <div className="flex justify-between items-center">
                       <h3
-                        className="text-xl text-grey-900 font-bold cursor-pointer "
+                        className="text-lg md:text-xl mt-2 md:mt-0 text-grey-900 font-bold cursor-pointer "
                         onClick={() => router.push(`/pro/proDetail/${post.id}`)}
                       >
                         {post.title}
                       </h3>
                     </div>
+                    <div className="flex items-center ">
+                      <Image
+                        src={
+                          CodeCategories.find((category) => category.name === post.lang_category[0])?.image ||
+                          '/defaultProfileimg.svg'
+                        }
+                        alt="d"
+                        width={12}
+                        height={12}
+                        className="w-5 h-5 flex mt-2 md:hidden"
+                      />
+                      <p className="text-base flex text-grey-500 md:hidden mt-2 ml-2">
+                        {post.lang_category.join(', ')}
+                      </p>
+                    </div>
                     <div className="flex flex-col md:flex-row justify-between">
-                      <p className="mb-[50px]">{post.price}원</p>
+                      <p className="mb-2 md:mb-[50px] mt-2 md:mt-0">{post.price}원</p>
                       <div>
                         {userReview ? (
                           <button
