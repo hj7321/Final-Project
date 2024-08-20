@@ -169,13 +169,13 @@ export default function Portfolio() {
 
   return (
     <div className="flex flex-col items-center justify-center  w-full ">
-      <div className=" self-start hidden md:flex text-2xl font-bold mb-4"> 포트폴리오</div>
+      <div className=" self-start hidden md:flex font-bold text-[24px] mb-4"> 포트폴리오</div>
 
       {data?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center w-full bg-white border border-gray-300 rounded-md p-6 text-center h-96">
+        <div className="flex flex-col items-center justify-center w-full bg-white border border-grey-300 rounded-md p-6 text-center h-96">
           <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24  mx-auto mb-4" />
           <div className="text-lg font-semibold mb-2">아직 등록된 포트폴리오가 없어요!</div>
-          <div className="text-sm text-gray-600 mb-4">
+          <div className="text-sm text-grey-600 mb-4">
             전문가로 활동하기 위해서는 포트폴리오를 등록해야 해요 / 포트폴리오를 등록하면 매칭률이 높아져요
           </div>
           <button onClick={openEddmodal} className="mt-4 bg-primary-500 text-white rounded p-3 px-6">
@@ -220,10 +220,10 @@ export default function Portfolio() {
                         height={12}
                         className="w-5 h-5 "
                       />
-                      <p className="text-sm font-extralight text-gray-500 ml-2">{post.lang_category}</p>
+                      <p className="text-sm font-extralight text-grey-500 ml-2">{post.lang_category}</p>
                     </div>
                     <p className="font-bold text-[25px] mb-1">{post.title}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-grey-500">
                       {post.start_date} ~ {post.end_date}
                     </p>
                     <p

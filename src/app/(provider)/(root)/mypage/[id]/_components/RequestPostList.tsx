@@ -36,7 +36,7 @@ export default function QnaPostList() {
       <div className="flex flex-col items-center justify-center w-full bg-white rounded-md p-6 text-center h-96">
         <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
         <div className="text-lg font-semibold mb-2">등록된 의뢰게시판 게시물이 없어요</div>
-        <div className="text-sm text-gray-600 mb-4">의뢰를 남기며 소통해보세요</div>
+        <div className="text-sm text-grey-600 mb-4">의뢰를 남기며 소통해보세요</div>
       </div>
     );
   }
@@ -74,8 +74,8 @@ export default function QnaPostList() {
                   {post.content}
                 </p>
                 <p className="ml-8 mb-3">
-                  <span className="text-gray-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
-                  <span className="text-gray-500 text-[14px]"> like:13</span>
+                  <span className="text-grey-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
+                  <span className="text-grey-500 text-[14px]"> like:13</span>
                 </p>
               </div>
             </div>

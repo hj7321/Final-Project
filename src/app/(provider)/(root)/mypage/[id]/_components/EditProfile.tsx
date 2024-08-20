@@ -176,13 +176,13 @@ export default function EditProfile() {
               )}
             </div>
             <input type="file" id="profilePic" className="cursor-pointer text-xl mt-3" onChange={handleImageChange} />
-            <div className="mt-2 text-base md:text-xl text-grey-300 md:text-gray-600">
+            <div className="mt-2 text-base md:text-xl text-grey-300 md:text-grey-600">
               10MB 이내의 이미지 파일을 업로드 해주세요.
             </div>
           </label>
         </div>
         <div className="mb-6 w-full">
-          <div className="relative border border-gray-300 rounded-md">
+          <div className="relative border border-grey-300 rounded-md">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grey-500 pointer-events-none">
               닉네임
             </span>
@@ -194,17 +194,17 @@ export default function EditProfile() {
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
               maxLength={9}
             />
-            <span className="hidden md:absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+            <span className="hidden md:absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-500">
               {nickname.length}/10
             </span>
           </div>
-          <div className="mt-2 text-xs text-gray-500">
+          <div className="mt-2 text-xs text-grey-500">
             TIP: 한글/영문(대소문자)/숫자만 사용할 수 있으며, 특수문자는 사용 불가해요.
           </div>
         </div>
         <div className="mb-6">
-          <div className="relative border border-gray-300 rounded-md">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+          <div className="relative border border-grey-300 rounded-md">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grey-500 pointer-events-none">
               이름
             </span>
             <input
@@ -216,14 +216,14 @@ export default function EditProfile() {
               placeholder="홍길동"
               className="w-full h-20 pl-24 pr-4 py-2 rounded-md font-normal"
             />
-            <span className="hidden md:absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+            <span className="hidden md:absolute right-4 top-1/2 transform -translate-y-1/2 text-grey-500">
               {name.length}/10
             </span>
           </div>
         </div>
         <div className="mb-20">
-          <div className="relative border  border-gray-300 rounded-md">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+          <div className="relative border  border-grey-300 rounded-md">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grey-500 pointer-events-none">
               생일
             </span>
             <input
