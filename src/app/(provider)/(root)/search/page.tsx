@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useSearchPosts from '@/hooks/useSearchPosts';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CodeCategories } from '@/components/dumy';
+import styles from '@/css/loader.module.css';
+
 
 const TABS = ['전체', 'Q&A', '인사이트', '전문가 의뢰'];
 const ITEMS_PER_PAGE = 10; // 페이지당 항목 수
@@ -13,7 +15,7 @@ const ITEMS_PER_PAGE = 10; // 페이지당 항목 수
 function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const { results, filteredResults, setFilteredResults, counts, userMap } = useSearchPosts(query);
+  const { results, filteredResults, setFilteredResults, counts, userMap, isLoading } = useSearchPosts(query);
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
 
@@ -104,6 +106,21 @@ function SearchContent() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className={styles.icon}>
+          <div className={styles.circle + ' ' + styles.circleLeft}>
+            <div className={styles.innerCircle + ' ' + styles.innerCircleLeft}></div>
+          </div>
+          <div className={styles.circle + ' ' + styles.circleRight}>
+            <div className={styles.innerCircle + ' ' + styles.innerCircleRight}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-2xl font-md mb-4 text-primary-500 mb-8 flex">
@@ -131,7 +148,7 @@ function SearchContent() {
         ))}
       </div>
       {filteredResults.length === 0 ? (
-        <div className="w-auto h-screen flex ">
+        <div className="w-auto flex">
           <h1>검색결과가 없습니다.</h1>
         </div>
       ) : (
@@ -176,7 +193,7 @@ function SearchContent() {
                       {highlightIfMatch(truncateText(result.content, isMobile() ? 25 : 180), query)}
                     </p>
                     <div className="flex justify-between items-center">
-                      <p className="text-grey-400">{userMap[result.user_id] || '알수없음'}</p>
+                      <p className="text-gray-400"> {highlightIfMatch(userMap[result.user_id] || "알수없음", query)}</p>
                     </div>
                     <div className="flex mt-4">
                       <div className="flex items-center">
@@ -203,7 +220,7 @@ function SearchContent() {
 
 export default function Search() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <SearchContent />
     </Suspense>
   );
