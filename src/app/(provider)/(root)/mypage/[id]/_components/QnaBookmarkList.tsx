@@ -3,9 +3,9 @@
 import { createClient } from '@/utils/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { BookmarkCount } from './BookmarkCount';
+import DesktopPostCard from './DesktopPostCard';
+import MobilePostCard from './MobilePostCard';
 
 /**
  * 1. URL에 있는 userId를 이용해서 bookmark 목록을 가져온다
@@ -14,7 +14,7 @@ import { BookmarkCount } from './BookmarkCount';
  */
 
 export default function QnaBookmarkList() {
-  const { id: userId } = useParams();
+  const { id: userId } = useParams<{ id: string }>();
 
   const getQnaBookmarkPosts = async () => {
     // (1) Bookmark 테이블의 데이터 중, 해당 사용자가 북마크한 Q&A 카테고리에 해당하는 게시물들을 가져옴
@@ -59,47 +59,8 @@ export default function QnaBookmarkList() {
 
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
-      <div className="space-y-4">
-        {data?.slice(0, 10).map((post, index) => (
-          <div key={post.id} className="bg-white rounded-2xl">
-            <div className="flex flex-col md:flex-row">
-              {post.post_img && post.post_img.length > 0 && (
-                <Image
-                  src={post.post_img[0]}
-                  alt="썸네일 이미지"
-                  width={288}
-                  height={160}
-                  className="w-72 h-40 ml-6 mb-3 md:ml-0 md:mb-0 rounded-lg "
-                />
-              )}
-              <div className="flex flex-col">
-                {post.post_category && (
-                  <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
-                    <h3 className="font-bold text-[20px] ml-8 mb-8">{post.title}</h3>
-                  </Link>
-                )}
-                <p
-                  className=" text-[16px] ml-8 mb-6 mr-5"
-                  style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}
-                >
-                  {post.content}
-                </p>
-                <p className="ml-8 mb-3">
-                  <span className="text-grey-500 text-[14px] mr-10  ">{post.created_at.slice(0, 10)}</span>
-                  <Image src="/bookmark.svg" alt="글 찜한 후 북마크 아이콘" width={16} height={16} />
-                  <BookmarkCount postId={post.id} />
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <DesktopPostCard data={data!} />
+      <MobilePostCard data={data!} />
     </section>
   );
 }
