@@ -43,15 +43,18 @@ export default function CommuComment() {
   // };
 
   const handleSubmit = async () => {
-    const commentData = value;
+    const commentData = value?.trim();
+
+    if (!commentData) {
+      alert('댓글을 입력해주세요.');
+      return;
+    }
 
     const response = await fetch('/api/communityComments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, commentData, userId })
     }).then((res) => res.json());
-
-    // Handle response if necessary
   };
 
   const getComments = async (): Promise<CommunityComments[]> => {

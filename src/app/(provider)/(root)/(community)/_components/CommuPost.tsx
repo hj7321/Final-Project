@@ -9,6 +9,8 @@ import useProfile from '@/hooks/useProfile';
 import useAuthStore from '@/zustand/authStore';
 import Cookies from 'js-cookie';
 import { Notify } from 'notiflix';
+import { useState } from 'react';
+import { CodeCategories } from '@/components/dumy';
 
 const langSt = 'text-[14px] flex items-center gap-[12px] ';
 const iconSt = 'w-[24px] h-[24px]';
@@ -24,6 +26,7 @@ export default function CommuPost() {
   const pathname = usePathname();
   const category = pathname.split('/')[1];
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -145,16 +148,85 @@ export default function CommuPost() {
     }
   };
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleNavigation = () => {
+    router.back();
+  };
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
+      <div
+        className="md:mb-5 mb-3 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]"
+        onClick={handleNavigation}
+      >
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="63" height="63" rx="31.5" stroke="#9FA8B2" />
+          <path
+            d="M40 31.5C40.2761 31.5 40.5 31.7239 40.5 32C40.5 32.2761 40.2761 32.5 40 32.5V31.5ZM23.6464 32.3536C23.4512 32.1583 23.4512 31.8417 23.6464 31.6464L26.8284 28.4645C27.0237 28.2692 27.3403 28.2692 27.5355 28.4645C27.7308 28.6597 27.7308 28.9763 27.5355 29.1716L24.7071 32L27.5355 34.8284C27.7308 35.0237 27.7308 35.3403 27.5355 35.5355C27.3403 35.7308 27.0237 35.7308 26.8284 35.5355L23.6464 32.3536ZM40 32.5H24V31.5H40V32.5Z"
+            fill="#24292D"
+          />
+        </svg>
+      </div>
       <div className="flex flex-col gap-6 py-6">
-        <ul className="flex gap-[24px]">
-          {postData?.lang_category?.map((lang, index) => (
-            <li key={index} className={langSt}>
-              {lang}
-            </li>
-          ))}
-        </ul>
+        <div className="flex  justify-between">
+          <ul className="flex gap-[24px]">
+            {postData?.lang_category?.map((lang, index) => {
+              const categoryData = CodeCategories.find((cat) => cat.name === lang);
+              return (
+                <div key={index} className="flex gap-[9px]">
+                  {categoryData && (
+                    <Image src={categoryData.image} alt={lang} width={24} height={24} className="rounded-full" />
+                  )}
+                  <p className="text-gray-600">{lang}</p>
+                </div>
+              );
+            })}
+          </ul>
+          <button className="w-5 h-5 flex justify-center" onClick={toggleMenu}>
+            <svg width="4" height="18" viewBox="0 0 4 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="1.9987" cy="2.33341" r="1.66667" fill="#828F9B" />
+              <circle cx="1.9987" cy="8.99992" r="1.66667" fill="#828F9B" />
+              <circle cx="1.9987" cy="15.6667" r="1.66667" fill="#828F9B" />
+            </svg>
+          </button>
+          {isOpen && (
+            <div
+              className="absolute bg-white rounded-[16px] shadow-md w-[150px]"
+              style={{
+                top: '40%',
+                right: '0',
+                zIndex: 1000
+              }}
+            >
+              <ul>
+                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                  <Image
+                    src="/pencil_color.svg"
+                    alt="수정"
+                    width={24}
+                    height={24}
+                    className="filter brightness-0 invert-0"
+                  />
+                  수정하기
+                </li>
+                <hr className="w-full h-[1px] bg-gray-100 border-0" />
+                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                  <Image
+                    src="/trashCan_color.svg"
+                    alt="삭제"
+                    width={24}
+                    height={24}
+                    className="filter brightness-0 invert-0"
+                  />
+                  삭제하기
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
         <h1 className="text-2xl font-bold">{postData?.title}</h1>
         <div className="text-base flex gap-[24px]">
           {userIdFromPost === userData?.id && <p className="text-base">{userData?.nickname}</p>}
@@ -183,7 +255,7 @@ export default function CommuPost() {
           </div>
         </div>
       </div>
-      <hr className="w-full border-t border-black my-8" />
+      <hr className="w-full border-t border-gray-100 my-8" />
       {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
       <div data-color-mode="light">
         <MDEditor.Markdown source={postData?.content} />

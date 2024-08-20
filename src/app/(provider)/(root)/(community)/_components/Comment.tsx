@@ -18,7 +18,7 @@ interface CommentProps {
   handleCancelClick: () => void;
   editingCommentId: string | null;
   editContent: string | undefined;
-  setEditContent: (content: string) => void;
+  setEditContent: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 type LikesData = {
@@ -147,10 +147,34 @@ export default function Comment({
   return (
     <div key={comment.id}>
       {editingCommentId === comment.id ? (
-        <div className="flex space-y-2 p-4 border border-grey-300 rounded-md shadow-sm gap-1" data-color-mode="light">
-          <MDEditor height={100} value={editContent} onChange={() => setEditContent} commands={[]} />
-          <button onClick={() => handleSaveClick(comment.id)}>저장</button>
-          <button onClick={handleCancelClick}>취소</button>
+        <div className="flex flex-col gap-4" data-color-mode="light">
+          <p className="font-bold">{getUserNickname(comment.user_id)}</p>
+          <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
+          <div className="flex gap-[24px] items-center">
+            <p className="text-[16px] text-gray-400">{comment.created_at.split('T')[0]}</p>
+            <div className="flex w-[60px] gap-[8px] text-gray-400 bg-gray-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center ">
+              {likesData?.data.find((item) => item.user_id === userId) ? (
+                <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
+              ) : (
+                <Image src="/like_logo_dark.svg" alt="좋아요 X" width={20} height={20} />
+              )}
+              <p>{likesData?.count}</p>
+            </div>
+            <div className="flex ml-auto gap-4">
+              <button
+                onClick={() => handleSaveClick(comment.id)}
+                className="px-[16px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] bg-primary-500  text-white"
+              >
+                수정하기
+              </button>
+              <button
+                onClick={handleCancelClick}
+                className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-gray-300 rounded-[8px] text-white"
+              >
+                취소
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div data-color-mode="light">

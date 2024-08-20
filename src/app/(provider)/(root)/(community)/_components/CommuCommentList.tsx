@@ -15,7 +15,7 @@ export default function CommuCommentList() {
   const queryClient = useQueryClient();
   const { userId } = useAuthStore();
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState<string | undefined>(undefined);
+  const [editContent, setEditContent] = useState<string | undefined>('');
 
   const getComments = async (): Promise<CommunityComments[]> => {
     const response = await fetch('/api/communityComments');
@@ -85,9 +85,12 @@ export default function CommuCommentList() {
 
   const handleDelete = (commentId: string, commentUserId: string) => {
     if (userId === commentUserId) {
-      deleteMutation.mutate(commentId);
+      const isConfirmed = window.confirm('정말로 이 댓글을 삭제하시겠습니까?');
 
-      getComments();
+      if (isConfirmed) {
+        deleteMutation.mutate(commentId);
+        getComments();
+      }
     } else {
       console.error('삭제 권한이 없습니다.');
     }
