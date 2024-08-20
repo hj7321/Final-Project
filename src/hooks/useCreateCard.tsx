@@ -21,7 +21,7 @@ export default function useCreateCard() {
       if (newImages.length <= 5) {
         setImages(newImages);
       } else {
-        alert('이미지는 최대 5까지만 등록이 가능합니다');
+        Notify.failure('이미지는 최대 5까지 등록 가능합니다')
       }
     }
   };
@@ -39,23 +39,23 @@ const handleSubmit = async (): Promise<number | null> => {
     throw new Error('로그인되어 있지 않습니다');
   }
   if (!title.trim()) {
-    alert('제목을 입력해주세요');
+    Notify.failure('제목을 입력해주세요');
     return null;
   }
   if (!price) {
-    alert('가격을 입력해주세요');
+    Notify.failure('가격을 입력해주세요');
     return null;
   }
   if (language.length < 1) {
-    alert('언어는 1개 이상 선택해야 합니다');
+    Notify.failure('언어는 1개 이상 선택해야 합니다');
     return null;
   }
   if(images.length < 1) {
-    alert('이미지 사진은 최소 1개 이상 등록해야 합니다')
+    Notify.failure('이미지 사진은 최소 1개 이상 등록해야 합니다')
     return null;
   }
   if (!description.trim()) {
-    alert('내용을 입력해주세요');
+    Notify.failure('내용을 입력해주세요');
     return null;
   }
   setDisableBtn(true)
@@ -85,11 +85,11 @@ const handleSubmit = async (): Promise<number | null> => {
       setDescription('');
       return data.id; // 새로 생성된 게시물 ID 반환
     } else {
-      alert('오류 발생');
+      Notify.failure('오류 발생');
       return null;
     }
   } catch (error) {
-    alert(error);
+    console.error(error);
     return null;
   } finally {
     setDisableBtn(false)
