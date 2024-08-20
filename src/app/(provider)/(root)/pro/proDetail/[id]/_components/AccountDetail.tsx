@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import * as PortOne from '@portone/browser-sdk/v2';
 import useProfile from '@/hooks/useProfile';
 import { Notify } from 'notiflix';
+import Image from 'next/image';
+import { CodeCategories } from '@/components/dumy';
 
 interface PostData {
   id: string;
@@ -13,6 +15,7 @@ interface PostData {
   price: number;
   title: string;
   user_id: string;
+  lang_category: string[];
 }
 
 interface UserData {
@@ -121,21 +124,45 @@ const DetailAccount: React.FC<AccountModalProps> = ({ onClose, post, user, portf
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-0 md:p-0">
-      <div className="bg-white md:p-5 md:rounded-xl w-full md:w-1/3 max-w-xl h-full md:h-5/6">
-        <div>
-          <button onClick={onClose}>x</button>
-        </div>
-        <div>
-          <h2>{user?.nickname}님의 상품입니다.</h2>
-          <p>price: {post?.price}</p>
+      <div className="bg-white md:p-5 md:rounded-xl w-full md:w-1/4 max-w-xl h-full md:h-3/6">
+        <div></div>
+        <div className="flex flex-col ml-[20px]">
+          <button
+            onClick={onClose}
+            className=' className="absolute top-2 right-4 text-grey-600 flex font-thin justify-end "'
+          >
+            x
+          </button>
+          <h2 className="flex">
+            <Image src={user?.profile_img || '/defaultProfileimg.svg'} alt="프로필이미지" width={60} height={60} />
+            <div className="ml-3 mt-4 text-black font-bold">{user?.nickname}</div>
+          </h2>
+          <div className="flex items-center mt-4 ml-0">
+            {post && (
+              <div className="flex">
+                {post.lang_category.map((category, index) => {
+                  const categoryImage =
+                    CodeCategories.find((cat) => cat.name === category)?.image || '/defaultProfileimg.svg';
+                  return (
+                    <div key={index} className="flex items-center mr-2">
+                      <Image src={categoryImage} alt={category} width={12} height={12} className="w-5 h-5 mb-3" />
+                      <p className="text-sm ml-1 text-grey-600 font-bold mb-3">{category}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <div className=" text-xl font-bold">{post?.title}</div>
+          <div className="hidden md:flex border-t  border-grey-300 my-10"></div>
+          <div className="flex">
+            <p className="text-2xl text-grey-800 font-bold">결제 금액</p>
+            <p className="ml-1 mt-1 text-grey-400">(VAT 포함)</p>{' '}
+            <p className=" ml-3 text-2xl text-grey-800 font-bold">{post?.price} 원 </p>
+          </div>
 
-          <h3>Portfolios:</h3>
-          {portfolio.map((item) => (
-            <div key={item.id}>
-              <p>{item.title}</p>
-            </div>
-          ))}
-          <button onClick={() => requestPayment(post)} className="mt-4 p-2 bg-blue-500 text-white rounded">
+          <h3 className="mt-4"></h3>
+          <button onClick={() => requestPayment(post)} className="mt-4 p-2 py-4 bg-primary-500 text-white rounded">
             결제하기
           </button>
         </div>
