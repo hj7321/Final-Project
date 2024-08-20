@@ -1,7 +1,7 @@
 // components/SkeletonLoader.tsx
 import React from 'react';
 
-const SkeletonLoader = () => {
+const MainSkeletonLoader = () => {
   return (
     <div className="animate-pulse">
       {/* 메인베너 스켈레톤 */}
@@ -69,4 +69,4 @@ const SkeletonLoader = () => {
   );
 };
 
-export default SkeletonLoader;
+export default MainSkeletonLoader;
