@@ -5,18 +5,21 @@ const MainSkeletonLoader = () => {
   return (
     <div className="animate-pulse">
       {/* 메인베너 스켈레톤 */}
-      <div className="w-full md:h-[calc(100vh-75px)] bg-gray-300 mb-4"></div>
+      <div className="w-full md:h-[calc(100vh-75px)] bg-gray-100 mb-4"> <div
+          className="hidden md:block w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: "url('/mainBanner.svg')" }}
+        ></div></div>
 
       {/* 언어별 카테고리 스켈레톤 */}
       <section className="w-full flex flex-col min-h-[calc(100vh-75px)] mb-12 md:mb-64">
         <div className="bg-gray-100 py-4 flex-shrink-0">
           <div className="container mx-auto px-4 md:px-16 h-full">
-            <div className="h-6 bg-gray-300 rounded w-1/4 mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
             <div className="flex md:justify-between items-center gap-6 md:gap-4 overflow-x-auto">
               {[...Array(10)].map((_, i) => (
                 <div key={i} className="flex flex-col items-center mb-4 md:w-auto items-start">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-300 rounded-full"></div>
-                  <div className="mt-2 w-12 h-4 bg-gray-300 rounded"></div>
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-200 rounded-full"></div>
+                  <div className="mt-2 w-12 h-4 bg-gray-100 rounded"></div>
                 </div>
               ))}
             </div>

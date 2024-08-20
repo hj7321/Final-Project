@@ -55,9 +55,6 @@ export default function CompletedAccount() {
 
   const { chatRoomId, createOrFetchChatRoom, toggleChat } = useChatRoom(currentUserId, user || null, postId);
 
-  console.log('chatRoomId', chatRoomId);
-  console.log('user', user);
-
   const handleChatOpen = async () => {
     if (!currentUserId || !user || !post) {
       alert('필요한 정보가 부족합니다. 잠시 후 다시 시도해주세요.');
