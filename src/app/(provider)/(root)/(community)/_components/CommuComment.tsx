@@ -43,15 +43,18 @@ export default function CommuComment() {
   // };
 
   const handleSubmit = async () => {
-    const commentData = value;
+    const commentData = value?.trim();
+
+    if (!commentData) {
+      alert('댓글을 입력해주세요.');
+      return;
+    }
 
     const response = await fetch('/api/communityComments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, commentData, userId })
     }).then((res) => res.json());
-
-    // Handle response if necessary
   };
 
   const getComments = async (): Promise<CommunityComments[]> => {
@@ -79,7 +82,7 @@ export default function CommuComment() {
     <div className="flex flex-col">
       <div className="flex gap-[8px]">
         <Image src="/comment.svg" alt="댓글" width={24} height={24} />
-        <p className="text-[16px] text-gray-400 font-bold">{commentCount}</p>
+        <p className="text-[16px] text-grey-400 font-bold">{commentCount}</p>
       </div>
       <div className="flex gap-[32px] mt-[32px]">
         <div data-color-mode="light" className="w-[995px] rounded-[8px]">

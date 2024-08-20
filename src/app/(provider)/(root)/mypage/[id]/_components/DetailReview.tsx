@@ -186,10 +186,10 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
               <div key={review.id} className="mt-5">
                 <div className="flex items-center">
                   <StarRating totalStars={5} size={30} selectedStars={review.stars} readOnly />
-                  <div className="mt-3 text-gray-400 text-sm">({review.stars})</div>
+                  <div className="mt-3 text-grey-400 text-sm">({review.stars})</div>
                 </div>
                 <p className="ml-1 font-semibold mt-3 text-lg text-grey-800">{review.contents}</p>
-                <p className="mt-3 text-sm text-gray-400">작성일: {review.created_at.slice(0, 10)}</p>
+                <p className="mt-3 text-sm text-grey-400">작성일: {review.created_at.slice(0, 10)}</p>
                 <div className="flex justify-end">
                   <button className="hidden bg-primary-500 text-white text-base font-normal mt-2 px-4 py-2 rounded-md shadow-sm mr-0 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     리뷰 수정

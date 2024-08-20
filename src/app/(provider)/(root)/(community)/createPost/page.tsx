@@ -175,7 +175,7 @@ const CreatePost = () => {
         {/* 언어 선택 */}
         <div className="flex md:flex-row flex-col justify-between h-[180px] mb-4">
           <div className="border border-grey-100 p-3 rounded-xl md:w-[60%] w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-4">언어 선택 (필수, 중복 선택 가능)</label>
+            <label className="block text-sm font-medium text-grey-700 mb-4">언어 선택 (필수, 중복 선택 가능) </label>
             <div className="flex flex-row flex-wrap justify-center items-center gap-2">
               {CodeCategories.map((lang, index) => (
                 <div className="flex justify-start items-center mx-2 my-3 w-[100px]" key={index}>
@@ -190,7 +190,7 @@ const CreatePost = () => {
                   <label
                     htmlFor={lang.name}
                     className={`cursor-pointer flex items-center ${
-                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
+                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-grey-500'
                     }`}
                   >
                     <Image
@@ -237,7 +237,7 @@ const CreatePost = () => {
 
         {/* 내용 입력 */}
         <div className="mt-[220px] md:mt-[0]">
-          <label className="block text-sm font-medium text-gray-700"></label>
+          <label className="block text-sm font-medium text-grey-700"></label>
           <div data-color-mode="light">
             <MDEditor
               height={700}
@@ -254,7 +254,7 @@ const CreatePost = () => {
         <div className="w-full mt-4">
           <button
             onClick={handleSubmit}
-            className="w-full bg-primary-500 text-white px-6 py-2 md:py-4 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full bg-primary-500 text-white px-6 py-2 md:py-4 rounded-md shadow-sm hover:bg-grey-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             등록하기
           </button>

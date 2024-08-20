@@ -70,10 +70,10 @@ export default function MyCommentList() {
     return (
       <div className="flex flex-col w-full">
         <h2 className="hidden md:flex text-2xl font-bold">내가 쓴 댓글</h2>
-        <div className="flex flex-col items-center justify-center w-fullbg-white border mt-10 border-gray-300 rounded-md p-6 text-center h-96">
+        <div className="flex flex-col items-center justify-center w-fullbg-white border mt-10 border-grey-100 rounded-md p-6 text-center h-96">
           <Image src="/cryingLogo.svg" alt="cryingLogo" width={30} height={30} className="w-24 h-24 mx-auto mb-4" />
           <div className="text-lg font-semibold mb-2">아직 남긴 댓글이 없어요</div>
-          <div className="text-sm text-gray-600 mb-4">다른 사람의 글을 읽어보고 답변을 남겨보세요 </div>
+          <div className="text-sm text-grey-600 mb-4">다른 사람의 글을 읽어보고 답변을 남겨보세요 </div>
         </div>
       </div>
     );
@@ -92,13 +92,13 @@ export default function MyCommentList() {
   return (
     <section className="container mx-auto px-4 py-8 min-h-screen">
       <div className="mb-10">
-        <h2 className="hidden md:flex text-2xl font-bold">내가 쓴 댓글</h2>
+        <h2 className="hidden md:flex font-bold text-[24px]">내가 쓴 댓글</h2>
       </div>
       <div className="space-y-4">
         {commentWithPosts.map((comment) => (
           <div
             key={comment.id}
-            className="bg-white p-4 border border-gray-400 rounded-2xl flex justify-between items-center"
+            className="bg-white p-4 border border-grey-400 rounded-2xl flex justify-between items-center"
           >
             <div>
               <Link href={`/${comment.postCategory}/${comment.postId}`}>
@@ -117,7 +117,7 @@ export default function MyCommentList() {
                 {comment.contents}
               </div>
               <p className="ml-8 mb-3">
-                <span className="text-gray-500 text-[14px] mr-10">{comment.created_at.slice(0, 10)}</span>
+                <span className="text-grey-500 text-[14px] mr-10">{comment.created_at.slice(0, 10)}</span>
               </p>
             </div>
             <button

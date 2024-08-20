@@ -130,7 +130,7 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
   return (
     <div>
       <div>
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onBack}>
+        <button className="absolute top-2 right-2 text-grey-500 hover:text-grey-700" onClick={onBack}>
           x
         </button>
         <h1 className="text-2xl font-bold mb-4">포트폴리오 등록하기</h1>
@@ -158,7 +158,7 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
                   className="mt-2 w-full h-auto"
                 />
               )}
-              <label className="block text-sm font-medium text-gray-700">썸네일 이미지를 등록해주세요.</label>
+              <label className="block text-sm font-medium text-grey-700">썸네일 이미지를 등록해주세요.</label>
               <input type="file" className="mt-1 w-full text-sm" onChange={handleThumbnailChange} />
             </div>
             <div className="w-1/2">
@@ -174,12 +174,12 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
                   />
                 ))}
               </div>
-              <label className="block text-sm font-medium text-gray-700">추가 이미지를 등록해주세요.</label>
+              <label className="block text-sm font-medium text-grey-700">추가 이미지를 등록해주세요.</label>
               <input type="file" multiple className="mt-1 w-full text-sm" onChange={handleAdditionalImagesChange} />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">언어 선택 </label>
+            <label className="block text-sm font-medium text-grey-700">언어 선택 </label>
             <div className="flex flex-row px-4 flex-wrap items-center">
               {CodeCategories.map((lang, index) => (
                 <div className="flex justify-start items-center mx-5 my-3 w-[100px]" key={index}>
@@ -194,7 +194,7 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
                   <label
                     htmlFor={lang.name}
                     className={`cursor-pointer flex items-center ${
-                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-gray-500'
+                      selectedLanguage.includes(lang.name) ? 'text-primary-600' : 'text-grey-500'
                     }`}
                   >
                     <Image
@@ -211,27 +211,27 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
           </div>
           <div className="flex space-x-4">
             <div className="relative w-1/2">
-              <label className="block text-sm font-medium text-gray-700">참여 기간</label>
+              <label className="block text-sm font-medium text-grey-700">참여 기간</label>
               <input
                 type="date"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
               ~
               <input
                 type="date"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">내용</label>
+            <label className="block text-sm font-medium text-grey-700">내용</label>
             <textarea
               placeholder="내용을 입력해주세요."
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               rows={6}
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -240,7 +240,7 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
           <div className="flex justify-end">
             <button
               onClick={handleSubmit}
-              className="bg-black text-white px-6 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="bg-black text-white px-6 py-2 rounded-md shadow-sm hover:bg-grey-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               등록하기
             </button>
