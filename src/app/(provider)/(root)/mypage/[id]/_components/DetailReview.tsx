@@ -128,7 +128,7 @@ const DetailReview: React.FC<ReviewModalProps> = ({ onClose, portfolio }) => {
 
   const handleSubmit = async () => {
     if (!userId || !portfolio.id) {
-      alert('필수 정보가 누락되었습니다.');
+      Notify.failure('필수 정보가 누락되었습니다.');
       return;
     }
     if (!content || rating === 0) {

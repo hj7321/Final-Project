@@ -11,7 +11,6 @@ export default function RequestBookmarkList() {
   const getRequestBookmark = async () => {
     const response = await fetch('/api/bookmark').then((res) => res.json());
     if (response.errorMsg) {
-      console.log(response.errorMsg);
       return [];
     }
     const data: BookMark[] = response.data;
