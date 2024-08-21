@@ -141,77 +141,152 @@ export default function Comment({
   };
 
   return (
-    <div key={comment.id}>
-      {editingCommentId === comment.id ? (
-        <div className="flex flex-col gap-4" data-color-mode="light">
-          <p className="font-bold">{getUserNickname(comment.user_id)}</p>
-          <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
-          <div className="flex gap-[24px] items-center">
-            <p className="text-[16px] text-gray-400">{comment.created_at.split('T')[0]}</p>
-            <div className="flex w-[60px] gap-[8px] text-gray-400 bg-gray-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center ">
-              {likesData?.data.find((item) => item.user_id === userId) ? (
-                <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
-              ) : (
-                <Image src="/like_logo_dark.svg" alt="좋아요 X" width={20} height={20} />
-              )}
-              <p>{likesData?.count}</p>
-            </div>
-            <div className="flex ml-auto gap-4">
-              <button
-                onClick={() => handleSaveClick(comment.id)}
-                className="px-[16px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] bg-primary-500  text-white"
-              >
-                수정하기
-              </button>
-              <button
-                onClick={handleCancelClick}
-                className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-gray-300 rounded-[8px] text-white"
-              >
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div data-color-mode="light">
-          <p className="font-bold">{getUserNickname(comment.user_id)}</p>
-          <MDEditor.Markdown source={comment.contents} />
-          <div className="flex gap-[24px] items-center">
-            <p className="text-[16px] text-grey-400">{comment.created_at.split('T')[0]}</p>
-            <div
-              onClick={handleToggleLike}
-              className="flex w-[60px] gap-[8px] text-grey-400 bg-grey-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center "
-            >
-              {likesData?.data.find((item) => item.user_id === userId) ? (
-                <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
-              ) : (
-                <Image src="/like_logo_dark.svg" alt="좋아요 X" width={20} height={20} />
-              )}
-              <p>{likesData?.count}</p>
-            </div>
-            <div className="flex ml-auto gap-4">
-              {userId === comment.user_id && (
-                <>
-                  <button
-                    onClick={() => handleEditClick(comment)}
-                    className="px-[16px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] border border-solid border-primary-500"
-                  >
-                    <Image src="/pencil_color.svg" alt="수정" width={24} height={24} />
-                    <p className="text-primary-500">댓글 수정</p>
-                  </button>
-                  <button
-                    onClick={() => handleDelete(comment.id, comment.user_id)}
-                    className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-grey-300 rounded-[8px]"
-                  >
-                    <Image src="/trashCan_color.svg" alt="삭제" width={24} height={24} />
-                    <p className="text-white">댓글 삭제</p>
-                  </button>
-                </>
-              )}
+    <>
+      <div key={comment.id} className="hidden sm:block">
+        {editingCommentId === comment.id ? (
+          <div className="flex flex-col gap-4" data-color-mode="light">
+            <p className="font-bold">{getUserNickname(comment.user_id)}</p>
+            <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
+            <div className="flex gap-[24px] items-center">
+              <p className="text-[16px] text-gray-400">{comment.created_at.split('T')[0]}</p>
+              <div className="flex w-[60px] gap-[8px] text-gray-400 bg-gray-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center ">
+                {likesData?.data.find((item) => item.user_id === userId) ? (
+                  <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
+                ) : (
+                  <Image src="/like_logo_dark.svg" alt="좋아요 X" width={20} height={20} />
+                )}
+                <p>{likesData?.count}</p>
+              </div>
+              <div className="flex ml-auto gap-4">
+                <button
+                  onClick={() => handleSaveClick(comment.id)}
+                  className="px-[16px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] bg-primary-500  text-white"
+                >
+                  수정하기
+                </button>
+                <button
+                  onClick={handleCancelClick}
+                  className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-gray-300 rounded-[8px] text-white"
+                >
+                  취소
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div data-color-mode="light">
+            <p className="font-bold">{getUserNickname(comment.user_id)}</p>
+            <MDEditor.Markdown source={comment.contents} />
+            <div className="flex gap-[24px] items-center">
+              <p className="text-[16px] text-grey-400">{comment.created_at.split('T')[0]}</p>
+              <div
+                onClick={handleToggleLike}
+                className="flex w-[60px] gap-[8px] text-grey-400 bg-grey-100 px-[8px] py-[4px] rounded-[16px] items-center justify-center "
+              >
+                {likesData?.data.find((item) => item.user_id === userId) ? (
+                  <Image src="/like_logo.svg" alt="좋아요 O" width={20} height={20} />
+                ) : (
+                  <Image src="/like_logo_dark.svg" alt="좋아요 X" width={20} height={20} />
+                )}
+                <p>{likesData?.count}</p>
+              </div>
+              <div className="flex ml-auto gap-4">
+                {userId === comment.user_id && (
+                  <>
+                    <button
+                      onClick={() => handleEditClick(comment)}
+                      className="px-[16px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] border border-solid border-primary-500"
+                    >
+                      <Image src="/pencil_color.svg" alt="수정" width={24} height={24} />
+                      <p className="text-primary-500">댓글 수정</p>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.id, comment.user_id)}
+                      className="px-[16px] py-[8px] flex items-center justify-center gap-1 bg-grey-300 rounded-[8px]"
+                    >
+                      <Image src="/trashCan_color.svg" alt="삭제" width={24} height={24} />
+                      <p className="text-white">댓글 삭제</p>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* 모바일용 div */}
+      <div key={comment.id} className="block sm:hidden">
+        {editingCommentId === comment.id ? (
+          <div className="flex flex-col gap-4" data-color-mode="light">
+            <p className="font-bold">{getUserNickname(comment.user_id)}</p>
+            <MDEditor height={100} value={editContent} onChange={setEditContent} commands={[]} />
+            <div className="flex gap-[16px] items-center">
+              <p className="text-[12px] text-gray-400">{comment.created_at.split('T')[0]}</p>
+              <div className="flex gap-[4px] text-[12px] text-gray-400 bg-gray-100 px-[8px] py-[2px] rounded-[16px] items-center justify-center ">
+                {likesData?.data.find((item) => item.user_id === userId) ? (
+                  <Image src="/like_logo.svg" alt="좋아요 O" width={12} height={12} />
+                ) : (
+                  <Image src="/like_logo_dark.svg" alt="좋아요 X" width={12} height={12} />
+                )}
+                <p>{likesData?.count}</p>
+              </div>
+              <div className="text-[14px] flex ml-auto gap-2">
+                <button
+                  onClick={() => handleSaveClick(comment.id)}
+                  className="px-[12px] py-[8px] flex items-center justify-center gap-1 rounded-[8px] bg-primary-500  text-white"
+                >
+                  수정
+                </button>
+                <button
+                  onClick={handleCancelClick}
+                  className="px-[12px] py-[8px] flex items-center justify-center gap-1 bg-gray-300 rounded-[8px] text-white"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div data-color-mode="light">
+            <p className="font-bold">{getUserNickname(comment.user_id)}</p>
+            <MDEditor.Markdown source={comment.contents} />
+            <div className="flex gap-[16px] items-center">
+              <p className="text-[12px] text-grey-400">{comment.created_at.split('T')[0]}</p>
+              <div
+                onClick={handleToggleLike}
+                className="flex gap-[4px] text-[12px] text-grey-400 bg-grey-100 px-[8px] py-[2px] rounded-[16px] items-center justify-center "
+              >
+                {likesData?.data.find((item) => item.user_id === userId) ? (
+                  <Image src="/like_logo.svg" alt="좋아요 O" width={12} height={12} />
+                ) : (
+                  <Image src="/like_logo_dark.svg" alt="좋아요 X" width={12} height={12} />
+                )}
+                <p>{likesData?.count}</p>
+              </div>
+              <div className="text-[14px] flex ml-auto gap-2">
+                {userId === comment.user_id && (
+                  <>
+                    <button
+                      onClick={() => handleEditClick(comment)}
+                      className="px-[12px] py-[4px] flex items-center justify-center gap-1 rounded-[8px] border border-solid border-primary-500"
+                    >
+                      <Image src="/pencil_color.svg" alt="수정" width={24} height={24} />
+                      <p className="text-primary-500">수정</p>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(comment.id, comment.user_id)}
+                      className="px-[12px] py-[8px] flex items-center justify-center gap-1 bg-grey-300 rounded-[8px]"
+                    >
+                      <Image src="/trashCan_color.svg" alt="삭제" width={24} height={24} />
+                      <p className="text-white">삭제</p>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

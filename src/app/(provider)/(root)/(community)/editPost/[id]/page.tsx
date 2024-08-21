@@ -101,54 +101,6 @@ const EditPost = () => {
     }
   });
 
-  const handleSubmit = async () => {
-    if (!title) {
-      Notify.failure('제목을 입력해주세요.');
-      return;
-    }
-    if (!selectedCategory) {
-      Notify.failure('카테고리를 선택해주세요.');
-      return;
-    }
-    if (selectedLanguage.length === 0) {
-      Notify.failure('언어를 선택해주세요.');
-      return;
-    }
-    if (!content) {
-      Notify.failure('내용을 입력해주세요.');
-      return;
-    }
-
-    try {
-      const uploadPromises = [];
-      if (thumbnail) {
-        uploadPromises.push(uploadImage(thumbnail));
-      }
-      additionalImages.forEach((file) => uploadPromises.push(uploadImage(file)));
-
-      const uploadedUrls = await Promise.all(uploadPromises);
-      setImageUrls(uploadedUrls);
-
-      if (!user) {
-        Notify.failure('유저 정보가 없습니다.');
-        return;
-      }
-
-      const CommunityPostsData: CommunityPostsData = {
-        title,
-        content,
-        user_id: user,
-        post_img: uploadedUrls,
-        post_category: selectedCategory,
-        lang_category: selectedLanguage
-      };
-
-      addMutation(CommunityPostsData);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
-
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
