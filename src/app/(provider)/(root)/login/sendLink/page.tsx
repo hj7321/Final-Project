@@ -61,7 +61,6 @@ export default function SendLinkPage() {
       }).then((res) => res.json());
 
       if (data.errorMsg) {
-        console.log(data.errorMsg);
         Notify.failure('링크 전송에 실패했습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   잠시 후에 다시 시도해주세요.', {
           width: '250px'
         });

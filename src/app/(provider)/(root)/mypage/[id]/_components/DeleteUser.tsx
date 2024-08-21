@@ -31,7 +31,6 @@ export default function DeleteUser() {
     }).then((res) => res.json());
 
     if (data.errorMsg) {
-      console.log(data.errorMsg);
       Report.failure('회원 탈퇴 실패', '비밀번호가 일치하지 않습니다.', '확인');
       setThrottling(false);
       return;
