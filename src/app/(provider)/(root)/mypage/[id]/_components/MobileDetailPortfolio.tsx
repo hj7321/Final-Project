@@ -18,23 +18,6 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
   const params = useParams();
   const userId = params.id as string;
 
-  // 리팩토링 전
-  // const getUserData = async () => {
-  //   const supabase = createClient();
-  //   const { data, error } = await supabase.from('Users').select('*').eq('id', userId).single();
-  //   if (error) throw error;
-  //   return data;
-  // };
-  // const {
-  //   data: Users,
-  //   isLoading: userLoading,
-  //   error: userError
-  // } = useQuery({
-  //   queryKey: ['Users'],
-  //   queryFn: getUserData
-  // });
-
-  // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(userId);
 
   const getsPortfolio = async () => {
@@ -73,8 +56,6 @@ export default function MobileDetailPortfolio({ portfolioId, onBack }: MobileDet
       }
     }
   }, [data, portfolioId]);
-
-  console.log(portfolioId);
 
   const editHandle = () => {
     setIsEditing(true);

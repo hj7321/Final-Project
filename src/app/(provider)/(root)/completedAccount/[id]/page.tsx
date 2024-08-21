@@ -26,12 +26,12 @@ export default function CompletedAccount() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { currentUserId } = useSession();
   const router = useRouter();
-  const { id: paymentId } = useParams(); // 결제 ID를 파라미터로 가져옵니다.
+  const { id: paymentId } = useParams(); 
   const searchParams = useSearchParams();
-  const postId = searchParams.get('post_id'); // post_id 가져오기
+  const postId = searchParams.get('post_id');
 
-  const [user, setUser] = useState(null); // 전문가 유저 정보 저장
-  const [post, setPost] = useState<PostData | null>(null); // 결제된 게시물 정보 저장
+  const [user, setUser] = useState(null);
+  const [post, setPost] = useState<PostData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,9 +54,6 @@ export default function CompletedAccount() {
   }, [paymentId]);
 
   const { chatRoomId, createOrFetchChatRoom, toggleChat } = useChatRoom(currentUserId, user || null, postId);
-
-  console.log('chatRoomId', chatRoomId);
-  console.log('user', user);
 
   const handleChatOpen = async () => {
     if (!currentUserId || !user || !post) {

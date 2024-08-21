@@ -22,7 +22,6 @@ export async function POST(request: Request) {
   });
 
   if (signUpError) {
-    console.log(signUpError);
     console.log('회원가입 실패: ', signUpError.message);
     return Response.json({ errorMsg: signUpError.message });
   } else {

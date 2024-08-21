@@ -8,7 +8,7 @@ import MDEditor from '@uiw/react-md-editor';
 import useProfile from '@/hooks/useProfile';
 import useAuthStore from '@/zustand/authStore';
 import Cookies from 'js-cookie';
-import { Notify } from 'notiflix';
+import { Confirm, Notify } from 'notiflix';
 import { useState } from 'react';
 import { CodeCategories } from '@/components/dumy';
 
@@ -51,12 +51,11 @@ export default function CommuPost() {
   });
   const userIdFromPost = postData?.user_id;
 
-  const { userData, isUserDataPending, userDataError } = useProfile(userIdFromPost);
+  const { userData } = useProfile(userIdFromPost);
 
   const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
     const { data, count } = await fetch(`/api/bookmark/${postId}`).then((res) => res.json());
     if (data.errorMsg) {
-      console.log(data.errorMsg);
       return;
     }
     return { data, count };
@@ -94,7 +93,6 @@ export default function CommuPost() {
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['bookmark', postId], context?.previousData);
     },
     onSettled: () => {
@@ -116,7 +114,6 @@ export default function CommuPost() {
       await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
       const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
       queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number } | undefined) => {
-        console.log(prev);
         if (!prev) return { data: [], count: 0 };
         const updatedData = prev.data.filter((item) => item.user_id !== userId);
         return { data: updatedData, count: updatedData.length };
@@ -124,7 +121,6 @@ export default function CommuPost() {
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['bookmark', postId], context?.previousData);
     },
     onSettled: () => {
@@ -148,6 +144,49 @@ export default function CommuPost() {
     }
   };
 
+  const deletePost = async () => {
+    const response = await fetch(`/api/communityRead/${postId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  };
+
+  const deleteMutation = useMutation<void, Error, string | string[]>({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      Notify.success('게시글이 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      router.back();
+    },
+    onError: (error) => {
+      Notify.failure('삭제에 실패했습니다.');
+      console.error('삭제에 실패했습니다.', error);
+    }
+  });
+
+  const handleDelete = () => {
+    if (userId === userIdFromPost) {
+      Confirm.show(
+        '게시글 삭제',
+        '정말로 삭제하시겠습니까?',
+        '네',
+        '아니오',
+        () => {
+          deleteMutation.mutate(postId!);
+        },
+        () => {
+          Notify.failure('삭제가 취소되었습니다.');
+        },
+        {}
+      );
+    } else {
+      Notify.failure('삭제 권한이 없습니다.');
+    }
+  };
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -156,10 +195,18 @@ export default function CommuPost() {
     router.back();
   };
 
+  const handleEdit = () => {
+    if (userId === userIdFromPost) {
+      router.push(`/editPost/${postId}`);
+    } else {
+      Notify.failure('수정 권한이 없습니다.');
+    }
+  };
+
   return (
     <div className="flex flex-col relative">
       <div
-        className="md:mb-5 mb-3 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]"
+        className="hidden md:block mb-5 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]"
         onClick={handleNavigation}
       >
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,18 +217,33 @@ export default function CommuPost() {
           />
         </svg>
       </div>
-      <div className="flex flex-col gap-6 py-6">
+      <div className="flex flex-col gap-6 mb:py-6">
         <div className="flex  justify-between">
-          <ul className="flex gap-[24px]">
+          <ul className="flex gap-[24px] sm:gap-4">
             {postData?.lang_category?.map((lang, index) => {
               const categoryData = CodeCategories.find((cat) => cat.name === lang);
               return (
-                <div key={index} className="flex gap-[9px]">
-                  {categoryData && (
-                    <Image src={categoryData.image} alt={lang} width={24} height={24} className="rounded-full" />
-                  )}
-                  <p className="text-gray-600">{lang}</p>
-                </div>
+                <>
+                  <div key={index} className=" gap-[9px] hidden sm:flex">
+                    {categoryData && (
+                      <Image src={categoryData.image} alt={lang} width={24} height={24} className="rounded-full" />
+                    )}
+                    <p className="text-gray-600">{lang}</p>
+                  </div>
+
+                  <div key={index} className=" gap-[4px] flex sm:hidden">
+                    {categoryData && (
+                      <Image
+                        src={categoryData.image}
+                        alt={lang}
+                        width={20}
+                        height={20}
+                        className="w-4 h-4 rounded-full object-cover"
+                      />
+                    )}
+                    <p className="text-gray-600 text-[12px]">{lang}</p>
+                  </div>
+                </>
               );
             })}
           </ul>
@@ -193,16 +255,9 @@ export default function CommuPost() {
             </svg>
           </button>
           {isOpen && (
-            <div
-              className="absolute bg-white rounded-[16px] shadow-md w-[150px]"
-              style={{
-                top: '40%',
-                right: '0',
-                zIndex: 1000
-              }}
-            >
+            <div className="absolute bg-white rounded-[16px] shadow-md w-[150px] top-[10%] md:top-[15%] right-0 z-[1000]">
               <ul>
-                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleEdit}>
                   <Image
                     src="/pencil_color.svg"
                     alt="수정"
@@ -211,9 +266,9 @@ export default function CommuPost() {
                     className="filter brightness-0 invert-0"
                   />
                   수정하기
-                </li>
+                </div>
                 <hr className="w-full h-[1px] bg-gray-100 border-0" />
-                <li className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleDelete}>
                   <Image
                     src="/trashCan_color.svg"
                     alt="삭제"
@@ -222,7 +277,7 @@ export default function CommuPost() {
                     className="filter brightness-0 invert-0"
                   />
                   삭제하기
-                </li>
+                </div>
               </ul>
             </div>
           )}
@@ -255,7 +310,7 @@ export default function CommuPost() {
           </div>
         </div>
       </div>
-      <hr className="w-full border-t border-gray-100 my-8" />
+      <hr className="w-full border-t border-grey-100 my-8" />
       {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
       <div data-color-mode="light">
         <MDEditor.Markdown source={postData?.content} />

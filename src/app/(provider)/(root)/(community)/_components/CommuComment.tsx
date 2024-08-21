@@ -7,27 +7,31 @@ import { CommunityComments } from '@/types/type';
 import { FormEvent, useState } from 'react';
 // import { comment } from 'postcss';
 import { useParams, useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import '../../../../../css/commentMdStyle.css';
 import Image from 'next/image';
+import { Notify } from 'notiflix';
 
 export default function CommuComment() {
   const [value, setValue] = useState<string | undefined>('');
   const { isLogin, userId } = useAuthStore();
+
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
   const handleCheckLogin = () => {
     if (!isLogin) {
-      alert('로그인 후 이용해주세요.');
+      Notify.failure('로그인 후 이용해주세요.');
       const presentPage = window.location.href;
       const pagePathname = new URL(presentPage).pathname;
       Cookies.set('returnPage', pagePathname);
       router.push('/login');
     }
   };
+
+  const queryClient = useQueryClient();
 
   // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
@@ -46,7 +50,7 @@ export default function CommuComment() {
     const commentData = value?.trim();
 
     if (!commentData) {
-      alert('댓글을 입력해주세요.');
+      Notify.failure('댓글을 입력해주세요.');
       return;
     }
 
@@ -54,7 +58,10 @@ export default function CommuComment() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, commentData, userId })
-    }).then((res) => res.json());
+    });
+    queryClient.invalidateQueries({ queryKey: ['comment', id] });
+
+    setValue('');
   };
 
   const getComments = async (): Promise<CommunityComments[]> => {
@@ -65,7 +72,6 @@ export default function CommuComment() {
     const data: CommunityComments[] = await response.json();
 
     const filteredData = data.filter((comment) => comment.community_post_id === id);
-    console.log(filteredData);
     return filteredData;
   };
 
@@ -74,6 +80,8 @@ export default function CommuComment() {
     queryFn: getComments,
     enabled: !!id
   });
+
+  // 뮤테이션 맞춰서 통일하기
 
   // data의 총 개수를 계산
   const commentCount = data ? data.length : 0;
@@ -84,8 +92,8 @@ export default function CommuComment() {
         <Image src="/comment.svg" alt="댓글" width={24} height={24} />
         <p className="text-[16px] text-grey-400 font-bold">{commentCount}</p>
       </div>
-      <div className="flex gap-[32px] mt-[32px]">
-        <div data-color-mode="light" className="w-[995px] rounded-[8px]">
+      <div className="flex md:gap-8 gap-4 mt-[32px]">
+        <div data-color-mode="light" className="w-[995px] rounded-[8px] hidden sm:block">
           <MDEditor
             onClick={handleCheckLogin}
             height={100}
@@ -95,6 +103,18 @@ export default function CommuComment() {
             commands={[]}
           />
         </div>
+
+        <div data-color-mode="light" className="w-[248px] rounded-[8px] block sm:hidden">
+          <MDEditor
+            onClick={handleCheckLogin}
+            height={64}
+            value={value}
+            onChange={setValue}
+            textareaProps={{ placeholder: '도움이 되는 댓글을 등록하세요!' }}
+            commands={[]}
+          />
+        </div>
+
         <>
           {/* <ReactQuill value={value} onChange={(e) => setValue(e.target.value)} />
           <input type="hidden" name="editorContent" value={value} />
@@ -105,7 +125,7 @@ export default function CommuComment() {
             handleCheckLogin();
             await handleSubmit();
           }}
-          className="w-[173px] h-[101px] rounded-lg bg-primary-500 text-white font-bold text-base flex items-center justify-center hover:bg-primary-700 hover:cursor-pointer"
+          className="md:w-[173px] md:h-[101px] w-16 h-16 rounded-lg bg-primary-500 text-white font-bold text-base flex items-center justify-center hover:bg-primary-700 hover:cursor-pointer"
         >
           <span className="hidden sm:block">댓글 등록</span>
           <span className="block sm:hidden">등록</span>
