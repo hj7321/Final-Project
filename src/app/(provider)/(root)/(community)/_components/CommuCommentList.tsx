@@ -144,22 +144,6 @@ export default function CommuCommentList() {
     return user ? user.nickname : 'Unknown';
   };
 
-  // const getBookmarkData = async () => {
-  //   const { data, count } = await fetch(`/api/commentLike/${id}`).then((res) => res.json());
-  //   if (data.errorMsg) {
-  //     console.log(data.errorMsg);
-  //     return;
-  //   }
-  //   return {
-  //     data,
-  //     count
-  //   };
-  // };
-
-  // const { data: bookmarkData } = useQuery({
-  //   queryKey: ['bookmarkCount', id],
-  //   queryFn: () => getBookmarkData()
-  // });
 
   return (
     <div className="flex flex-col">

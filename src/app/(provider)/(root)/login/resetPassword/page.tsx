@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
     <section className="flex flex-col text-center items-center justify-center md:bg-grey-50">
       <form
         onSubmit={(e) => {
-          e.preventDefault(); // 폼 제출 방지
+          e.preventDefault();
           // 버튼 클릭을 허용한 경우(throttling 변수가 false일 경우)에만 handleChangePW 이벤트 핸들러 호출
           if (!throttling) handleChangePW(e);
         }}

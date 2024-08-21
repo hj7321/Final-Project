@@ -10,7 +10,6 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     console.log('사용자 데이터 가져오기 실패: ', error.message);
     return Response.json({ errorMsg: error.message });
   } else {
-    console.log('사용자 데이터 가져오기 성공');
     return Response.json({ userData: data });
   }
 }
