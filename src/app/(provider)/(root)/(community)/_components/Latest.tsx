@@ -115,7 +115,8 @@ export default function Latest({ selectedLanguages }: LatestProps) {
           currentPosts.map((post, index) => (
             <div key={post.id}>
               <Link href={`/${post.post_category.toLowerCase()}/${post.id}`}>
-                <div className="flex px-[32px] py-[24px] border border-[#D9d9d9] rounded-[16px] gap-[24px]">
+                {/* 데스크탑용 div */}
+                <div className="hidden sm:flex px-[32px] py-[24px] border border-[#D9d9d9] rounded-[16px] gap-[24px]">
                   {post?.post_img?.[0] && (
                     <Image
                       src={post.post_img[0]}
@@ -151,6 +152,82 @@ export default function Latest({ selectedLanguages }: LatestProps) {
                       <h1 className="font-black text-gray-800 text-[16px]">{post.title}</h1>
                       <div
                         className="font-medium text-[16px] text-gray-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2"
+                        data-color-mode="light"
+                      >
+                        <MDEditor.Markdown source={post.content} />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="font-medium text-[12px] text-grey-400">{getUserNickname(post.user_id)}</p>
+                      <div className="flex justify-between	items-center">
+                        <div className="flex gap-6">
+                          <div className="flex items-center gap-2">
+                            <Image src="/comment.svg" alt="" width={16} height={16} className="w-[16px] h-[16px]" />
+                            <p className="font-medium text-[12px] text-grey-400">{commentCounts?.[index] ?? 0}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src="/bookmark_dark.svg"
+                              alt=""
+                              width={16}
+                              height={16}
+                              className="w-[16px] h-[16px]"
+                            />
+                            <p className="font-medium text-[12px] text-grey-400">
+                              <BookmarkCount postId={post.id} />
+                            </p>
+                          </div>
+                        </div>
+                        <p className="font-medium text-[12px] text-grey-400">{post?.created_at.split('T')[0]}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 모바일용 div */}
+                <div className="flex sm:hidden px-[16px] py-[16px] border border-[#D9d9d9] rounded-[16px] gap-[24px]">
+                  <div className="flex flex-col gap-4 w-full overflow-hidden">
+                    <div className="flex gap-4">
+                      {post?.post_img?.[0] && (
+                        <Image
+                          src={post.post_img[0]}
+                          alt="Post Image"
+                          width={72}
+                          height={72}
+                          className="rounded-[8px] w-[72px] h-[72px] object-cover"
+                        />
+                      )}
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-[12px] line-clamp-1">
+                          {(post.lang_category ?? []).slice(0, post?.post_img?.[0] ? 1 : 3).map((category, index) => {
+                            const categoryData = CodeCategories.find((cat) => cat.name === category);
+                            return (
+                              <div key={index} className="flex gap-[1px]">
+                                {categoryData && (
+                                  <Image
+                                    src={categoryData.image}
+                                    alt={category}
+                                    width={16}
+                                    height={16}
+                                    className="rounded-full"
+                                  />
+                                )}
+                                <p className="text-[12px] text-grey-600">
+                                  {post?.post_img?.[0] && (post.lang_category?.length ?? 0) > 1 && index === 0
+                                    ? `${category} ⋯`
+                                    : category}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <h1 className="font-black text-grey-800 text-[16px]">{post.title}</h1>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <div
+                        className="font-medium text-[14px] text-grey-600 w-full h-[48px] overflow-hidden text-ellipsis line-clamp-2"
                         data-color-mode="light"
                       >
                         <MDEditor.Markdown source={post.content} />

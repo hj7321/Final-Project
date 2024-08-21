@@ -6,7 +6,7 @@ import CommuPost from '../../_components/CommuPost';
 
 export default function page() {
   return (
-    <div className="mt-[110px] flex flex-col gap-16">
+    <div className="md:mt-[110px] mt-[32px] flex flex-col gap-16">
       <div className="flex flex-col gap-16">
         <CommuPost />
         <CommuComment />
