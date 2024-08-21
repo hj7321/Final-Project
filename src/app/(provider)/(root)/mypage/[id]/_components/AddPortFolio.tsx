@@ -239,13 +239,6 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
               className="mt-1 w-full block p-2"
               textareaProps={{ placeholder: '내용을 입력해주세요. (마크다운 형식)' }}
             />
-            {/* <textarea
-              placeholder="내용을 입력해주세요."
-              className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              rows={6}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            ></textarea> */}
           </div>
           <div className="flex justify-end">
             <button

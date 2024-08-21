@@ -100,7 +100,7 @@ export default function ProDetail() {
     fetchData();
   }, [id]);
 
-  // 추가(수정-승현) //
+
   const handleInquiry = async () => {
     if (!currentUserId || !user?.id || !id) {
       console.error('No user logged in, author ID or post ID missing');
@@ -124,7 +124,6 @@ export default function ProDetail() {
     setSelectedPortfolio(null);
   };
 
-  // 여기까지 //
 
   const handleAccount = () => {
     setIsDetailAccountOpen(true); // DetailAccount 모달 열기
