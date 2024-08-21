@@ -56,7 +56,6 @@ export default function CommuPost() {
   const handleGetBookmarkData = async (): Promise<BookmarkData | undefined> => {
     const { data, count } = await fetch(`/api/bookmark/${postId}`).then((res) => res.json());
     if (data.errorMsg) {
-      console.log(data.errorMsg);
       return;
     }
     return { data, count };
@@ -94,7 +93,6 @@ export default function CommuPost() {
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['bookmark', postId], context?.previousData);
     },
     onSettled: () => {
@@ -116,7 +114,6 @@ export default function CommuPost() {
       await queryClient.cancelQueries({ queryKey: ['bookmark', postId] });
       const previousData = queryClient.getQueryData<BookmarkData>(['bookmark', postId]);
       queryClient.setQueryData(['bookmark', postId], (prev: { data: BookMark[]; count: number } | undefined) => {
-        console.log(prev);
         if (!prev) return { data: [], count: 0 };
         const updatedData = prev.data.filter((item) => item.user_id !== userId);
         return { data: updatedData, count: updatedData.length };
@@ -124,7 +121,6 @@ export default function CommuPost() {
       return { previousData };
     },
     onError: (error, _, context) => {
-      console.log(error.message);
       queryClient.setQueryData(['bookmark', postId], context?.previousData);
     },
     onSettled: () => {
@@ -199,6 +195,14 @@ export default function CommuPost() {
     router.back();
   };
 
+  const handleEdit = () => {
+    if (userId === userIdFromPost) {
+      router.push(`/editPost/${postId}`);
+    } else {
+      Notify.failure('수정 권한이 없습니다.');
+    }
+  };
+
   return (
     <div className="flex flex-col relative">
       <div
@@ -245,7 +249,7 @@ export default function CommuPost() {
               }}
             >
               <ul>
-                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2">
+                <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleEdit}>
                   <Image
                     src="/pencil_color.svg"
                     alt="수정"
