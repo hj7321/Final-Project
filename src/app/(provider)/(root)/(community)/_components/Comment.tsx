@@ -52,7 +52,6 @@ export default function Comment({
       console.log(data.errorMsg);
       return;
     }
-    console.log(data);
     return { data, count };
   };
 
@@ -124,9 +123,6 @@ export default function Comment({
       queryClient.invalidateQueries({ queryKey: ['like', commentId] });
     }
   });
-
-  console.log(deleteLike);
-  console.log(addLike);
 
   const handleToggleLike = () => {
     if (!isLogin) {

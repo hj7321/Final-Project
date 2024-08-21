@@ -1,8 +1,8 @@
 'use client';
 import { CommunityPosts } from '@/types/type';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { useRef, useState, ChangeEvent } from 'react';
+import { useRef, useState, ChangeEvent, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/zustand/authStore';
 import { CodeCategories } from '@/components/dumy';
@@ -22,13 +22,30 @@ type CommunityPostsData = Omit<CommunityPosts, 'id' | 'created_at'> & {
   user_id: string;
 };
 
-const CreatePost = () => {
+const EditPost = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
   const queryClient = useQueryClient();
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const user = useAuthStore((state) => state.userId) as string | null; // ??
+  const postId = params.id;
+
+  const getPost = async () => {
+    const response = await fetch('/api/communityRead');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: CommunityPosts[] = await response.json();
+
+    return data.filter((post) => post.id === postId);
+  };
+
+  const { data, isLoading, error } = useQuery<CommunityPosts[]>({
+    queryKey: ['post', id],
+    queryFn: getPost,
+    enabled: !!id
+  });
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string | undefined>('');
@@ -38,6 +55,18 @@ const CreatePost = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('QnA');
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const postData = data[0]; // 가져온 데이터가 배열이므로 첫 번째 요소를 사용
+      setTitle(postData.title || '');
+      setContent(postData.content || '');
+      setSelectedLanguage(postData.lang_category || []);
+      setThumbnailPreview(postData.post_img ? postData.post_img[0] : null);
+      setImageUrls(postData.post_img || []);
+      setSelectedCategory(postData.post_category || 'QnA');
+    }
+  }, [data]);
 
   const savePost = async (data: CommunityPostsData) => {
     const response = await fetch('/api/communityAdd', {
@@ -143,6 +172,43 @@ const CreatePost = () => {
   const handleThumbnailRemove = () => {
     setThumbnail(null);
     setThumbnailPreview(null);
+  };
+
+  const EditSave = async () => {
+    try {
+      const uploadPromises = [];
+      if (thumbnail) {
+        uploadPromises.push(uploadImage(thumbnail));
+      }
+      additionalImages.forEach((file) => uploadPromises.push(uploadImage(file)));
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+      setImageUrls(uploadedUrls);
+
+      const response = await fetch('/api/communityAdd', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: postId,
+          title,
+          content,
+          post_img: uploadedUrls,
+          post_category: selectedCategory,
+          lang_category: selectedLanguage
+        })
+      });
+
+      if (response.ok) {
+        Notify.success('포트폴리오 수정이 완료되었습니다.');
+        router.push(`/${selectedCategory.toLowerCase()}`);
+      } else {
+        console.error('수정에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   };
 
   return (
@@ -254,7 +320,7 @@ const CreatePost = () => {
         {/* 등록 버튼 */}
         <div className="w-full mt-4">
           <button
-            onClick={handleSubmit}
+            onClick={EditSave}
             className="w-full bg-primary-500 text-white px-6 py-2 md:py-4 rounded-md shadow-sm hover:bg-grey-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             등록하기
@@ -265,4 +331,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;

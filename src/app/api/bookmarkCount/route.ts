@@ -5,13 +5,6 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const postId = url.searchParams.get('postId');
 
-  // const { data, error } = await supabase
-  //   .from('Community Posts')
-  //   .select(
-  //     `id, title, content, created_at, user_id, post_img, lang_category, bookmarks_count:Bookmark!posts_id(count)`
-  //   )
-  //   .eq('post_id', postId!);
-
   const { data, count, error } = await supabase
     .from('Bookmark')
     .select('posts_id', { count: 'exact', head: false })

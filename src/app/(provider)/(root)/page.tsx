@@ -6,13 +6,13 @@ import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
 import { CommunityPosts, RequestPosts } from '@/types/type';
 import Image from 'next/image';
-import MainSkeletonLoader from '@/components/MainSkeletonLoader';  // Import SkeletonLoader
+import MainSkeletonLoader from '@/components/MainSkeletonLoader'; 
 
 export default function Home() {
   const [qnaPosts, setQnaPosts] = useState<CommunityPosts[]>([]);
   const [insightPosts, setInsightPosts] = useState<CommunityPosts[]>([]);
   const [expertPosts, setExpertPosts] = useState<RequestPosts[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Loading state 추가
+  const [isLoading, setIsLoading] = useState(true); 
   const supabase = createClient();
 
   useEffect(() => {

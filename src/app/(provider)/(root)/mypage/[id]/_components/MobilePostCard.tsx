@@ -5,6 +5,7 @@ import Link from 'next/link';
 import GetNickname from './GetNickname';
 import { BookmarkCount } from './BookmarkCount';
 import clsx from 'clsx';
+import { LikeCount } from './LikeCount';
 
 interface MobilePostCardProp {
   data: CommunityPosts[];
@@ -72,7 +73,7 @@ export default function MobilePostCard({ data }: MobilePostCardProp) {
               <div className="flex gap-[24px]">
                 <div className="flex items-center gap-[4px] text-grey-400">
                   <Image src="/comment.svg" alt="댓글 아이콘" width={16} height={16} className="w-[13px] h-[13px]" />
-                  <p>-1</p>
+                  <LikeCount postId={post.id} />
                 </div>
                 <div className="flex items-center gap-[4px] text-grey-400">
                   <Image src="/bookmark.svg" alt="북마크 아이콘" width={16} height={16} className="w-[13px] h-[13px]" />

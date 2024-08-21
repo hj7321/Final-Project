@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { useRef, useState, ChangeEvent } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { CodeCategories } from '@/components/dumy';
-import { Notify } from 'notiflix';
+import Notiflix, { Notify } from 'notiflix';
 import Image from 'next/image';
 import MDEditor from '@uiw/react-md-editor';
 import '../../../../../../css/mdStyle.css';
@@ -72,15 +72,15 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
 
   const handleSubmit = async () => {
     if (!title || !content) {
-      alert('제목과 내용을 입력해주세요.');
+      Notify.failure('제목과 내용을 입력해주세요.');
       return;
     }
     if (selectedLanguage === '') {
-      alert('언어를 선택해주세요.');
+      Notify.failure('언어를 선택해주세요.');
       return;
     }
     if (!startDate || !endDate) {
-      alert('참여 기간을 선택해주세요.');
+      Notify.failure('참여 기간을 선택해주세요.');
       return;
     }
 
@@ -239,13 +239,6 @@ const AddPortfolio: React.FC<AddPortfolioProps> = ({ clickModal }) => {
               className="mt-1 w-full block p-2"
               textareaProps={{ placeholder: '내용을 입력해주세요. (마크다운 형식)' }}
             />
-            {/* <textarea
-              placeholder="내용을 입력해주세요."
-              className="mt-1 block w-full p-2 border border-grey-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              rows={6}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            ></textarea> */}
           </div>
           <div className="flex justify-end">
             <button

@@ -69,15 +69,15 @@ const MobileAddPortfolio: React.FC<AddPortfolioProps> = ({ onBack }) => {
 
   const handleSubmit = async () => {
     if (!title || !content) {
-      alert('제목과 내용을 입력해주세요.');
+      Notify.failure('제목과 내용을 입력해주세요.');
       return;
     }
     if (selectedLanguage === '') {
-      alert('언어를 선택해주세요.');
+      Notify.failure('언어를 선택해주세요.');
       return;
     }
     if (!startDate || !endDate) {
-      alert('참여 기간을 선택해주세요.');
+      Notify.failure('참여 기간을 선택해주세요.');
       return;
     }
 

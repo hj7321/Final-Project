@@ -8,9 +8,6 @@ export async function GET(request: Request, { params }: { params: { commentId: s
     .from('Community Likes')
     .select('*', { count: 'exact', head: false })
     .eq('comment_id', commentId);
-
-  console.log(data);
-
   if (error) {
     console.log('GET 에러: ', error.message);
     return Response.json({ errorMsg: error.message });
@@ -35,8 +32,6 @@ export async function DELETE(request: Request, { params }: { params: { commentId
   const { commentId } = params;
   const url = new URL(request.url);
   const userId = url.searchParams.get('userId');
-
-  console.log(commentId, userId);
 
   const { data, error } = await supabase
     .from('Community Likes')

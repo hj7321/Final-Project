@@ -1,7 +1,6 @@
 import { CodeCategories } from '@/components/dumy';
 import Image from 'next/image';
 import React from 'react';
-import bookmark_dark from '../../../../../../../../public/bookmark_dark.svg';
 import { BookMark } from '@/types/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Notify } from 'notiflix';

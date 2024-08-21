@@ -11,7 +11,6 @@ export default function useProfile(userId: string | null | undefined) {
       console.log('유저 데이터 못가져옴: ', data.errorMsg);
       return null;
     } else {
-      console.log('유저 데이터 가져옴');
       return data.userData;
     }
   };

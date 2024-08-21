@@ -40,33 +40,6 @@ export default function AllMypage() {
 
   const [activeComponent, setActiveComponent] = useState('MyBookmarkList');
 
-  // const renderComponent = () => {
-  //   switch (activeComponent) {
-  //     case 'BookMark':
-  //       return <BookMark />;
-  //     case 'AccountList':
-  //       return <AccountList />;
-  //     case 'MyCommentList':
-  //       return <MyCommentList />;
-  //     case 'MyPostList':
-  //       return <MyPostList />;
-  //     case 'Portfolio':
-  //       return <Portfolio />;
-  //     case 'EditProfile':
-  //       return <EditProfile />;
-  //     case 'ReceiveReview':
-  //       return <ReceiveReview />;
-  //     case 'SendReview':
-  //       return <SendReview />;
-  //     case 'MyChatList':
-  //       return <ChatList />;
-  //     case 'ResetPassword':
-  //       return <ResetPassword />;
-  //     case 'DeleteUser':
-  //       return <DeleteUser />;
-  //   }
-  // };
-
   const componentMapping: { [key: string]: JSX.Element } = {
     MyBookmarkList: <MyBookmarkList />,
     AccountList: <AccountList />,
@@ -98,27 +71,6 @@ export default function AllMypage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 리팩토링 전
-  // const getUserData = async () => {
-  //   const supabase = createClient();
-  //   if (!id) {
-  //     throw new Error('Invalid UUID: id is null or undefined');
-  //   }
-  //   const data = await supabase.from('Users').select('*').eq('id', id).maybeSingle();
-
-  //   return data;
-  // };
-  // const {
-  //   data: Users,
-  //   isPending,
-  //   error
-  // } = useQuery({
-  //   queryKey: ['Users'],
-  //   queryFn: getUserData,
-  //   enabled: !!id
-  // });
-
-  // 리팩토링 후
   const { userData, isUserDataPending, userDataError } = useProfile(id);
 
   const changeUserType = async (currentIsPro: any) => {
@@ -238,74 +190,6 @@ export default function AllMypage() {
                 {item.name}
               </li>
             ))}
-            {/* <li
-              className={activeComponent === 'BookMark' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('BookMark')}
-            >
-              찜한 목록
-            </li>
-            <li
-              className={activeComponent === 'MyPostList' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('MyPostList')}
-            >
-              내가 쓴 글
-            </li>
-            <li
-              className={activeComponent === 'MyCommentList' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('MyCommentList')}
-            >
-              내가 쓴 댓글
-            </li>
-            <li
-              className={activeComponent === 'AccountList' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('AccountList')}
-            >
-              거래내역
-            </li>
-            <li
-              className={activeComponent === 'MyChatList' ? activeStyle : liStyle}
-              onClick={() => setActiveComponent('MyChatList')}
-            >
-              내 채팅 목록
-            </li>
-            {userData?.is_pro ? (
-              <li
-                className={activeComponent === 'ReceiveReview' ? activeStyle : liStyle}
-                onClick={() => setActiveComponent('ReceiveReview')}
-              >
-                내가 받은 리뷰
-              </li>
-            ) : (
-              <li
-                className={activeComponent === 'SendReview' ? activeStyle : liStyle}
-                onClick={() => setActiveComponent('SendReview')}
-              >
-                내가 작성한 리뷰
-              </li>
-            )}
-
-            {userData?.is_pro ? (
-              <li
-                className={activeComponent === 'Portfolio' ? activeStyle : liStyle}
-                onClick={() => setActiveComponent('Portfolio')}
-              >
-                나의 포트폴리오
-              </li>
-            ) : (
-              ''
-            )}
-            <li
-              className={clsx('hidden md:block', activeComponent === 'ResetPassword' ? activeStyle : liStyle)}
-              onClick={goToResetPassword}
-            >
-              비밀번호 변경
-            </li>
-            <li
-              className={clsx('hidden md:block', activeComponent === 'DeleteUser' ? activeStyle : liStyle)}
-              onClick={() => setActiveComponent('DeleteUser')}
-            >
-              회원탈퇴
-            </li> */}
           </ul>
         </div>
         <main className="md:flex-1">
