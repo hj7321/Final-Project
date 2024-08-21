@@ -23,19 +23,18 @@ export async function GET(request: Request) {
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code); // 코드 교환
     if (!error) {
-      // (2-1) 현재 로그인한 사용자의 이메일, 생성 시간 데이터를 가져옴
+      // (2-1) 현재 로그인한 사용자의 이메일 데이터를 가져옴
       const {
         data: { user }
       } = await supabase.auth.getUser();
       const loginUserEmail: string | undefined = user!.email; // 현재 로그인한 사용자의 이메일(string)
-      const loginUserCreatedAt: string = user!.created_at; // 현재 로그인한 사용자의 생성 시간(string) -> 사용 안하므로 추후 삭제
 
       // (2-2) Users 테이블에서 현재 로그인한 사용자의 이메일에 대응하는 created_at 칼럼만을 추출함
       const { data } = await supabase.from('Users').select('created_at').eq('email', loginUserEmail!);
-      const createdAtData: string = data!.map((obj) => obj.created_at)[0];
+      const createdAtDate: string = data!.map((obj) => obj.created_at)[0];
 
-      // 정확한 시간 비교를 위해서 createdAtData를 Data 객체로 변환
-      const createdTime: Date = new Date(createdAtData); // Users 테이블에 최초 저장된 시간
+      // 정확한 시간 비교를 위해서 createdAtDate를 Date 객체로 변환
+      const createdTime: Date = new Date(createdAtDate); // Users 테이블에 최초 저장된 시간
       // 현재 시간을 나타내는 Date 객체 생성
       const currentTime: Date = new Date(); // 현재 시간
 
