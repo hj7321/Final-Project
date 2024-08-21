@@ -38,6 +38,7 @@ export default function CompletePostList() {
         alt="배너"
         width={1200}
         height={160}
+        className=" hidden md:block"
       />
       <div className="flex flex-col md:flex-row md:gap-[32px] mt-[30px]">
         <Languages selectedLanguages={selectedLanguages} setSelectedLanguages={setSelectedLanguages} />

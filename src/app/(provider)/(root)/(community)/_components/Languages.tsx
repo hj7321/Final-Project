@@ -63,7 +63,11 @@ export default function Languages({ selectedLanguages, setSelectedLanguages }: L
       <div className="container mx-auto px-4  h-full sm:hidden">
         <div className="flex items-center gap-6 overflow-x-auto">
           {CodeCategories.map((category) => (
-            <div key={category.id} className="flex flex-col items-center mb-4  ">
+            <div
+              key={category.id}
+              className="flex flex-col items-center mb-4  "
+              onClick={() => handleLanguageFilter(category.name)}
+            >
               <div className="w-[52px] h-[52px] flex rounded-[8px] items-center justify-center overflow-hidden">
                 <Image src={category.image} alt={category.name} width={64} height={64} className="min-w-16 min-h-16 " />
               </div>

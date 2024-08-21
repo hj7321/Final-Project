@@ -93,8 +93,8 @@ export default function CommuComment() {
         <Image src="/comment.svg" alt="댓글" width={24} height={24} />
         <p className="text-[16px] text-grey-400 font-bold">{commentCount}</p>
       </div>
-      <div className="flex gap-[32px] mt-[32px]">
-        <div data-color-mode="light" className="w-[995px] rounded-[8px]">
+      <div className="flex md:gap-8 gap-4 mt-[32px]">
+        <div data-color-mode="light" className="w-[995px] rounded-[8px] hidden sm:block">
           <MDEditor
             onClick={handleCheckLogin}
             height={100}
@@ -104,6 +104,18 @@ export default function CommuComment() {
             commands={[]}
           />
         </div>
+
+        <div data-color-mode="light" className="w-[248px] rounded-[8px] block sm:hidden">
+          <MDEditor
+            onClick={handleCheckLogin}
+            height={64}
+            value={value}
+            onChange={setValue}
+            textareaProps={{ placeholder: '도움이 되는 댓글을 등록하세요!' }}
+            commands={[]}
+          />
+        </div>
+
         <>
           {/* <ReactQuill value={value} onChange={(e) => setValue(e.target.value)} />
           <input type="hidden" name="editorContent" value={value} />
@@ -114,7 +126,7 @@ export default function CommuComment() {
             handleCheckLogin();
             await handleSubmit();
           }}
-          className="w-[173px] h-[101px] rounded-lg bg-primary-500 text-white font-bold text-base flex items-center justify-center hover:bg-primary-700 hover:cursor-pointer"
+          className="md:w-[173px] md:h-[101px] w-16 h-16 rounded-lg bg-primary-500 text-white font-bold text-base flex items-center justify-center hover:bg-primary-700 hover:cursor-pointer"
         >
           <span className="hidden sm:block">댓글 등록</span>
           <span className="block sm:hidden">등록</span>

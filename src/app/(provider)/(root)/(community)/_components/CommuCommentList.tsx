@@ -165,23 +165,25 @@ export default function CommuCommentList() {
     <div className="flex flex-col">
       <div className="text-base flex flex-col gap-[24px]">
         {comments &&
-          comments.map((comment) => (
-            <Comment
-              key={comment.id}
-              comment={comment}
-              userId={userId}
-              getUserNickname={getUserNickname}
-              handleDelete={handleDelete}
-              handleEditClick={handleEditClick}
-              handleSaveClick={handleSaveClick}
-              handleCancelClick={handleCancelClick}
-              editingCommentId={editingCommentId}
-              editContent={editContent}
-              setEditContent={setEditContent}
-            />
+          comments.map((comment, index) => (
+            <>
+              <Comment
+                key={comment.id}
+                comment={comment}
+                userId={userId}
+                getUserNickname={getUserNickname}
+                handleDelete={handleDelete}
+                handleEditClick={handleEditClick}
+                handleSaveClick={handleSaveClick}
+                handleCancelClick={handleCancelClick}
+                editingCommentId={editingCommentId}
+                editContent={editContent}
+                setEditContent={setEditContent}
+              />
+              {index < comments.length - 1 && <hr className="w-full h-[1px] bg-grey-100 border-0 " />}
+            </>
           ))}
       </div>
-      <hr className="w-full h-[1px] bg-grey-100 border-0 my-[32px]" />
     </div>
   );
 }

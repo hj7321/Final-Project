@@ -210,7 +210,7 @@ export default function CommuPost() {
   return (
     <div className="flex flex-col relative">
       <div
-        className="md:mb-5 mb-3 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]"
+        className="hidden md:block mb-5 ml-2 cursor-pointer group md:w-[65px] md:h-[65px] w-[30px] h-[30px]"
         onClick={handleNavigation}
       >
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,18 +221,33 @@ export default function CommuPost() {
           />
         </svg>
       </div>
-      <div className="flex flex-col gap-6 py-6">
+      <div className="flex flex-col gap-6 mb:py-6">
         <div className="flex  justify-between">
-          <ul className="flex gap-[24px]">
+          <ul className="flex gap-[24px] sm:gap-4">
             {postData?.lang_category?.map((lang, index) => {
               const categoryData = CodeCategories.find((cat) => cat.name === lang);
               return (
-                <div key={index} className="flex gap-[9px]">
-                  {categoryData && (
-                    <Image src={categoryData.image} alt={lang} width={24} height={24} className="rounded-full" />
-                  )}
-                  <p className="text-gray-600">{lang}</p>
-                </div>
+                <>
+                  <div key={index} className=" gap-[9px] hidden sm:flex">
+                    {categoryData && (
+                      <Image src={categoryData.image} alt={lang} width={24} height={24} className="rounded-full" />
+                    )}
+                    <p className="text-gray-600">{lang}</p>
+                  </div>
+
+                  <div key={index} className=" gap-[4px] flex sm:hidden">
+                    {categoryData && (
+                      <Image
+                        src={categoryData.image}
+                        alt={lang}
+                        width={20}
+                        height={20}
+                        className="w-4 h-4 rounded-full object-cover"
+                      />
+                    )}
+                    <p className="text-gray-600 text-[12px]">{lang}</p>
+                  </div>
+                </>
               );
             })}
           </ul>
@@ -244,14 +259,7 @@ export default function CommuPost() {
             </svg>
           </button>
           {isOpen && (
-            <div
-              className="absolute bg-white rounded-[16px] shadow-md w-[150px]"
-              style={{
-                top: '20%',
-                right: '0',
-                zIndex: 1000
-              }}
-            >
+            <div className="absolute bg-white rounded-[16px] shadow-md w-[150px] top-[10%] md:top-[15%] right-0 z-[1000]">
               <ul>
                 <div className="flex px-4 py-2 hover:bg-gray-200 cursor-pointer gap-2" onClick={handleEdit}>
                   <Image
@@ -306,7 +314,7 @@ export default function CommuPost() {
           </div>
         </div>
       </div>
-      <hr className="w-full border-t border-gray-100 my-8" />
+      <hr className="w-full border-t border-grey-100 my-8" />
       {postData?.post_img?.[0] && <Image src={postData.post_img[0]} alt="Post Image" width={800} height={500} />}
       <div data-color-mode="light">
         <MDEditor.Markdown source={postData?.content} />
